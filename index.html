@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 <style>
 :root{--bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#262626;--bg5:#2e2e2e;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.12);--b3:rgba(255,255,255,0.2);--tx:#f0f0f0;--tx2:#888;--tx3:#555;--or:#E8722A;--or2:#C45A1A;--ord:rgba(232,114,42,0.15);--re:#E24B4A;--red:rgba(226,75,74,0.12);--am:#E8A020;--amd:rgba(232,160,32,0.12);--gr:#52A85C;--grd:rgba(82,168,92,0.12);--bl:#4A90D9;--bld:rgba(74,144,217,0.12);--r:10px;--rl:14px;--rx:20px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -693,6 +694,62 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+
+// ═══ NOTIFICATIONS PUSH ═══
+const VAPID_KEY = 'BNj7qWlnfKc7-gnvHiZX2IX5gxXoCjRQEzYjm1J1wbMeWrlHp_nW4cfIkQWyRwm-hasi9a5OmLvHhd0R49Ushag';
+let messaging = null;
+
+function initPush(){
+  try{messaging=firebase.messaging();console.log('FCM ok');}
+  catch(e){console.log('FCM not supported:',e);}
+}
+
+function requestPushPermission(){
+  if(!messaging)return;
+  Notification.requestPermission().then(function(perm){
+    if(perm==='granted'){
+      messaging.getToken({vapidKey:VAPID_KEY}).then(function(token){
+        if(token){
+          db.collection('push_tokens').doc(CU).set({token:token,user:CU,ts:firebase.firestore.FieldValue.serverTimestamp()});
+          console.log('Push token saved');
+          toast('Notifications push activees !');
+        }
+      }).catch(function(e){console.error('Token error:',e);});
+    }
+  });
+}
+
+function sendPushNotif(title, body){
+  db.collection('notifications').add({
+    title:title, body:body, from:CU,
+    ts:firebase.firestore.FieldValue.serverTimestamp(),
+    read:[]
+  }).catch(function(e){console.error('Notif error:',e);});
+}
+
+function listenNotifications(){
+  if(!CU)return;
+  db.collection('notifications').orderBy('ts','desc').limit(20)
+    .onSnapshot(function(snap){
+      snap.docChanges().forEach(function(change){
+        if(change.type==='added'){
+          var n=change.doc.data();
+          var readBy=n.read||[];
+          if(!readBy.includes(CU)&&n.from!==CU){
+            change.doc.ref.update({read:firebase.firestore.FieldValue.arrayUnion(CU)});
+            if(Notification.permission==='granted'){
+              new Notification('Le Board — '+n.title,{
+                body:n.body,
+                icon:'/LeBoard/icon-192.png'
+              });
+            }
+            addN(n.title+' : '+n.body);
+          }
+        }
+      });
+    },function(e){console.error('Notif listen error:',e);});
+}
+
 // ═══ SYNC FIREBASE → LOCAL ═══
 function syncFromFirebase(){
   console.log('Starting Firebase sync...');
@@ -841,6 +898,9 @@ function launchApp(){
   if(CR==='referent'){showPg('planning',document.getElementById('nvp'));}
   else{showPg('moncal',document.getElementById('mnmc'));}
   startSess();
+  initPush();
+  setTimeout(requestPushPermission, 1500);
+  listenNotifications();
   document.getElementById('syntime').textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
 }
 
@@ -1090,7 +1150,7 @@ function saveCh(){
   if(!nom||!debut||!fin){toast('Nom, debut et fin sont obligatoires');return;}
   const ctv=document.getElementById('fctv').value;if(!ctv){toast('Le charge de travaux est obligatoire');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:document.getElementById('ftyp').value,statut:document.getElementById('fsta').value,chef:document.getElementById('fche').value,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
   if(editId){const idx=CH.findIndex(c=>c.id===editId);if(idx>=0)CH[idx]={...CH[idx],...data};toast('Chantier mis a jour');}
-  else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';addN(`Nouveau chantier ajoute par ${chef} : ${nom} — du ${fd(debut)} au ${fd(fin)}`);toast('Chantier cree !');}
+  else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);addN(nmsg);sendPushNotif('Nouveau chantier',nmsg);toast('Chantier cree !');}
   if(editId){
     saveChantierFB(CH.find(function(c){return c.id===editId;})||{});
   } else {
