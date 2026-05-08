@@ -9,6 +9,8 @@
 <meta name="theme-color" content="#0f0f0f">
 <title>Le Board</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 :root{--bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#262626;--bg5:#2e2e2e;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.12);--b3:rgba(255,255,255,0.2);--tx:#f0f0f0;--tx2:#888;--tx3:#555;--or:#E8722A;--or2:#C45A1A;--ord:rgba(232,114,42,0.15);--re:#E24B4A;--red:rgba(226,75,74,0.12);--am:#E8A020;--amd:rgba(232,160,32,0.12);--gr:#52A85C;--grd:rgba(82,168,92,0.12);--bl:#4A90D9;--bld:rgba(74,144,217,0.12);--r:10px;--rl:14px;--rx:20px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -678,13 +680,97 @@ let MSG=ld('lb_msg')||[{id:'m1',user:'florian',text:'Bonjour tout le monde ! Cha
 
 let CU=null,CR=null,calY=2026,calM=5,editId=null,repCh=null,selColor='#E8722A',pinBuf='',pinStep='',pinFirst='',notifs=[],sessTimer=null;
 
+
+// ═══ FIREBASE ═══
+const firebaseConfig = {
+  apiKey: "AIzaSyCmFe9XziS3hf5IuXmP3KHGx23_hUUWBCU",
+  authDomain: "leboard-93a96.firebaseapp.com",
+  projectId: "leboard-93a96",
+  storageBucket: "leboard-93a96.firebasestorage.app",
+  messagingSenderId: "876837050695",
+  appId: "1:876837050695:web:db90b431f4dff8acc9d462"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ═══ SYNC FIREBASE → LOCAL ═══
+function syncFromFirebase(){
+  console.log('Starting Firebase sync...');
+  try {
+    // Chantiers
+    db.collection('chantiers').onSnapshot(function(snap){
+      console.log('Chantiers snapshot received:', snap.docs.length);
+      CH = snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+      sv('lb_ch',CH);
+      renderAll();
+      if(document.getElementById('pg-cal') && document.getElementById('pg-cal').classList.contains('active'))renderCal();
+      if(document.getElementById('pg-moncal') && document.getElementById('pg-moncal').classList.contains('active'))renderMonCal();
+    }, function(err){console.error('Chantiers error:', err);});
+
+    // Membres
+    db.collection('membres').doc('data').onSnapshot(function(doc){
+      console.log('Membres snapshot received');
+      if(doc.exists){
+        var d=doc.data();
+        if(d.mbr){MBR=d.mbr;sv('lb_mbr',MBR);}
+        if(d.moe){MOE=Object.assign({},MOE_DEFAULT,d.moe);sv('lb_moe',MOE);}
+        buildGrids();bldChefSel();bldCChks();
+      }
+    }, function(err){console.error('Membres error:', err);});
+
+    // Messages
+    db.collection('messages').orderBy('ts').onSnapshot(function(snap){
+      console.log('Messages snapshot received:', snap.docs.length);
+      MSG=snap.docs.map(function(d){return d.data();});
+      sv('lb_msg',MSG);
+      if(document.getElementById('pg-msg') && document.getElementById('pg-msg').classList.contains('active'))renderChat();
+    }, function(err){console.error('Messages error:', err);});
+
+    console.log('Firebase sync listeners attached successfully');
+  } catch(e) {
+    console.error('Firebase sync failed:', e);
+  }
+}
+
+// ═══ SAVE TO FIREBASE ═══
+function saveChantierFB(c){
+  if(!c||!c.id){console.error('saveChantierFB: invalid chantier',c);return;}
+  var id=c.id;var data=Object.assign({},c);delete data.id;
+  console.log('Saving chantier to Firebase:', id, data.nom);
+  db.collection('chantiers').doc(id).set(data)
+    .then(function(){console.log('Chantier saved to Firebase:', id);})
+    .catch(function(e){console.error('Error saving chantier:', e);});
+}
+
+function deleteChantierFB(id){
+  db.collection('chantiers').doc(id).delete();
+}
+
+function saveMembersFB(){
+  console.log('Saving members to Firebase...');
+  db.collection('membres').doc('data').set({mbr:MBR,moe:MOE})
+    .then(function(){console.log('Members saved to Firebase');})
+    .catch(function(e){console.error('Error saving members:', e);});
+}
+
+function saveMsgFB(msg){
+  if(!msg||!msg.text)return;
+  db.collection('messages').add(Object.assign({},msg,{ts:firebase.firestore.FieldValue.serverTimestamp()}))
+    .then(function(){console.log('Message saved to Firebase');})
+    .catch(function(e){console.error('Error saving message:', e);});
+}
+
 // ═══ INIT ═══
 function init(){
-  // Reset all PINs - fresh start
-  localStorage.removeItem('lb_pins');
-  localStorage.removeItem('lb_sec');
+  // Reset all PINs - fresh start (one time)
+  if(!localStorage.getItem('lb_pins_reset')){
+    localStorage.removeItem('lb_pins');
+    localStorage.removeItem('lb_sec');
+    localStorage.setItem('lb_pins_reset','1');
+  }
 
   buildGrids();
+  syncFromFirebase();
   setTimeout(()=>{
     document.getElementById('splash').classList.add('hide');
     setTimeout(()=>{document.getElementById('splash').style.display='none';if(!localStorage.getItem('lb_pol'))showPol();else showAcc();},400);
@@ -1005,6 +1091,12 @@ function saveCh(){
   const ctv=document.getElementById('fctv').value;if(!ctv){toast('Le charge de travaux est obligatoire');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:document.getElementById('ftyp').value,statut:document.getElementById('fsta').value,chef:document.getElementById('fche').value,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
   if(editId){const idx=CH.findIndex(c=>c.id===editId);if(idx>=0)CH[idx]={...CH[idx],...data};toast('Chantier mis a jour');}
   else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';addN(`Nouveau chantier ajoute par ${chef} : ${nom} — du ${fd(debut)} au ${fd(fin)}`);toast('Chantier cree !');}
+  if(editId){
+    saveChantierFB(CH.find(function(c){return c.id===editId;})||{});
+  } else {
+    var last=CH[CH.length-1];if(last)saveChantierFB(last);
+  }
+  saveMembersFB();
   svAll();closeM('modch');editId=null;renderAll();
 }
 
@@ -1021,7 +1113,7 @@ function doRep(){
   const c=CH.find(x=>x.id===repCh);if(!c)return;
   c.collabs=c.collabs.map(n=>n===from?to:n);
   addN(`${from} remplace par ${to} sur le chantier ${c.nom}`);
-  svAll();closeM('modrep');renderAll();renderMonCal();toast(`${from} remplace par ${to}`);
+  saveChantierFB(c);svAll();closeM('modrep');renderAll();renderMonCal();toast(`${from} remplace par ${to}`);
 }
 
 // ═══ PROFILE ═══
@@ -1046,6 +1138,7 @@ function delCh(id){
   if(!confirm('Supprimer "'+c.nom+'" ? Cette action est irreversible.'))return;
   var idx=CH.findIndex(function(x){return x.id===id;});
   CH.splice(idx,1);
+  deleteChantierFB(id);
   svAll();renderAll();
   try{if(document.getElementById('pg-cal').classList.contains('active'))renderCal();}catch(e){}
   toast('Chantier supprime');
