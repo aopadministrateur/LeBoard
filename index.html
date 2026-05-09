@@ -826,6 +826,18 @@ function startFbPolling(){
 
 async function fbPoll(){
   try{
+    // Load avatars/profiles
+    const profileDocs = await fbGet('profiles');
+    profileDocs.forEach(function(p){
+      if(p.id && p.avatar){
+        if(!PR[p.id])PR[p.id]={};
+        if(PR[p.id].avatar !== p.avatar){
+          PR[p.id].avatar = p.avatar;
+          sv('lb_pr',PR);
+        }
+      }
+    });
+
     // Load members
     const mbrDocs = await fbGet('membres');
     const mbrDoc = mbrDocs.find(function(d){return d.id==='data';});
@@ -1067,8 +1079,8 @@ function renderAll(){
     const bTer = b.statut==='Termine';
     if(aTer && !bTer) return 1;
     if(!aTer && bTer) return -1;
-    if(aTer && bTer) return a.debut > b.debut ? 1 : -1; // oldest terminated last
-    return a.debut < b.debut ? -1 : 1; // closest start date first
+    if(aTer && bTer) return a.debut < b.debut ? 1 : -1; // plus ancien en bas
+    return a.debut < b.debut ? -1 : 1; // date la plus proche en haut
   });
   renderStats();renderPlan();renderNotifs();
 }
@@ -1235,23 +1247,41 @@ function copyLien(){navigator.clipboard.writeText(document.getElementById('lient
 function bldChefSel(){
   const sel=document.getElementById('fche');if(!sel)return;
   const curVal=sel.value;
-  sel.innerHTML=Object.values(MOE).map(m=>`<option value="${m.name}">${m.name}</option>`).join('')
-    +`<option value="__autre__">+ Autre — definir un nouveau</option>`;
+  sel.innerHTML=Object.values(MOE).map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('')
+    +'<option value="__autre__">+ Autre — definir un nouveau</option>';
   if(curVal&&curVal!=='__autre__')sel.value=curVal;
   sel.onchange=function(){
     if(this.value==='__autre__'){
       this.value=Object.values(MOE)[0]?Object.values(MOE)[0].name:'';
       selMoeColor='#E8722A';
-      document.querySelectorAll('#moe-colpick .csw').forEach(s=>s.classList.remove('sel'));
+      document.querySelectorAll('#moe-colpick .csw').forEach(function(s){s.classList.remove('sel');});
       const first=document.querySelector('#moe-colpick .csw');if(first)first.classList.add('sel');
       document.getElementById('moe-name').value='';
       openM('modmoe');
     }
   };
   const ctv=document.getElementById('fctv');if(!ctv)return;
-  ctv.innerHTML=Object.values(MBR).map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
+  // Order: referents first in defined order, then collaborateurs
+  const ORDER=['florian','henri','franck','yoan','frederic','thomas'];
+  const refs=ORDER.map(function(k){return MBR[k];}).filter(Boolean);
+  const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';}).map(function(e){return e[1];});
+  const all=refs.concat(cols);
+  ctv.innerHTML=all.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('');
 }
-function bldCChks(){const cont=document.getElementById('cchks');if(!cont)return;cont.innerHTML=Object.values(MBR).map(m=>`<div class="cchk" onclick="togCChk(this,'${m.name}')"><div class="cchkd" style="background:${m.color}"></div>${m.name}</div>`).join('');}
+function bldCChks(){
+  const cont=document.getElementById('cchks');if(!cont)return;
+  const ORDER=['florian','henri','franck','yoan','frederic','thomas'];
+  const refs=ORDER.map(function(k){return MBR[k];}).filter(Boolean);
+  const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';}).map(function(e){return e[1];});
+  const all=refs.concat(cols);
+  cont.innerHTML=all.map(function(m){
+    const div=document.createElement('div');
+    div.className='cchk';
+    div.setAttribute('onclick','togCChk(this,"'+m.name+'")');
+    div.innerHTML='<div class="cchkd" style="background:'+m.color+'"></div>'+m.name;
+    return div.outerHTML;
+  }).join('');
+}
 function togCChk(el,name){el.classList.toggle('sel');}
 function getSelCollabs(){return Array.from(document.querySelectorAll('.cchk.sel')).map(el=>el.textContent.trim());}
 function setSelCollabs(names){document.querySelectorAll('.cchk').forEach(el=>{const name=el.textContent.trim();el.classList.toggle('sel',names.includes(name));});}
@@ -1303,7 +1333,34 @@ function openProf(){
   pa.innerHTML=p.avatar?`<img src="${p.avatar}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:`<span class="avt">${m?m.name.slice(0,2).toUpperCase():'?'}</span>`;
   openM('modprof');
 }
-function handleAv(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{if(!PR[CU])PR[CU]={};PR[CU].avatar=ev.target.result;svAll();toast('Photo mise a jour');};reader.readAsDataURL(file);e.target.value='';}
+function handleAv(e){
+  const file=e.target.files[0];if(!file)return;
+  // Compress image before saving
+  const img=new Image();
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    img.src=ev.target.result;
+    img.onload=function(){
+      const canvas=document.createElement('canvas');
+      const MAX=120;
+      let w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=h*MAX/w;w=MAX;}}else{if(h>MAX){w=w*MAX/h;h=MAX;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const data=canvas.toDataURL('image/jpeg',0.7);
+      if(!PR[CU])PR[CU]={};
+      PR[CU].avatar=data;
+      sv('lb_pr',PR);
+      // Save to Firestore
+      fbSet('profiles', CU, {avatar:data, user:CU});
+      toast('Photo mise a jour !');
+      setupUI();
+      if(document.getElementById('pg-equipe').classList.contains('active'))renderTeam();
+    };
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
 function saveProf(){svAll();closeM('modprof');setupUI();toast('Profil sauvegarde');}
 
 // ═══ MODAL ═══
