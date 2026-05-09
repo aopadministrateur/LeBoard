@@ -566,8 +566,8 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
     <div class="fr"><div class="fg"><label class="fl">Nom *</label><input class="fi" type="text" id="fnom" placeholder=""></div><div class="fg"><label class="fl">Client</label><input class="fi" type="text" id="fcli" placeholder=""></div></div>
     <div class="fg"><label class="fl">Adresse</label><input class="fi" type="text" id="fadr" placeholder=""></div>
     <div class="fr">
-      <div class="fg"><label class="fl">Type</label><select class="fi" id="ftyp"><option>Facade</option><option>Vitres</option><option>Toiture</option><option>Nettoyage industriel</option><option>Autre</option></select></div>
-      <div class="fg"><label class="fl">Statut</label><select class="fi" id="fsta"><option>Confirme</option><option>Prevu</option><option>Option</option><option>Termine</option></select></div>
+      <div class="fg"><label class="fl">Type</label><select class="fi" id="ftyp"><option value="">-- Choisir --</option><option>Facade</option><option>Vitres</option><option>Toiture</option><option>Nettoyage industriel</option><option>Autre</option></select></div>
+      <div class="fg"><label class="fl">Statut</label><select class="fi" id="fsta"><option value="">-- Choisir --</option><option>Confirme</option><option>Prevu</option><option>Option</option><option>Termine</option></select></div>
     </div>
     <div class="fr">
       <div class="fg"><label class="fl">Maitre d'oeuvre *</label><select class="fi" id="fche"></select></div>
@@ -1247,7 +1247,7 @@ function copyLien(){navigator.clipboard.writeText(document.getElementById('lient
 function bldChefSel(){
   const sel=document.getElementById('fche');if(!sel)return;
   const curVal=sel.value;
-  sel.innerHTML=Object.values(MOE).map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('')
+  sel.innerHTML='<option value="">-- Choisir --</option>'+Object.values(MOE).map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('')
     +'<option value="__autre__">+ Autre — definir un nouveau</option>';
   if(curVal&&curVal!=='__autre__')sel.value=curVal;
   sel.onchange=function(){
@@ -1288,7 +1288,7 @@ function togCChk(el,name){el.classList.toggle('sel');}
 function getSelCollabs(){return Array.from(document.querySelectorAll('.cchk.sel')).map(el=>el.textContent.trim());}
 function setSelCollabs(names){document.querySelectorAll('.cchk').forEach(el=>{const name=el.textContent.trim();el.classList.toggle('sel',names.includes(name));});}
 
-function openModCh(){editId=null;document.getElementById('modchtit').textContent='Nouveau chantier';['fnom','fcli','fadr','fmat','fnot'].forEach(id=>document.getElementById(id).value='');document.getElementById('fsta').value='Confirme';setSelCollabs([]);document.getElementById('fctv').value='';openM('modch');}
+function openModCh(){editId=null;document.getElementById('modchtit').textContent='Nouveau chantier';['fnom','fcli','fadr','fmat','fnot'].forEach(id=>document.getElementById(id).value='');document.getElementById('fsta').value='';document.getElementById('ftyp').value='';document.getElementById('fche').value='';setSelCollabs([]);document.getElementById('fctv').value='';openM('modch');}
 function editCh(id){
   const c=CH.find(x=>x.id===id);if(!c)return;editId=id;document.getElementById('modchtit').textContent='Modifier le chantier';
   document.getElementById('fnom').value=c.nom;document.getElementById('fcli').value=c.client;document.getElementById('fadr').value=c.adresse;document.getElementById('ftyp').value=c.type;document.getElementById('fsta').value=c.statut;document.getElementById('fche').value=c.chef;document.getElementById('fctv').value=c.ctv||'';document.getElementById('fdeb').value=c.debut;document.getElementById('ffin').value=c.fin;document.getElementById('fmat').value=c.materiel;document.getElementById('fnot').value=c.notes;
@@ -1297,7 +1297,10 @@ function editCh(id){
 function saveCh(){
   const nom=document.getElementById('fnom').value.trim();const debut=document.getElementById('fdeb').value;const fin=document.getElementById('ffin').value;
   if(!nom||!debut||!fin){toast('Nom, debut et fin sont obligatoires');return;}
-  const ctv=document.getElementById('fctv').value;if(!ctv||ctv===''){toast('Veuillez choisir un charge de travaux');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:document.getElementById('ftyp').value,statut:document.getElementById('fsta').value,chef:document.getElementById('fche').value,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
+  const typ=document.getElementById('ftyp').value;if(!typ){toast('Veuillez choisir un type de travaux');return;}
+  const sta=document.getElementById('fsta').value;if(!sta){toast('Veuillez choisir un statut');return;}
+  const che=document.getElementById('fche').value;if(!che||che===''){toast('Veuillez choisir un Maitre d\'oeuvre');return;}
+  const ctv=document.getElementById('fctv').value;if(!ctv||ctv===''){toast('Veuillez choisir un charge de travaux');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:typ,statut:sta,chef:che,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
   if(editId){const idx=CH.findIndex(c=>c.id===editId);if(idx>=0)CH[idx]={...CH[idx],...data};toast('Chantier mis a jour');}
   else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);
       addN(nmsg);
