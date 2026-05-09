@@ -1266,7 +1266,9 @@ function bldChefSel(){
   const refs=ORDER.map(function(k){return MBR[k];}).filter(Boolean);
   const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';}).map(function(e){return e[1];});
   const all=refs.concat(cols);
-  ctv.innerHTML=all.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('');
+  const curCtv=ctv.value;
+  ctv.innerHTML='<option value="">-- Choisir --</option>'+all.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('');
+  if(curCtv)ctv.value=curCtv;
 }
 function bldCChks(){
   const cont=document.getElementById('cchks');if(!cont)return;
@@ -1286,7 +1288,7 @@ function togCChk(el,name){el.classList.toggle('sel');}
 function getSelCollabs(){return Array.from(document.querySelectorAll('.cchk.sel')).map(el=>el.textContent.trim());}
 function setSelCollabs(names){document.querySelectorAll('.cchk').forEach(el=>{const name=el.textContent.trim();el.classList.toggle('sel',names.includes(name));});}
 
-function openModCh(){editId=null;document.getElementById('modchtit').textContent='Nouveau chantier';['fnom','fcli','fadr','fmat','fnot'].forEach(id=>document.getElementById(id).value='');document.getElementById('fsta').value='Confirme';setSelCollabs([]);openM('modch');}
+function openModCh(){editId=null;document.getElementById('modchtit').textContent='Nouveau chantier';['fnom','fcli','fadr','fmat','fnot'].forEach(id=>document.getElementById(id).value='');document.getElementById('fsta').value='Confirme';setSelCollabs([]);document.getElementById('fctv').value='';openM('modch');}
 function editCh(id){
   const c=CH.find(x=>x.id===id);if(!c)return;editId=id;document.getElementById('modchtit').textContent='Modifier le chantier';
   document.getElementById('fnom').value=c.nom;document.getElementById('fcli').value=c.client;document.getElementById('fadr').value=c.adresse;document.getElementById('ftyp').value=c.type;document.getElementById('fsta').value=c.statut;document.getElementById('fche').value=c.chef;document.getElementById('fctv').value=c.ctv||'';document.getElementById('fdeb').value=c.debut;document.getElementById('ffin').value=c.fin;document.getElementById('fmat').value=c.materiel;document.getElementById('fnot').value=c.notes;
@@ -1295,7 +1297,7 @@ function editCh(id){
 function saveCh(){
   const nom=document.getElementById('fnom').value.trim();const debut=document.getElementById('fdeb').value;const fin=document.getElementById('ffin').value;
   if(!nom||!debut||!fin){toast('Nom, debut et fin sont obligatoires');return;}
-  const ctv=document.getElementById('fctv').value;if(!ctv){toast('Le charge de travaux est obligatoire');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:document.getElementById('ftyp').value,statut:document.getElementById('fsta').value,chef:document.getElementById('fche').value,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
+  const ctv=document.getElementById('fctv').value;if(!ctv||ctv===''){toast('Veuillez choisir un charge de travaux');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:document.getElementById('ftyp').value,statut:document.getElementById('fsta').value,chef:document.getElementById('fche').value,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
   if(editId){const idx=CH.findIndex(c=>c.id===editId);if(idx>=0)CH[idx]={...CH[idx],...data};toast('Chantier mis a jour');}
   else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);
       addN(nmsg);
