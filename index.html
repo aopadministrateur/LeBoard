@@ -1313,4 +1313,24 @@ document.querySelectorAll('.mlov').forEach(o=>o.addEventListener('click',e=>{if(
 
 // ═══ SYNC ═══
 function delCh(id){
-  var c=CH.find(function(x){return x.id===id;}
+  var c=CH.find(function(x){return x.id===id;});
+  if(!c)return;
+  if(!confirm('Supprimer "'+c.nom+'" ? Cette action est irreversible.'))return;
+  var idx=CH.findIndex(function(x){return x.id===id;});
+  CH.splice(idx,1);
+  deleteChantierFB(id);
+  svAll();renderAll();
+  try{if(document.getElementById('pg-cal').classList.contains('active'))renderCal();}catch(e){}
+  toast('Chantier supprime');
+}
+
+function syncGCal(){const dot=document.getElementById('syndot'),txt=document.getElementById('syntxt');dot.classList.add('syn');txt.textContent='Synchronisation...';setTimeout(()=>{dot.classList.remove('syn');txt.textContent='Synchronise';document.getElementById('syntime').textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});toast('Google Calendar mis a jour');},2200);}
+
+// ═══ UTILS ═══
+function fd(str){if(!str)return'—';const d=new Date(str+'T00:00:00');return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function toast(msg){const t=document.getElementById('toastel');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+init();
+</script>
+</body>
+</html>
