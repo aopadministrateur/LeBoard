@@ -9,9 +9,6 @@
 <meta name="theme-color" content="#0f0f0f">
 <title>Le Board</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 <style>
 :root{--bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#262626;--bg5:#2e2e2e;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.12);--b3:rgba(255,255,255,0.2);--tx:#f0f0f0;--tx2:#888;--tx3:#555;--or:#E8722A;--or2:#C45A1A;--ord:rgba(232,114,42,0.15);--re:#E24B4A;--red:rgba(226,75,74,0.12);--am:#E8A020;--amd:rgba(232,160,32,0.12);--gr:#52A85C;--grd:rgba(82,168,92,0.12);--bl:#4A90D9;--bld:rgba(74,144,217,0.12);--r:10px;--rl:14px;--rx:20px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -644,7 +641,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
 
 <script>
 // ═══ CONSTANTS ═══
-const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Operation':'#2D9E5F','OrizonDrone':'#f0f0f0'};
+const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Operation':'#2D9E5F','OrizonDrone':'#8B7FD4'};
 const STATOK=['Confirme','Prevu'];
 const MOIS=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
 const SDUR=3600000;
@@ -672,8 +669,8 @@ function saveMoe(){
 function svAll(){sv('lb_mbr',MBR);sv('lb_ch',CH);sv('lb_pr',PR);sv('lb_msg',MSG);sv('lb_moe',MOE);}
 
 // ═══ STATE ═══
-let MBR=ld('lb_mbr')||{florian:{name:'Florian',color:'#E8722A',role:'referent'},henri:{name:'Henri',color:'#E24B4A',role:'referent'},franck:{name:'Franck',color:'#4A90D9',role:'referent'},yoan:{name:'Yoan',color:'#2D9E5F',role:'referent'},thomas:{name:'Thomas',color:'#f0f0f0',role:'referent'},frederic:{name:'Frederic',color:'#F5C842',role:'referent'},tony:{name:'Tony',color:'#D4A843',role:'collaborateur'},camille:{name:'Camille',color:'#3BB8A8',role:'collaborateur'},sebastien:{name:'Sebastien',color:'#C67AB8',role:'collaborateur'},alexandre:{name:'Alexandre',color:'#7BB5E8',role:'collaborateur'}};
-const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KGiR',color:'#E24B4A'},flightdrone:{name:'Flight Drone Service',color:'#4A90D9'},wdrones:{name:'W-Drones',color:'#F5C842'},droneoperation:{name:'Drone Operation',color:'#2D9E5F'},orizondrone:{name:'OrizonDrone',color:'#f0f0f0'}};
+let MBR=ld('lb_mbr')||{florian:{name:'Florian',color:'#E8722A',role:'referent'},henri:{name:'Henri',color:'#E24B4A',role:'referent'},franck:{name:'Franck',color:'#4A90D9',role:'referent'},yoan:{name:'Yoan',color:'#2D9E5F',role:'referent'},thomas:{name:'Thomas',color:'#8B7FD4',role:'referent'},frederic:{name:'Frederic',color:'#F5C842',role:'referent'},tony:{name:'Tony',color:'#D4A843',role:'collaborateur'},camille:{name:'Camille',color:'#3BB8A8',role:'collaborateur'},sebastien:{name:'Sebastien',color:'#C67AB8',role:'collaborateur'},alexandre:{name:'Alexandre',color:'#7BB5E8',role:'collaborateur'}};
+const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KGiR',color:'#E24B4A'},flightdrone:{name:'Flight Drone Service',color:'#4A90D9'},wdrones:{name:'W-Drones',color:'#F5C842'},droneoperation:{name:'Drone Operation',color:'#2D9E5F'},orizondrone:{name:'OrizonDrone',color:'#8B7FD4'}};
 let MOE=Object.assign({},MOE_DEFAULT,ld('lb_moe')||{});
 let CH=ld('lb_ch')||[];
 let PR=ld('lb_pr')||{};
@@ -691,8 +688,50 @@ const firebaseConfig = {
   messagingSenderId: "876837050695",
   appId: "1:876837050695:web:db90b431f4dff8acc9d462"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+let db = null;
+
+function loadFirebase(){
+  return new Promise(function(resolve, reject){
+    var scripts = [
+      'https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-app-compat.min.js',
+      'https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-firestore-compat.min.js',
+      'https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-messaging-compat.min.js'
+    ];
+    function loadScript(index){
+      if(index >= scripts.length){
+        try{
+          firebase.initializeApp(firebaseConfig);
+          db = firebase.firestore();
+          console.log('Firebase initialized via jsdelivr CDN');
+          resolve();
+        } catch(e){ console.error('Firebase init error:',e); reject(e); }
+        return;
+      }
+      var s = document.createElement('script');
+      s.src = scripts[index];
+      s.onload = function(){ loadScript(index+1); };
+      s.onerror = function(){
+        console.warn('Failed CDN script '+index+', trying next...');
+        // Try gstatic as fallback
+        var fallback = [
+          'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
+          'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js',
+          'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js'
+        ];
+        var sf = document.createElement('script');
+        sf.src = fallback[index];
+        sf.onload = function(){ loadScript(index+1); };
+        sf.onerror = function(){ 
+          if(index < 2){ loadScript(index+1); }
+          else{ reject(new Error('All CDNs failed')); }
+        };
+        document.head.appendChild(sf);
+      };
+      document.head.appendChild(s);
+    }
+    loadScript(0);
+  });
+}
 
 
 // ═══ NOTIFICATIONS PUSH ═══
@@ -752,6 +791,7 @@ function listenNotifications(){
 
 // ═══ SYNC FIREBASE → LOCAL ═══
 function syncFromFirebase(){
+  if(!db){console.error('Firestore not available');return;}
   console.log('Starting Firebase sync...');
   try {
     // Chantiers
@@ -791,7 +831,7 @@ function syncFromFirebase(){
 
 // ═══ SAVE TO FIREBASE ═══
 function saveChantierFB(c){
-  if(!c||!c.id){console.error('saveChantierFB: invalid chantier',c);return;}
+  if(!db||!c||!c.id){console.error('saveChantierFB: db not ready or invalid chantier');return;}
   var id=c.id;var data=Object.assign({},c);delete data.id;
   console.log('Saving chantier to Firebase:', id, data.nom);
   db.collection('chantiers').doc(id).set(data)
@@ -970,7 +1010,7 @@ function renderPlan(){
     const isTer=c.statut==='Termine';
     const cls=isTer?'trt':c.statut==='Option'?'tro':f.col?'trc':'trn';
     const col=getColor(c.chef);
-    const txtCol=col==='#f0f0f0'?'#1a1a1a':'';
+    const txtCol='';
     const sb=c.statut==='Confirme'?'bgg':c.statut==='Prevu'?'bbl':'bgr';
     const synced=STATOK.includes(c.statut)&&!f.col;
     const rowClick=isR?'data-chid="'+c.id+'" style="cursor:pointer;"':'';
@@ -982,7 +1022,7 @@ function renderPlan(){
       +'<div class="ca">'+c.client+' — '+c.adresse+'</div>'
       +(f.col?'<div class="cm cmr">'+f.col+'</div>':'')
       +'</div></div></td>'
-      +'<td><div class="crw"><div class="cdt" style="background:'+col+';border:'+(col==='#f0f0f0'?'0.5px solid #555':'none')+'"></div>'+c.chef+'</div></td>'
+      +'<td><div class="crw"><div class="cdt" style="background:'+col+';border:none"></div>'+c.chef+'</div></td>'
       +'<td style="font-size:12px;color:var(--tx2);">'+(c.ctv||'—')+'</td>'
       +'<td style="font-size:12px;color:var(--tx2);">'+(c.collabs.join(', ')||'—')+'</td>'
       +'<td style="font-size:12px;white-space:nowrap;">'+fd(c.debut)+'</td>'
@@ -1030,10 +1070,10 @@ function renderCal(){
     let evts='';if(ds)for(const c of CH){if(ds>=c.debut&&ds<=c.fin){
   const m=MBR[CU];
   if(CR!=='referent'&&m&&c.chef!==m.name&&!c.collabs.includes(m.name)&&c.ctv!==m.name)continue;
-  const col=getColor(c.chef);const evtTxt=col==='#f0f0f0'?'#1a1a1a':'white';const evtBorder=col==='#f0f0f0'?'border:0.5px solid #aaa;':'';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' [Termine]':'';const op=isOpt?'0.6':'1';evts+=`<div class="calev" style="background:${col};color:${evtTxt};${evtBorder}opacity:${op};">${c.nom}${lbl}</div>`;}}
+  const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' [Termine]':'';const op=isOpt?'0.6':'1';evts+=`<div class="calev" style="background:${col};color:${evtTxt};${evtBorder}opacity:${op};">${c.nom}${lbl}</div>`;}}
     return `<div class="calce ${!cell.cur?'om':''} ${isT?'td':''}"><div class="caldt">${cell.d}</div>${evts}</div>`;
   }).join('');
-  document.getElementById('calleg').innerHTML=Object.values(MOE).map(m=>`<div class="callgi"><div class="callgc" style="background:${m.color};border:${m.color==='#f0f0f0'?'0.5px solid #555':''}"></div><span style="font-size:12px;color:var(--tx2)">${m.name}</span></div>`).join('');
+  document.getElementById('calleg').innerHTML=Object.values(MOE).map(m=>`<div class="callgi"><div class="callgc" style="background:${m.color};border:''"></div><span style="font-size:12px;color:var(--tx2)">${m.name}</span></div>`).join('');
 }
 function prevM(){calM--;if(calM<0){calM=11;calY--;}renderCal();}
 function nextM(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
