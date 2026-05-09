@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Le Board">
 <meta name="theme-color" content="#0f0f0f">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Le Board</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -641,6 +644,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
 
 <script>
 // ═══ CONSTANTS ═══
+console.log('Le Board v3.5 - REST API - loaded at ' + new Date().toISOString());
 const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Operation':'#2D9E5F','OrizonDrone':'#8B7FD4'};
 const STATOK=['Confirme','Prevu'];
 const MOIS=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
@@ -734,128 +738,174 @@ function loadFirebase(){
 }
 
 
-// ═══ NOTIFICATIONS PUSH ═══
-const VAPID_KEY = 'BNj7qWlnfKc7-gnvHiZX2IX5gxXoCjRQEzYjm1J1wbMeWrlHp_nW4cfIkQWyRwm-hasi9a5OmLvHhd0R49Ushag';
-let messaging = null;
+// ═══ FIREBASE REST API (no CDN needed) ═══
+const FB_PROJECT = 'leboard-93a96';
+const FB_BASE = 'https://firestore.googleapis.com/v1/projects/'+FB_PROJECT+'/databases/(default)/documents';
+let fbListeners = {};
 
-function initPush(){
-  try{messaging=firebase.messaging();console.log('FCM ok');}
-  catch(e){console.log('FCM not supported:',e);}
+function fbDoc(path){ return FB_BASE+'/'+path; }
+
+async function fbGet(collection){
+  try{
+    const r = await fetch(FB_BASE+'/'+collection+'?pageSize=200');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data = await r.json();
+    return (data.documents||[]).map(function(doc){
+      const id = doc.name.split('/').pop();
+      return Object.assign({id:id}, fbParseDoc(doc.fields||{}));
+    });
+  } catch(e){ console.error('fbGet error:',e); return []; }
 }
 
-function requestPushPermission(){
-  if(!messaging)return;
-  Notification.requestPermission().then(function(perm){
-    if(perm==='granted'){
-      messaging.getToken({vapidKey:VAPID_KEY}).then(function(token){
-        if(token){
-          db.collection('push_tokens').doc(CU).set({token:token,user:CU,ts:firebase.firestore.FieldValue.serverTimestamp()});
-          console.log('Push token saved');
-          toast('Notifications push activees !');
-        }
-      }).catch(function(e){console.error('Token error:',e);});
+async function fbSet(collection, id, obj){
+  try{
+    const fields = fbEncodeDoc(obj);
+    const r = await fetch(FB_BASE+'/'+collection+'/'+id+'?updateMask.fieldPaths='+Object.keys(obj).join('&updateMask.fieldPaths='), {
+      method:'PATCH', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({fields:fields})
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    console.log('fbSet ok:', collection, id);
+  } catch(e){ console.error('fbSet error:',e); }
+}
+
+async function fbDelete(collection, id){
+  try{
+    const r = await fetch(FB_BASE+'/'+collection+'/'+id, {method:'DELETE'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    console.log('fbDelete ok:', id);
+  } catch(e){ console.error('fbDelete error:',e); }
+}
+
+async function fbAdd(collection, obj){
+  try{
+    const fields = fbEncodeDoc(obj);
+    const r = await fetch(FB_BASE+'/'+collection, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({fields:fields})
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    console.log('fbAdd ok:', collection);
+  } catch(e){ console.error('fbAdd error:',e); }
+}
+
+function fbParseDoc(fields){
+  const obj = {};
+  for(const k in fields){
+    const v = fields[k];
+    if(v.stringValue !== undefined) obj[k] = v.stringValue;
+    else if(v.integerValue !== undefined) obj[k] = parseInt(v.integerValue);
+    else if(v.booleanValue !== undefined) obj[k] = v.booleanValue;
+    else if(v.arrayValue !== undefined) obj[k] = (v.arrayValue.values||[]).map(function(i){ return i.stringValue||i.integerValue||''; });
+    else if(v.mapValue !== undefined) obj[k] = fbParseDoc(v.mapValue.fields||{});
+  }
+  return obj;
+}
+
+function fbEncodeDoc(obj){
+  const fields = {};
+  for(const k in obj){
+    const v = obj[k];
+    if(v === null || v === undefined) continue;
+    if(Array.isArray(v)) fields[k] = {arrayValue:{values:v.map(function(i){return {stringValue:String(i)};})}};
+    else if(typeof v === 'boolean') fields[k] = {booleanValue:v};
+    else if(typeof v === 'number') fields[k] = {integerValue:String(v)};
+    else if(typeof v === 'object') fields[k] = {mapValue:{fields:fbEncodeDoc(v)}};
+    else fields[k] = {stringValue:String(v)};
+  }
+  return fields;
+}
+
+// Poll Firebase every 5 seconds for real-time-like sync
+let fbPollInterval = null;
+function startFbPolling(){
+  if(fbPollInterval) return;
+  fbPollInterval = setInterval(fbPoll, 5000);
+  fbPoll(); // immediate first poll
+}
+
+async function fbPoll(){
+  try{
+    // Load members
+    const mbrDocs = await fbGet('membres');
+    const mbrDoc = mbrDocs.find(function(d){return d.id==='data';});
+    if(mbrDoc){
+      if(mbrDoc.mbr){try{MBR=JSON.parse(mbrDoc.mbr);}catch(e){}}
+      if(mbrDoc.moe){try{MOE=Object.assign({},MOE_DEFAULT,JSON.parse(mbrDoc.moe));}catch(e){}}
+      buildGrids();bldChefSel();bldCChks();
     }
-  });
+    const docs = await fbGet('chantiers');
+    if(JSON.stringify(docs) !== JSON.stringify(CH)){
+      CH = docs;
+      sv('lb_ch', CH);
+      renderAll();
+      try{ if(document.getElementById('pg-cal').classList.contains('active'))renderCal(); }catch(e){}
+      try{ if(document.getElementById('pg-moncal').classList.contains('active'))renderMonCal(); }catch(e){}
+    }
+    // Poll messages
+    const msgs = await fbGet('messages');
+    if(msgs.length !== MSG.length){
+      MSG = msgs.sort(function(a,b){ return (a.ts||'') > (b.ts||'') ? 1 : -1; });
+      sv('lb_msg', MSG);
+      try{ if(document.getElementById('pg-msg').classList.contains('active'))renderChat(); }catch(e){}
+    }
+    // Poll notifications
+    pollNotifications();
+  } catch(e){ console.error('fbPoll error:', e); }
 }
 
-function sendPushNotif(title, body){
-  db.collection('notifications').add({
-    title:title, body:body, from:CU,
-    ts:firebase.firestore.FieldValue.serverTimestamp(),
-    read:[]
-  }).catch(function(e){console.error('Notif error:',e);});
-}
-
-function listenNotifications(){
-  if(!CU)return;
-  db.collection('notifications').orderBy('ts','desc').limit(20)
-    .onSnapshot(function(snap){
-      snap.docChanges().forEach(function(change){
-        if(change.type==='added'){
-          var n=change.doc.data();
-          var readBy=n.read||[];
-          if(!readBy.includes(CU)&&n.from!==CU){
-            change.doc.ref.update({read:firebase.firestore.FieldValue.arrayUnion(CU)});
-            if(Notification.permission==='granted'){
-              new Notification('Le Board — '+n.title,{
-                body:n.body,
-                icon:'/LeBoard/icon-192.png'
-              });
-            }
-            addN(n.title+' : '+n.body);
+async function pollNotifications(){
+  try{
+    const notifDocs = await fbGet('notifications');
+    notifDocs.forEach(function(n){
+      if(!n.read || !n.read.includes(CU)){
+        if(n.from !== CU){
+          // Mark read
+          const readArr = n.read ? [...n.read, CU] : [CU];
+          fbSet('notifications', n.id, Object.assign({},n,{read:readArr}));
+          if(Notification.permission==='granted'){
+            new Notification('Le Board — '+(n.title||''), {body:n.body||'', icon:'/LeBoard/icon-192.png'});
           }
+          addN((n.title||'')+' : '+(n.body||''));
         }
-      });
-    },function(e){console.error('Notif listen error:',e);});
+      }
+    });
+  } catch(e){}
 }
+
+function loadFirebase(){ return Promise.resolve(); }
+
 
 // ═══ SYNC FIREBASE → LOCAL ═══
 function syncFromFirebase(){
-  if(!db){console.error('Firestore not available');return;}
-  console.log('Starting Firebase sync...');
-  try {
-    // Chantiers
-    db.collection('chantiers').onSnapshot(function(snap){
-      console.log('Chantiers snapshot received:', snap.docs.length);
-      CH = snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
-      sv('lb_ch',CH);
-      renderAll();
-      if(document.getElementById('pg-cal') && document.getElementById('pg-cal').classList.contains('active'))renderCal();
-      if(document.getElementById('pg-moncal') && document.getElementById('pg-moncal').classList.contains('active'))renderMonCal();
-    }, function(err){console.error('Chantiers error:', err);});
-
-    // Membres
-    db.collection('membres').doc('data').onSnapshot(function(doc){
-      console.log('Membres snapshot received');
-      if(doc.exists){
-        var d=doc.data();
-        if(d.mbr){MBR=d.mbr;sv('lb_mbr',MBR);}
-        if(d.moe){MOE=Object.assign({},MOE_DEFAULT,d.moe);sv('lb_moe',MOE);}
-        buildGrids();bldChefSel();bldCChks();
-      }
-    }, function(err){console.error('Membres error:', err);});
-
-    // Messages
-    db.collection('messages').orderBy('ts').onSnapshot(function(snap){
-      console.log('Messages snapshot received:', snap.docs.length);
-      MSG=snap.docs.map(function(d){return d.data();});
-      sv('lb_msg',MSG);
-      if(document.getElementById('pg-msg') && document.getElementById('pg-msg').classList.contains('active'))renderChat();
-    }, function(err){console.error('Messages error:', err);});
-
-    console.log('Firebase sync listeners attached successfully');
-  } catch(e) {
-    console.error('Firebase sync failed:', e);
-  }
+  console.log('Starting Firebase REST sync...');
+  startFbPolling();
 }
 
 // ═══ SAVE TO FIREBASE ═══
 function saveChantierFB(c){
-  if(!db||!c||!c.id){console.error('saveChantierFB: db not ready or invalid chantier');return;}
-  var id=c.id;var data=Object.assign({},c);delete data.id;
-  console.log('Saving chantier to Firebase:', id, data.nom);
-  db.collection('chantiers').doc(id).set(data)
-    .then(function(){console.log('Chantier saved to Firebase:', id);})
-    .catch(function(e){console.error('Error saving chantier:', e);});
+  if(!c||!c.id){return;}
+  console.log('Saving chantier:', c.nom);
+  fbSet('chantiers', c.id, c);
 }
 
 function deleteChantierFB(id){
-  db.collection('chantiers').doc(id).delete();
+  fbDelete('chantiers', id);
 }
 
 function saveMembersFB(){
-  console.log('Saving members to Firebase...');
-  db.collection('membres').doc('data').set({mbr:MBR,moe:MOE})
-    .then(function(){console.log('Members saved to Firebase');})
-    .catch(function(e){console.error('Error saving members:', e);});
+  fbSet('membres', 'data', {mbr:JSON.stringify(MBR), moe:JSON.stringify(MOE)});
 }
 
 function saveMsgFB(msg){
   if(!msg||!msg.text)return;
-  db.collection('messages').add(Object.assign({},msg,{ts:firebase.firestore.FieldValue.serverTimestamp()}))
-    .then(function(){console.log('Message saved to Firebase');})
-    .catch(function(e){console.error('Error saving message:', e);});
+  fbAdd('messages', msg);
 }
+
+function sendPushNotif(title, body){
+  fbAdd('notifications', {title:title, body:body, from:CU, read:[], ts:new Date().toISOString()});
+}
+
 
 // ═══ INIT ═══
 function init(){
