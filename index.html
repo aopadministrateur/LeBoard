@@ -856,20 +856,34 @@ async function fbPoll(){
 
 async function pollNotifications(){
   try{
+    const seenKey = 'lb_seen_notifs';
+    const seen = JSON.parse(localStorage.getItem(seenKey)||'[]');
+    const now = new Date();
     const notifDocs = await fbGet('notifications');
+    let updated = false;
     notifDocs.forEach(function(n){
-      if(!n.read || !n.read.includes(CU)){
-        if(n.from !== CU){
-          // Mark read
-          const readArr = n.read ? [...n.read, CU] : [CU];
-          fbSet('notifications', n.id, Object.assign({},n,{read:readArr}));
-          if(Notification.permission==='granted'){
-            new Notification('Le Board — '+(n.title||''), {body:n.body||'', icon:'/LeBoard/icon-192.png'});
-          }
-          addN((n.title||'')+' : '+(n.body||''));
+      if(!n.id || seen.includes(n.id)) return;
+      // Filter by target role
+      if(n.targetRole && n.targetRole !== 'all' && n.targetRole !== CR) {
+        seen.push(n.id); updated=true; return;
+      }
+      // Only show notifications from last 2 minutes
+      const ts = n.ts ? new Date(n.ts) : null;
+      const isRecent = !ts || (now - ts) < 120000;
+      if(n.from !== CU && isRecent){
+        seen.push(n.id);
+        updated = true;
+        if(Notification.permission==='granted'){
+          new Notification('Le Board — '+(n.title||''), {body:n.body||'', icon:'/LeBoard/icon-192.png'});
         }
+        addN((n.title||'')+' : '+(n.body||''));
+      } else {
+        // Mark as seen even if old/own
+        seen.push(n.id);
+        updated = true;
       }
     });
+    if(updated) localStorage.setItem(seenKey, JSON.stringify(seen.slice(-100)));
   } catch(e){}
 }
 
@@ -902,8 +916,8 @@ function saveMsgFB(msg){
   fbAdd('messages', msg);
 }
 
-function sendPushNotif(title, body){
-  fbAdd('notifications', {title:title, body:body, from:CU, read:[], ts:new Date().toISOString()});
+function sendPushNotif(title, body, targetRole){
+  fbAdd('notifications', {title:title, body:body, from:CU, targetRole:targetRole||'all', read:[], ts:new Date().toISOString()});
 }
 
 
@@ -1004,8 +1018,10 @@ function setupUI(){
   if(mobAv){const p2=PR[CU]||{};const img2=p2.avatar?`<img src="${p2.avatar}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:'';mobAv.style.background=m?m.color:'#666';mobAv.innerHTML=img2+`<span class="avt">${p2.avatar?'':((m?m.name:'?').slice(0,2).toUpperCase())}</span>`;}
   const sd=(id,v)=>{const e=document.getElementById(id);if(e)e.style.display=v?'flex':'none';};
   sd('nve',isR);sd('nvmb',isR);sd('nvmc',!isR);sd('mne',isR);sd('mnmb',isR);sd('mnmc',!isR);
-  // Collaborateurs : masquer planning global et calendrier general
-  sd('nvp',isR);sd('nvc',isR);sd('mnp',isR);sd('mnc',isR);
+  // Collaborateurs : masquer planning global, garder calendrier perso
+  sd('nvp',isR);sd('mnp',isR);
+  // Show calendar for everyone but filter content by role
+  sd('nvc',true);sd('mnc',true);
   document.getElementById('tbact').innerHTML=isR?`<button class="btn btnp" onclick="openModCh()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau chantier</button>`:'';
   bldChefSel();bldCChks();
 }
@@ -1044,7 +1060,18 @@ function detectCf(){
 }
 
 // ═══ RENDER ═══
-function renderAll(){renderStats();renderPlan();renderNotifs();}
+function renderAll(){
+  // Sort: active by closest start date first, terminated at bottom oldest last
+  CH.sort(function(a,b){
+    const aTer = a.statut==='Termine';
+    const bTer = b.statut==='Termine';
+    if(aTer && !bTer) return 1;
+    if(!aTer && bTer) return -1;
+    if(aTer && bTer) return a.debut > b.debut ? 1 : -1; // oldest terminated last
+    return a.debut < b.debut ? -1 : 1; // closest start date first
+  });
+  renderStats();renderPlan();renderNotifs();
+}
 
 function getColor(chef){if(!chef)return '#666';const all=Object.assign({},MOE_DEFAULT,MOE);const moe=Object.values(all).find(function(m){return m.name===chef;});if(moe)return moe.color;return '#888780';}
 
@@ -1240,7 +1267,10 @@ function saveCh(){
   if(!nom||!debut||!fin){toast('Nom, debut et fin sont obligatoires');return;}
   const ctv=document.getElementById('fctv').value;if(!ctv){toast('Le charge de travaux est obligatoire');return;}const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:document.getElementById('ftyp').value,statut:document.getElementById('fsta').value,chef:document.getElementById('fche').value,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
   if(editId){const idx=CH.findIndex(c=>c.id===editId);if(idx>=0)CH[idx]={...CH[idx],...data};toast('Chantier mis a jour');}
-  else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);addN(nmsg);sendPushNotif('Nouveau chantier',nmsg);toast('Chantier cree !');}
+  else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);
+      addN(nmsg);
+      // Only send push to referents
+      sendPushNotif('Nouveau chantier',nmsg,'referent');toast('Chantier cree !');}
   if(editId){
     saveChantierFB(CH.find(function(c){return c.id===editId;})||{});
   } else {
@@ -1283,24 +1313,4 @@ document.querySelectorAll('.mlov').forEach(o=>o.addEventListener('click',e=>{if(
 
 // ═══ SYNC ═══
 function delCh(id){
-  var c=CH.find(function(x){return x.id===id;});
-  if(!c)return;
-  if(!confirm('Supprimer "'+c.nom+'" ? Cette action est irreversible.'))return;
-  var idx=CH.findIndex(function(x){return x.id===id;});
-  CH.splice(idx,1);
-  deleteChantierFB(id);
-  svAll();renderAll();
-  try{if(document.getElementById('pg-cal').classList.contains('active'))renderCal();}catch(e){}
-  toast('Chantier supprime');
-}
-
-function syncGCal(){const dot=document.getElementById('syndot'),txt=document.getElementById('syntxt');dot.classList.add('syn');txt.textContent='Synchronisation...';setTimeout(()=>{dot.classList.remove('syn');txt.textContent='Synchronise';document.getElementById('syntime').textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});toast('Google Calendar mis a jour');},2200);}
-
-// ═══ UTILS ═══
-function fd(str){if(!str)return'—';const d=new Date(str+'T00:00:00');return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});}
-function toast(msg){const t=document.getElementById('toastel');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
-
-init();
-</script>
-</body>
-</html>
+  var c=CH.find(function(x){return x.id===id;}
