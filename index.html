@@ -1276,6 +1276,18 @@ function addMbr(){
   if(MBR[key]){toast('Ce membre existe deja');return;}
   MBR[key]={name,color:selColor,role};document.getElementById('newname').value='';svAll();renderMbr();toast(name+' ajoute !');
 }
+
+function rmMoe(key){
+  if(!MOE[key])return;
+  var name=MOE[key].name;
+  var used=CH.find(function(c){return c.chef===name&&(c.statut==='Confirme'||c.statut==='Prevu');});
+  if(used){toast('Impossible : '+name+' est utilise sur "'+used.nom+'"');return;}
+  if(!confirm('Retirer '+name+' ?'))return;
+  delete MOE[key];
+  saveMembersFB();svAll();renderMbr();bldChefSel();
+  toast(name+' retire');
+}
+
 function rmMbr(key){if(!confirm('Retirer '+MBR[key].name+' de l\'equipe ?'))return;delete MBR[key];delete PR[key];svAll();renderMbr();toast('Membre retire');}
 function genLien(){const name=document.getElementById('newname').value.trim()||'nouveau';const lien=`https://aopadministrateur.github.io/LeBoard?invite=${btoa(name+'-'+Date.now()).slice(0,10)}`;document.getElementById('lientxt').textContent=lien;document.getElementById('lienbox').style.display='block';}
 function copyLien(){navigator.clipboard.writeText(document.getElementById('lientxt').textContent).then(()=>toast('Lien copie !')).catch(()=>toast('Copiez manuellement'));}
