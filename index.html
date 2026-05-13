@@ -982,11 +982,10 @@ function updDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).className=
 function chkPin(){
   const pins=ld('lb_pins')||{};
   if(pinStep==='c1'){pinFirst=pinBuf;pinBuf='';updDots();pinStep='c2';document.getElementById('pinlb').textContent='Confirmez votre code';document.getElementById('pininfo').textContent='';return;}
-  if(pinStep==='c2'){if(pinBuf===pinFirst){pins[CU]=pinBuf;sv('lb_pins',pins);pinBuf='';updDots();document.getElementById('pin').style.display='none';showSecSetup();}else{document.getElementById('pinerr').textContent='Codes differents, recommencez';pinBuf='';pinStep='c1';updDots();document.getElementById('pinlb').textContent='Choisissez votre code a 4 chiffres';}return;}
+  if(pinStep==='c2'){if(pinBuf===pinFirst){pins[CU]=pinBuf;sv('lb_pins',pins);pinBuf='';updDots();document.getElementById('pin').style.display='none';launchApp();}else{document.getElementById('pinerr').textContent='Codes differents, recommencez';pinBuf='';pinStep='c1';updDots();document.getElementById('pinlb').textContent='Choisissez votre code a 4 chiffres';}return;}
   if(pinStep==='v'){if(pinBuf===pins[CU]){document.getElementById('pin').style.display='none';launchApp();}else{document.getElementById('pinerr').textContent='Code incorrect';pinBuf='';updDots();}}
 }
 
-// ═══ SECRET ═══const secs=ld('lb_sec')||{};secs[CU]={q,a};sv('lb_sec',secs);document.getElementById('sec').style.display='none';toast('Code et question sauvegardes !');launchApp();};const s=secs[CU];if(!s){toast('Aucune question secrete definie');return;}const qs={pet:'Quel etait le nom de votre premier animal ?',city:'Dans quelle ville etes-vous ne ?',school:'Quelle etait votre ecole primaire ?',mother:'Quel est le prenom de votre mere ?',car:'Quelle etait votre premiere voiture ?'};document.getElementById('recq').textContent=qs[s.q]||s.q;document.getElementById('reca').value='';document.getElementById('recres').textContent='';document.getElementById('pin').style.display='none';document.getElementById('rec').style.display='flex';};const s=secs[CU];const ans=document.getElementById('reca').value.trim().toLowerCase();const pins=ld('lb_pins')||{};if(ans===s.a){document.getElementById('recres').style.color='var(--gr)';document.getElementById('recres').textContent='Votre code est : '+pins[CU];}else{document.getElementById('recres').style.color='var(--re)';document.getElementById('recres').textContent='Reponse incorrecte';}}
 
 // ═══ SESSION ═══
 function startSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();['click','keydown','touchstart'].forEach(e=>document.addEventListener(e,resetSess,{passive:true}));}
@@ -1033,7 +1032,7 @@ function showPg(name,btn){
   const titles={planning:['Planning','Vue globale de tous les chantiers'],cal:['Calendrier','Vue mensuelle'],equipe:['Equipe','Disponibilites et affectations'],membres:['Membres','Gestion de l\'equipe'],moncal:['Mon planning','Vos chantiers a venir']};
   const t=titles[name]||['',''];
   document.getElementById('pgtit').textContent=t[0];document.getElementById('pgsub').textContent=t[1];
-  if(name==='cal')renderCal();if(name==='equipe')renderTeam();if(name==='msg')renderChat();if(name==='membres')renderMbr();if(name==='moncal')renderMonCal();
+  if(name==='cal')renderCal();if(name==='equipe')renderTeam();if(name==='membres')renderMbr();if(name==='moncal')renderMonCal();
 }
 
 // ═══ CONFLICTS ═══
