@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Le Board">
 <meta name="theme-color" content="#0f0f0f">
+<link rel="icon" href="icon-192.png" type="image/png">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -393,34 +395,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
       <button class="pk emp"></button><button class="pk" onclick="pk('0')">0</button><button class="pk del" onclick="pdel()">&#x232B;</button>
     </div>
     <div class="pinerr" id="pinerr"></div>
-    <div class="pinfgt" id="pinfgt" onclick="showRec()" style="display:none;">Code oublie ?</div>
-  </div>
-</div>
-
-<!-- SECRET SETUP -->
-<div id="sec" style="display:none;align-items:center;justify-content:center;">
-  <div class="secbox">
-    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Question secrete</div>
-    <div style="font-size:13px;color:var(--tx3);margin-bottom:24px;line-height:1.6;">Definissez une question secrete pour recuperer votre code PIN en cas d'oubli.</div>
-    <div class="fg"><label class="fl">Question</label>
-      <select class="fi" id="secq"><option value="pet">Quel etait le nom de votre premier animal ?</option><option value="city">Dans quelle ville etes-vous ne ?</option><option value="school">Quelle etait votre ecole primaire ?</option><option value="mother">Quel est le prenom de votre mere ?</option><option value="car">Quelle etait votre premiere voiture ?</option></select>
-    </div>
-    <div class="fg"><label class="fl">Reponse</label><input class="fi" type="text" id="seca" placeholder="Votre reponse..."></div>
-    <button class="btn btnp" onclick="saveSec()" style="width:100%;justify-content:center;">Confirmer</button>
-  </div>
-</div>
-
-<!-- RECOVERY -->
-<div id="rec" style="display:none;align-items:center;justify-content:center;">
-  <div style="width:100%;max-width:380px;">
-    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Recuperer mon code</div>
-    <div style="font-size:13px;color:var(--tx3);margin-bottom:24px;" id="recq"></div>
-    <div class="fg"><label class="fl">Votre reponse</label><input class="fi" type="text" id="reca" placeholder="Votre reponse..."></div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <button class="btn btnp" onclick="chkRec()" style="width:100%;justify-content:center;">Verifier</button>
-      <button class="btn" onclick="hideRec()" style="width:100%;justify-content:center;">Annuler</button>
-    </div>
-    <div id="recres" style="margin-top:14px;font-size:14px;font-weight:600;text-align:center;"></div>
+    
   </div>
 </div>
 
@@ -556,7 +531,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
     <div class="fr"><div class="fg"><label class="fl">Nom *</label><input class="fi" type="text" id="fnom" placeholder=""></div><div class="fg"><label class="fl">Client</label><input class="fi" type="text" id="fcli" placeholder=""></div></div>
     <div class="fg"><label class="fl">Adresse</label><input class="fi" type="text" id="fadr" placeholder=""></div>
     <div class="fr">
-      <div class="fg"><label class="fl">Type</label><select class="fi" id="ftyp"><option value="">-- Choisir --</option><option>Facade</option><option>Vitres</option><option>Toiture</option><option>Nettoyage industriel</option><option>Autre</option></select></div>
+      <div class="fg"><label class="fl">Type</label><select class="fi" id="ftyp"><option value="">-- Choisir --</option></select></div>
       <div class="fg"><label class="fl">Statut</label><select class="fi" id="fsta"><option value="">-- Choisir --</option><option>Confirme</option><option>Prevu</option><option>Option</option><option>Termine</option></select></div>
     </div>
     <div class="fr">
@@ -630,6 +605,19 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
   </div>
 </div>
 
+
+<!-- MODAL NOUVEAU TYPE -->
+<div class="mlov" id="modtype">
+  <div class="modal" style="max-width:380px;">
+    <div class="mtit">Nouveau type de chantier</div>
+    <div class="fg"><label class="fl">Nom du type *</label><input class="fi" type="text" id="newtype-name" placeholder=""></div>
+    <div class="fa">
+      <button class="btn" onclick="closeM('modtype')">Annuler</button>
+      <button class="btn btnp" onclick="saveNewType()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toastel"></div>
 
 <script>
@@ -664,6 +652,9 @@ function svAll(){sv('lb_mbr',MBR);sv('lb_ch',CH);sv('lb_pr',PR);sv('lb_msg',MSG)
 
 // ═══ STATE ═══
 let MBR=ld('lb_mbr')||{florian:{name:'Florian',color:'#E8722A',role:'referent'},henri:{name:'Henri',color:'#E24B4A',role:'referent'},franck:{name:'Franck',color:'#4A90D9',role:'referent'},yoan:{name:'Yoan',color:'#2D9E5F',role:'referent'},thomas:{name:'Thomas',color:'#8B7FD4',role:'referent'},frederic:{name:'Frederic',color:'#F5C842',role:'referent'},tony:{name:'Tony',color:'#D4A843',role:'collaborateur'},camille:{name:'Camille',color:'#3BB8A8',role:'collaborateur'},sebastien:{name:'Sebastien',color:'#C67AB8',role:'collaborateur'},alexandre:{name:'Alexandre',color:'#7BB5E8',role:'collaborateur'}};
+let TYPES = JSON.parse(localStorage.getItem('lb_types')||'["Facade","Vitres","Toiture","Nettoyage industriel","Autre"]');
+function saveTypes(){ localStorage.setItem('lb_types', JSON.stringify(TYPES)); }
+
 const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KGiR',color:'#E24B4A'},flightdrone:{name:'Flight Drone Service',color:'#4A90D9'},wdrones:{name:'W-Drones',color:'#F5C842'},droneoperation:{name:'Drone Operation',color:'#2D9E5F'},orizondrone:{name:'OrizonDrone',color:'#8B7FD4'}};
 let MOE=Object.assign({},MOE_DEFAULT,ld('lb_moe')||{});
 let CH=ld('lb_ch')||[];
@@ -834,7 +825,11 @@ async function fbPoll(){
     if(mbrDoc){
       if(mbrDoc.mbr){try{MBR=JSON.parse(mbrDoc.mbr);}catch(e){}}
       if(mbrDoc.moe){try{MOE=Object.assign({},MOE_DEFAULT,JSON.parse(mbrDoc.moe));}catch(e){}}
-      buildGrids();bldChefSel();bldCChks();
+      buildGrids();
+      // Don't rebuild selects if modal is open (would reset user selections)
+      if(!document.getElementById('modch').classList.contains('open')){
+        bldChefSel();bldCChks();
+      }
     }
     const docs = await fbGet('chantiers');
     if(JSON.stringify(docs) !== JSON.stringify(CH)){
@@ -849,7 +844,7 @@ async function fbPoll(){
     if(msgs.length !== MSG.length){
       MSG = msgs.sort(function(a,b){ return (a.ts||'') > (b.ts||'') ? 1 : -1; });
       sv('lb_msg', MSG);
-      try{ if(document.getElementById('pg-msg').classList.contains('active'))renderChat(); }catch(e){}
+      
     }
     // Poll notifications
     pollNotifications();
@@ -976,8 +971,8 @@ function selMbr(key){
   av.innerHTML=img+`<span class="avt">${p.avatar?'':m.name.slice(0,2).toUpperCase()}</span>`;
   document.getElementById('pinam').textContent=m.name;
   document.getElementById('pinerr').textContent='';
-  if(!hasPin){pinStep='c1';document.getElementById('pinlb').textContent='Choisissez votre code a 4 chiffres';document.getElementById('pininfo').style.display='block';document.getElementById('pininfo').textContent='Premiere connexion : choisissez un code personnel a 4 chiffres. Notez-le et conservez-le precieusement.';document.getElementById('pinfgt').style.display='none';}
-  else{pinStep='v';document.getElementById('pinlb').textContent='Entrez votre code';document.getElementById('pininfo').style.display='none';document.getElementById('pinfgt').style.display='block';}
+  if(!hasPin){pinStep='c1';document.getElementById('pinlb').textContent='Choisissez votre code a 4 chiffres';document.getElementById('pininfo').style.display='block';document.getElementById('pininfo').textContent='Premiere connexion : choisissez un code personnel a 4 chiffres. Notez-le et conservez-le precieusement.';}
+  else{pinStep='v';document.getElementById('pinlb').textContent='Entrez votre code';document.getElementById('pininfo').style.display='none';}
   updDots();['lref','lcol','acc'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
   document.getElementById('pin').style.display='flex';
 }
@@ -991,12 +986,7 @@ function chkPin(){
   if(pinStep==='v'){if(pinBuf===pins[CU]){document.getElementById('pin').style.display='none';launchApp();}else{document.getElementById('pinerr').textContent='Code incorrect';pinBuf='';updDots();}}
 }
 
-// ═══ SECRET ═══
-function showSecSetup(){document.getElementById('seca').value='';document.getElementById('sec').style.display='flex';}
-function saveSec(){const q=document.getElementById('secq').value;const a=document.getElementById('seca').value.trim().toLowerCase();if(!a){toast('Entrez une reponse');return;}const secs=ld('lb_sec')||{};secs[CU]={q,a};sv('lb_sec',secs);document.getElementById('sec').style.display='none';toast('Code et question sauvegardes !');launchApp();}
-function showRec(){const secs=ld('lb_sec')||{};const s=secs[CU];if(!s){toast('Aucune question secrete definie');return;}const qs={pet:'Quel etait le nom de votre premier animal ?',city:'Dans quelle ville etes-vous ne ?',school:'Quelle etait votre ecole primaire ?',mother:'Quel est le prenom de votre mere ?',car:'Quelle etait votre premiere voiture ?'};document.getElementById('recq').textContent=qs[s.q]||s.q;document.getElementById('reca').value='';document.getElementById('recres').textContent='';document.getElementById('pin').style.display='none';document.getElementById('rec').style.display='flex';}
-function chkRec(){const secs=ld('lb_sec')||{};const s=secs[CU];const ans=document.getElementById('reca').value.trim().toLowerCase();const pins=ld('lb_pins')||{};if(ans===s.a){document.getElementById('recres').style.color='var(--gr)';document.getElementById('recres').textContent='Votre code est : '+pins[CU];}else{document.getElementById('recres').style.color='var(--re)';document.getElementById('recres').textContent='Reponse incorrecte';}}
-function hideRec(){document.getElementById('rec').style.display='none';document.getElementById('pin').style.display='flex';}
+// ═══ SECRET ═══const secs=ld('lb_sec')||{};secs[CU]={q,a};sv('lb_sec',secs);document.getElementById('sec').style.display='none';toast('Code et question sauvegardes !');launchApp();};const s=secs[CU];if(!s){toast('Aucune question secrete definie');return;}const qs={pet:'Quel etait le nom de votre premier animal ?',city:'Dans quelle ville etes-vous ne ?',school:'Quelle etait votre ecole primaire ?',mother:'Quel est le prenom de votre mere ?',car:'Quelle etait votre premiere voiture ?'};document.getElementById('recq').textContent=qs[s.q]||s.q;document.getElementById('reca').value='';document.getElementById('recres').textContent='';document.getElementById('pin').style.display='none';document.getElementById('rec').style.display='flex';};const s=secs[CU];const ans=document.getElementById('reca').value.trim().toLowerCase();const pins=ld('lb_pins')||{};if(ans===s.a){document.getElementById('recres').style.color='var(--gr)';document.getElementById('recres').textContent='Votre code est : '+pins[CU];}else{document.getElementById('recres').style.color='var(--re)';document.getElementById('recres').textContent='Reponse incorrecte';}}
 
 // ═══ SESSION ═══
 function startSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();['click','keydown','touchstart'].forEach(e=>document.addEventListener(e,resetSess,{passive:true}));}
@@ -1184,39 +1174,6 @@ function renderMonCal(){
   }).join('');
 }
 
-// ═══ MESSAGERIE GENERALE ═══
-function renderChat(){
-  const msgs=MSG||[];
-  document.getElementById('chmsgs').innerHTML=msgs.map(msg=>{
-    const isMine=msg.user===CU;const mm=MBR[msg.user]||{name:msg.user,color:'#666'};const pp=PR[msg.user]||{};
-    const init=mm.name.slice(0,2).toUpperCase();const img=pp.avatar?`<img src="${pp.avatar}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:'';
-    const av=`<div class="av" style="width:28px;height:28px;font-size:10px;background:${mm.color};flex-shrink:0;">${img}<span class="avt">${pp.avatar?'':init}</span></div>`;
-    const content=msg.type==='gif'||msg.type==='photo'?`<img src="${msg.url}" style="max-width:200px;border-radius:8px;display:block;">`:msg.text;
-    return `<div class="chmsg ${isMine?'mine':''}">${av}<div><div class="chbub ${isMine?'bubm':'bubo'}">${!isMine?`<div class="chsnd">${mm.name}</div>`:''}${content}<div class="chtm ${isMine?'m':''}">${msg.time}</div></div></div></div>`;
-  }).join('');
-  setTimeout(()=>{const el=document.getElementById('chmsgs');if(el)el.scrollTop=9999;},50);
-}
-
-function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
-function sendMsg(){
-  const inp=document.getElementById('chinp');const text=inp.value.trim();if(!text)return;
-  const now=new Date();MSG.push({id:'m'+Date.now(),user:CU,text,time:now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0')});
-  inp.value='';svAll();renderChat();
-}
-function togEm(){
-  const med=document.getElementById('chmedia');const ep=document.getElementById('empanel');const gp=document.getElementById('gifpanel');
-  gp.style.display='none';const open=ep.style.display!=='none';ep.style.display=open?'none':'block';med.className='chmedia'+(open?'':' open');
-  if(!open&&!document.getElementById('emgrd').children.length)document.getElementById('emgrd').innerHTML=EMOJIS.map(e=>`<span onclick="insEm('${e}')" style="font-size:22px;cursor:pointer;padding:4px;border-radius:6px;display:inline-block;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='transparent'">${e}</span>`).join('');
-}
-function togGif(){
-  const med=document.getElementById('chmedia');const ep=document.getElementById('empanel');const gp=document.getElementById('gifpanel');
-  ep.style.display='none';const open=gp.style.display!=='none';gp.style.display=open?'none':'block';med.className='chmedia'+(open?'':' open');
-  if(!open&&!document.getElementById('gifgrd').children.length)document.getElementById('gifgrd').innerHTML=GIFS.map(u=>`<img src="${u}" onclick="sendGif('${u}')" style="width:100%;height:60px;object-fit:cover;border-radius:6px;cursor:pointer;">`).join('');
-}
-function insEm(e){document.getElementById('chinp').value+=e;document.getElementById('chinp').focus();togEm();}
-function sendGif(url){const now=new Date();MSG.push({id:'m'+Date.now(),user:CU,type:'gif',url,text:'[GIF]',time:now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0')});togGif();svAll();renderChat();}
-function sendPhoto(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const now=new Date();MSG.push({id:'m'+Date.now(),user:CU,type:'photo',url:ev.target.result,text:'[Photo]',time:now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0')});svAll();renderChat();};reader.readAsDataURL(file);event.target.value='';}
-
 // ═══ MEMBRES ═══
 function selCol(c,el){selColor=c;document.querySelectorAll('.csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}
 function renderMbr(){
@@ -1270,11 +1227,24 @@ function renderMbr(){
 
 
 function addMbr(){
-  const name=document.getElementById('newname').value.trim();const role=document.getElementById('newrole').value;
-  if(!name){toast('Entrez un prenom');return;}
-  const key=name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'');
-  if(MBR[key]){toast('Ce membre existe deja');return;}
-  MBR[key]={name,color:selColor,role};document.getElementById('newname').value='';svAll();renderMbr();toast(name+' ajoute !');
+  var name=document.getElementById('newname').value.trim();
+  var role=document.getElementById('newrole').value;
+  if(!name){toast('Entrez un nom');return;}
+  if(!role){toast('Choisissez une categorie');return;}
+  var key=name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
+  if(role==='maitreoeuvre'){
+    if(MOE[key]){toast('Ce maitre existe deja');return;}
+    MOE[key]={name:name,color:selColor};
+  } else {
+    if(MBR[key]){toast('Ce membre existe deja');return;}
+    MBR[key]={name:name,color:selColor,role:role};
+  }
+  document.getElementById('newname').value='';
+  document.getElementById('newrole').value='';
+  saveMembersFB();svAll();renderMbr();
+  // Rebuild selects so new member appears immediately
+  bldChefSel();bldCChks();
+  toast(name+' ajoute !');
 }
 
 function rmMoe(key){
@@ -1293,6 +1263,36 @@ function genLien(){const name=document.getElementById('newname').value.trim()||'
 function copyLien(){navigator.clipboard.writeText(document.getElementById('lientxt').textContent).then(()=>toast('Lien copie !')).catch(()=>toast('Copiez manuellement'));}
 
 // ═══ CHANTIER MODAL ═══
+
+
+function saveNewType(){
+  var name=document.getElementById('newtype-name').value.trim();
+  if(!name){toast('Entrez un nom de type');return;}
+  if(TYPES.includes(name)){toast('Ce type existe deja');return;}
+  TYPES.push(name);
+  saveTypes();
+  bldTypeSel();
+  document.getElementById('ftyp').value=name;
+  document.getElementById('newtype-name').value='';
+  closeM('modtype');
+  toast(name+' ajoute !');
+}
+
+function bldTypeSel(){
+  const sel=document.getElementById('ftyp');if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">-- Choisir --</option>'
+    +TYPES.map(function(t){return '<option value="'+t+'">'+t+'</option>';}).join('')
+    +'<option value="__nouveau__">+ Nouveau type</option>';
+  if(cur)sel.value=cur;
+  sel.onchange=function(){
+    if(this.value==='__nouveau__'){
+      openM('modtype');
+      this.value='';
+    }
+  };
+}
+
 function bldChefSel(){
   const sel=document.getElementById('fche');if(!sel)return;
   const curVal=sel.value;
@@ -1310,22 +1310,20 @@ function bldChefSel(){
     }
   };
   const ctv=document.getElementById('fctv');if(!ctv)return;
-  // Order: referents first in defined order, then collaborateurs
+  // CTV = referents + collaborateurs only (NOT maitres d'oeuvre)
   const ORDER=['florian','henri','franck','yoan','frederic','thomas'];
   const refs=ORDER.map(function(k){return MBR[k];}).filter(Boolean);
   const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';}).map(function(e){return e[1];});
-  const all=refs.concat(cols);
+  const allCtv=refs.concat(cols);
   const curCtv=ctv.value;
-  ctv.innerHTML='<option value="">-- Choisir --</option>'+all.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('');
+  ctv.innerHTML='<option value="">-- Choisir --</option>'+allCtv.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('');
   if(curCtv)ctv.value=curCtv;
 }
 function bldCChks(){
   const cont=document.getElementById('cchks');if(!cont)return;
-  const ORDER=['florian','henri','franck','yoan','frederic','thomas'];
-  const refs=ORDER.map(function(k){return MBR[k];}).filter(Boolean);
+  // Collaborateurs only (not referents, not MOE)
   const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';}).map(function(e){return e[1];});
-  const all=refs.concat(cols);
-  cont.innerHTML=all.map(function(m){
+  cont.innerHTML=cols.map(function(m){
     const div=document.createElement('div');
     div.className='cchk';
     div.setAttribute('onclick','togCChk(this,"'+m.name+'")');
@@ -1337,7 +1335,7 @@ function togCChk(el,name){el.classList.toggle('sel');}
 function getSelCollabs(){return Array.from(document.querySelectorAll('.cchk.sel')).map(el=>el.textContent.trim());}
 function setSelCollabs(names){document.querySelectorAll('.cchk').forEach(el=>{const name=el.textContent.trim();el.classList.toggle('sel',names.includes(name));});}
 
-function openModCh(){editId=null;document.getElementById('modchtit').textContent='Nouveau chantier';['fnom','fcli','fadr','fmat','fnot'].forEach(id=>document.getElementById(id).value='');document.getElementById('fsta').value='';document.getElementById('ftyp').value='';document.getElementById('fche').value='';setSelCollabs([]);document.getElementById('fctv').value='';openM('modch');}
+function openModCh(){editId=null;document.getElementById('modchtit').textContent='Nouveau chantier';['fnom','fcli','fadr','fmat','fnot'].forEach(id=>document.getElementById(id).value='');document.getElementById('fsta').value='';document.getElementById('ftyp').value='';document.getElementById('fche').value='';setSelCollabs([]);document.getElementById('fctv').value='';bldChefSel();bldCChks();bldTypeSel();openM('modch');}
 function editCh(id){
   const c=CH.find(x=>x.id===id);if(!c)return;editId=id;document.getElementById('modchtit').textContent='Modifier le chantier';
   document.getElementById('fnom').value=c.nom;document.getElementById('fcli').value=c.client;document.getElementById('fadr').value=c.adresse;document.getElementById('ftyp').value=c.type;document.getElementById('fsta').value=c.statut;document.getElementById('fche').value=c.chef;document.getElementById('fctv').value=c.ctv||'';document.getElementById('fdeb').value=c.debut;document.getElementById('ffin').value=c.fin;document.getElementById('fmat').value=c.materiel;document.getElementById('fnot').value=c.notes;
