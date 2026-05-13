@@ -1258,7 +1258,19 @@ function rmMoe(key){
   toast(name+' retire');
 }
 
-function rmMbr(key){if(!confirm('Retirer '+MBR[key].name+' de l\'equipe ?'))return;delete MBR[key];delete PR[key];svAll();renderMbr();toast('Membre retire');}
+function rmMbr(key){
+  if(!MBR[key])return;
+  var name=MBR[key].name;
+  if(!confirm('Retirer '+name+' ?'))return;
+  delete MBR[key];
+  delete PR[key];
+  saveMembersFB();
+  svAll();
+  renderMbr();
+  bldChefSel();
+  bldCChks();
+  toast(name+' retire');
+}
 function genLien(){const name=document.getElementById('newname').value.trim()||'nouveau';const lien=`https://aopadministrateur.github.io/LeBoard?invite=${btoa(name+'-'+Date.now()).slice(0,10)}`;document.getElementById('lientxt').textContent=lien;document.getElementById('lienbox').style.display='block';}
 function copyLien(){navigator.clipboard.writeText(document.getElementById('lientxt').textContent).then(()=>toast('Lien copie !')).catch(()=>toast('Copiez manuellement'));}
 
