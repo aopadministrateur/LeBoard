@@ -1321,9 +1321,12 @@ function bldChefSel(){
 }
 function bldCChks(){
   const cont=document.getElementById('cchks');if(!cont)return;
-  // Collaborateurs only (not referents, not MOE)
+  // Referents + Collaborateurs (not MOE)
+  const ORDER=['florian','henri','franck','yoan','frederic','thomas'];
+  const refs=ORDER.map(function(k){return MBR[k];}).filter(Boolean);
   const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';}).map(function(e){return e[1];});
-  cont.innerHTML=cols.map(function(m){
+  const all=refs.concat(cols);
+  cont.innerHTML=all.map(function(m){
     const div=document.createElement('div');
     div.className='cchk';
     div.setAttribute('onclick','togCChk(this,"'+m.name+'")');
