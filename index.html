@@ -958,6 +958,7 @@ let CONGES = JSON.parse(localStorage.getItem('lb_conges') || '[]');
 function saveConges(){ localStorage.setItem('lb_conges', JSON.stringify(CONGES)); sv('lb_conges_fb', CONGES); fbSet('conges','data',{list:JSON.stringify(CONGES)}); }
 
 function isEnConges(nom, debut, fin){
+  console.log('isEnConges check:', nom, debut, fin, 'CONGES:', JSON.stringify(CONGES));
   return CONGES.some(function(c){
     return c.nom === nom && c.debut <= fin && c.fin >= debut;
   });
