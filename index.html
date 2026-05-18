@@ -633,7 +633,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
 <script>
 // ═══ CONSTANTS ═══
 console.log('Le Board v3.5 - REST API - loaded at ' + new Date().toISOString());
-const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Operation':'#2D9E5F','OrizonDrone':'#8B7FD4'};
+const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Operations':'#2D9E5F','OrizonDrone':'#8B7FD4'};
 const STATOK=['Confirme','Prevu'];
 const MOIS=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
 const SDUR=3600000;
@@ -665,7 +665,7 @@ let MBR=ld('lb_mbr')||{florian:{name:'Florian',color:'#E8722A',role:'referent'},
 let TYPES = JSON.parse(localStorage.getItem('lb_types')||'["Facade","Vitres","Toiture","Nettoyage industriel","Autre"]');
 function saveTypes(){ localStorage.setItem('lb_types', JSON.stringify(TYPES)); }
 
-const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KGiR',color:'#E24B4A'},flightdrone:{name:'Flight Drone Service',color:'#4A90D9'},wdrones:{name:'W-Drones',color:'#F5C842'},droneoperation:{name:'Drone Operation',color:'#2D9E5F'},orizondrone:{name:'OrizonDrone',color:'#8B7FD4'}};
+const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KGiR',color:'#E24B4A'},flightdrone:{name:'Flight Drone Service',color:'#4A90D9'},wdrones:{name:'W-Drones',color:'#F5C842'},droneoperation:{name:'Drone Operations',color:'#2D9E5F'},orizondrone:{name:'OrizonDrone',color:'#8B7FD4'}};
 let MOE=Object.assign({},MOE_DEFAULT,ld('lb_moe')||{});
 let CH=ld('lb_ch')||[];
 let PR=ld('lb_pr')||{};
@@ -949,7 +949,7 @@ const REF_SOC = {
   'Florian': 'Polydrones',
   'Henri': 'KGiR',
   'Franck': 'Flight Drone Service',
-  'Yoan': 'Drone Operation',
+  'Yoan': 'Drone Operations',
   'Frederic': 'W-Drones',
   'Thomas': 'OrizonDrone'
 };
