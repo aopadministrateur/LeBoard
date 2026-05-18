@@ -955,7 +955,11 @@ const REF_SOC = {
 };
 
 let CONGES = JSON.parse(localStorage.getItem('lb_conges') || '[]');
-function saveConges(){ localStorage.setItem('lb_conges', JSON.stringify(CONGES)); sv('lb_conges_fb', CONGES); fbSet('conges','data',{list:JSON.stringify(CONGES)}); }
+function saveConges(){
+  localStorage.setItem('lb_conges', JSON.stringify(CONGES));
+  fbSet('conges','data',{list:JSON.stringify(CONGES)});
+  console.log('Conges saved:', JSON.stringify(CONGES));
+}
 
 function isEnConges(nom, debut, fin){
   console.log('isEnConges check:', nom, debut, fin, 'CONGES:', JSON.stringify(CONGES));
@@ -1416,6 +1420,9 @@ function saveCh(){
   const che=document.getElementById('fche').value;if(!che||che===''){toast('Veuillez choisir un Maitre d\'oeuvre');return;}
   const ctv=document.getElementById('fctv').value;if(!ctv||ctv===''){toast('Veuillez choisir un charge de travaux');return;}
 
+  // Reload CONGES from localStorage (most up to date)
+  CONGES = JSON.parse(localStorage.getItem('lb_conges') || '[]');
+  console.log('CONGES at validation:', JSON.stringify(CONGES), 'CTV:', ctv, 'debut:', debut, 'fin:', fin);
   // Verifier conges CTV
   if(isEnConges(ctv, debut, fin)){
     toast(ctv+' est en conges a ces dates !');return;
