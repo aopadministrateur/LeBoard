@@ -304,6 +304,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
 .pavb:hover .pavo{opacity:1;}
 
 @media(max-width:768px){
+  .mbr-grid{grid-template-columns:1fr !important;}
   .sbar{display:none;}
   .sgrd{grid-template-columns:repeat(2,1fr);}
   .tgrd{grid-template-columns:1fr 1fr;}
@@ -457,7 +458,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
 
         <!-- MEMBRES -->
         <div class="pg" id="pg-membres">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="mbr-grid">
             <!-- Liste membres -->
             <div style="background:var(--bg2);border:0.5px solid var(--b);border-radius:var(--rl);overflow:hidden;">
               <div style="padding:14px 18px;border-bottom:0.5px solid var(--b);display:flex;align-items:center;justify-content:space-between;">
@@ -573,6 +574,15 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
       <input type="file" id="avinp" accept="image/*" style="display:none" onchange="handleAv(event)">
     </div>
     <div style="padding:12px;background:var(--bg3);border-radius:var(--r);margin-bottom:14px;font-size:12px;color:var(--tx2);line-height:1.6;">Session active. Deconnexion automatique apres <strong style="color:var(--tx);">1 heure</strong> d'inactivite.</div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Mes conges</div>
+      <div id="mes-conges" style="margin-bottom:10px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div><label class="fl">Debut</label><input class="fi" type="date" id="cong-deb"></div>
+        <div><label class="fl">Fin</label><input class="fi" type="date" id="cong-fin"></div>
+      </div>
+      <button onclick="addConge()" class="btn btnp" style="width:100%;justify-content:center;font-size:12px;">Ajouter des conges</button>
+    </div>
     <div class="fa"><button class="btn" onclick="closeM('modprof')">Fermer</button><button class="btn btnp" onclick="saveProf()">Sauvegarder</button></div>
   </div>
 </div>
@@ -807,6 +817,13 @@ function startFbPolling(){
 
 async function fbPoll(){
   try{
+    // Load conges
+    const congesDocs = await fbGet('conges');
+    const congesDoc = congesDocs.find(function(d){return d.id==='data';});
+    if(congesDoc && congesDoc.list){
+      try{CONGES=JSON.parse(congesDoc.list);localStorage.setItem('lb_conges',JSON.stringify(CONGES));}catch(e){}
+    }
+
     // Load avatars/profiles
     const profileDocs = await fbGet('profiles');
     profileDocs.forEach(function(p){
@@ -925,6 +942,30 @@ function sendPushNotif(title, body, targetRole){
   fbAdd('notifications', {title:title, body:body, from:CU, targetRole:targetRole||'all', read:[], ts:new Date().toISOString()});
 }
 
+
+
+// ═══ CONGES ═══
+const REF_SOC = {
+  'Florian': 'Polydrones',
+  'Henri': 'KGiR',
+  'Franck': 'Flight Drone Service',
+  'Yoan': 'Drone Operation',
+  'Frederic': 'W-Drones',
+  'Thomas': 'OrizonDrone'
+};
+
+let CONGES = JSON.parse(localStorage.getItem('lb_conges') || '[]');
+function saveConges(){ localStorage.setItem('lb_conges', JSON.stringify(CONGES)); sv('lb_conges_fb', CONGES); fbSet('conges','data',{list:JSON.stringify(CONGES)}); }
+
+function isEnConges(nom, debut, fin){
+  return CONGES.some(function(c){
+    return c.nom === nom && c.debut <= fin && c.fin >= debut;
+  });
+}
+
+function getSociete(nom){
+  return REF_SOC[nom] || null;
+}
 
 // ═══ INIT ═══
 function init(){
@@ -1141,7 +1182,18 @@ function renderCal(){
   document.getElementById('calgrd').innerHTML=cells.map(cell=>{
     const isT=cell.cur&&cell.d===today.getDate()&&calM===today.getMonth()&&calY===today.getFullYear();
     const ds=cell.cur?`${calY}-${String(calM+1).padStart(2,'0')}-${String(cell.d).padStart(2,'0')}`:null;
-    let evts='';if(ds)for(const c of CH){if(ds>=c.debut&&ds<=c.fin){
+    let evts='';
+    // Show conges in calendar
+    if(ds && CR==='referent'){
+      CONGES.forEach(function(cong){
+        if(ds>=cong.debut&&ds<=cong.fin){
+          const m=Object.values(MBR).find(function(mb){return mb.name===cong.nom;});
+          const col=m?m.color:'#555';
+          evts+='<div class="calev" style="background:'+col+';opacity:0.4;border:1px dashed '+col+';font-style:italic;">'+cong.nom+' - Conges</div>';
+        }
+      });
+    }
+    if(ds)for(const c of CH){if(ds>=c.debut&&ds<=c.fin){
   const m=MBR[CU];
   if(CR!=='referent'&&m&&c.chef!==m.name&&!c.collabs.includes(m.name)&&c.ctv!==m.name)continue;
   const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' [Termine]':'';const op=isOpt?'0.6':'1';evts+=`<div class="calev" style="background:${col};color:${evtTxt};${evtBorder}opacity:${op};">${c.nom}${lbl}</div>`;}}
@@ -1393,10 +1445,44 @@ function doRep(){
 }
 
 // ═══ PROFILE ═══
+
+function renderCongesProf(){
+  const el=document.getElementById('mes-conges');if(!el)return;
+  const mesConges=CONGES.filter(function(c){return c.nom===(MBR[CU]?MBR[CU].name:'');});
+  if(!mesConges.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);font-style:italic;">Aucun conge declare</div>';return;}
+  el.innerHTML=mesConges.map(function(c,i){
+    return '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg3);border-radius:8px;margin-bottom:6px;">'
+      +'<span style="font-size:12px;color:var(--tx);flex:1;">'+fd(c.debut)+' → '+fd(c.fin)+'</span>'
+      +'<button onclick="delConge('+c.id+')" style="background:none;border:none;cursor:pointer;color:var(--tx3);font-size:14px;padding:0 4px;">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
+function addConge(){
+  const deb=document.getElementById('cong-deb').value;
+  const fin=document.getElementById('cong-fin').value;
+  const m=MBR[CU];if(!m)return;
+  if(!deb||!fin){toast('Entrez les dates de conges');return;}
+  if(deb>fin){toast('La date de fin doit etre apres le debut');return;}
+  const id=Date.now();
+  CONGES.push({id:id,nom:m.name,debut:deb,fin:fin});
+  saveConges();
+  document.getElementById('cong-deb').value='';
+  document.getElementById('cong-fin').value='';
+  renderCongesProf();
+  toast('Conges ajoutes !');
+}
+
+function delConge(id){
+  CONGES=CONGES.filter(function(c){return c.id!==id;});
+  saveConges();renderCongesProf();toast('Conges supprimes');
+}
+
 function openProf(){
   const m=MBR[CU];const p=PR[CU]||{};const pa=document.getElementById('profav');
   pa.style.background=m?m.color:'#666';pa.style.width='80px';pa.style.height='80px';pa.style.fontSize='26px';
   pa.innerHTML=p.avatar?`<img src="${p.avatar}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:`<span class="avt">${m?m.name.slice(0,2).toUpperCase():'?'}</span>`;
+  renderCongesProf();
   openM('modprof');
 }
 function handleAv(e){
