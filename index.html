@@ -736,10 +736,23 @@ let fbListeners = {};
 
 function fbDoc(path){ return FB_BASE+'/'+path; }
 
+let fbBackoff = 1;
 async function fbGet(collection){
   try{
     const r = await fetch(FB_BASE+'/'+collection+'?pageSize=200');
+    if(r.status === 429){
+      fbBackoff = Math.min(fbBackoff * 2, 64);
+      console.warn('Firebase 429 - backoff:', fbBackoff+'min');
+      clearInterval(fbPollInterval);
+      fbPollInterval = null;
+      setTimeout(function(){
+        fbBackoff = 1;
+        startFbPolling();
+      }, fbBackoff * 60000);
+      return [];
+    }
     if(!r.ok) throw new Error('HTTP '+r.status);
+    fbBackoff = 1;
     const data = await r.json();
     return (data.documents||[]).map(function(doc){
       const id = doc.name.split('/').pop();
@@ -818,7 +831,7 @@ function startFbPolling(){
 async function fbPoll(){
   try{
     // Load conges
-    const congesDocs = await fbGet('conges');
+    const congesDocs = await fbGet('indispo');
     const congesDoc = congesDocs.find(function(d){return d.id==='data';});
     if(congesDoc && congesDoc.list){
       try{CONGES=JSON.parse(congesDoc.list);localStorage.setItem('lb_indispo',JSON.stringify(CONGES));}catch(e){}
@@ -909,8 +922,7 @@ function loadFirebase(){ return Promise.resolve(); }
 function initPush(){}
 function requestPushPermission(){}
 function listenNotifications(){
-  if(!CU)return;
-  setInterval(function(){pollNotifications();},5000);
+  // Notifications handled by fbPoll every 120s
 }
 
 function syncFromFirebase(){
@@ -933,10 +945,7 @@ function saveMembersFB(){
   fbSet('membres', 'data', {mbr:JSON.stringify(MBR), moe:JSON.stringify(MOE)});
 }
 
-function saveMsgFB(msg){
-  if(!msg||!msg.text)return;
-  fbAdd('messages', msg);
-}
+function saveMsgFB(msg){}
 
 function sendPushNotif(title, body, targetRole){
   fbAdd('notifications', {title:title, body:body, from:CU, targetRole:targetRole||'all', read:[], ts:new Date().toISOString()});
