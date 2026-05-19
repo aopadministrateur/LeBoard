@@ -824,7 +824,7 @@ function fbEncodeDoc(obj){
 let fbPollInterval = null;
 function startFbPolling(){
   if(fbPollInterval) return;
-  fbPollInterval = setInterval(fbPoll, 30000);
+  fbPollInterval = setInterval(fbPoll, 60000);
   fbPoll(); // immediate first poll
 }
 
@@ -869,18 +869,6 @@ async function fbPoll(){
       try{ if(document.getElementById('pg-cal').classList.contains('active'))renderCal(); }catch(e){}
       try{ if(document.getElementById('pg-moncal').classList.contains('active'))renderMonCal(); }catch(e){}
     }
-    // Poll messages
-    const msgs = await fbGet('messages');
-    if(msgs.length !== MSG.length){
-      MSG = msgs.sort(function(a,b){ return (a.ts||'') > (b.ts||'') ? 1 : -1; });
-      sv('lb_msg', MSG);
-      
-    }
-    // Poll notifications
-    pollNotifications();
-  } catch(e){ console.error('fbPoll error:', e); }
-}
-
 async function pollNotifications(){
   try{
     const seenKey = 'lb_seen_notifs';
@@ -912,6 +900,11 @@ async function pollNotifications(){
     });
     if(updated) localStorage.setItem(seenKey, JSON.stringify(seen.slice(-100)));
   } catch(e){}
+}
+
+    // Poll notifications
+    pollNotifications();
+  } catch(e){ console.error('fbPoll error:', e); }
 }
 
 function loadFirebase(){ return Promise.resolve(); }
@@ -966,7 +959,7 @@ const REF_SOC = {
 let CONGES = JSON.parse(localStorage.getItem('lb_indispo') || '[]');
 function saveConges(){
   localStorage.setItem('lb_indispo', JSON.stringify(CONGES));
-  fbSet('conges','data',{list:JSON.stringify(CONGES)});
+  fbSet('indispo','data',{list:JSON.stringify(CONGES)});
   console.log('Indispo saved:', JSON.stringify(CONGES));
 }
 
