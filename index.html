@@ -181,9 +181,9 @@ tr:last-child td{border-bottom:none;}
 /* CALENDAR */
 .calnv{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
 .calml{font-size:16px;font-weight:700;letter-spacing:-0.02em;min-width:150px;}
-.caldh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px;}
+.caldh{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:3px;margin-bottom:3px;}
 .caldn{text-align:center;font-size:10px;color:var(--tx3);padding:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;}
-.calgr{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.calgr{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:3px;}
 .calce{min-height:88px;background:var(--bg2);border:0.5px solid var(--b);border-radius:8px;padding:6px 7px;}
 .calce.om{opacity:0.3;}
 .calce.td{border-color:var(--or);}
@@ -449,7 +449,7 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
             <button class="btn" onclick="nextM()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg></button>
           </div>
           <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-            <div style="min-width:560px;">
+            <div style="min-width:max(700px, 100%);">
               <div class="caldh"><div class="caldn">Lun</div><div class="caldn">Mar</div><div class="caldn">Mer</div><div class="caldn">Jeu</div><div class="caldn">Ven</div><div class="caldn">Sam</div><div class="caldn">Dim</div></div>
               <div class="calgr" id="calgrd"></div>
             </div>
