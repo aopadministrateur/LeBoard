@@ -448,8 +448,12 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
             <div class="calml" id="callbl"></div>
             <button class="btn" onclick="nextM()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg></button>
           </div>
-          <div class="caldh"><div class="caldn">Lun</div><div class="caldn">Mar</div><div class="caldn">Mer</div><div class="caldn">Jeu</div><div class="caldn">Ven</div><div class="caldn">Sam</div><div class="caldn">Dim</div></div>
-          <div class="calgr" id="calgrd"></div>
+          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+            <div style="min-width:560px;">
+              <div class="caldh"><div class="caldn">Lun</div><div class="caldn">Mar</div><div class="caldn">Mer</div><div class="caldn">Jeu</div><div class="caldn">Ven</div><div class="caldn">Sam</div><div class="caldn">Dim</div></div>
+              <div class="calgr" id="calgrd"></div>
+            </div>
+          </div>
           <div class="callg" id="calleg"></div>
         </div>
 
