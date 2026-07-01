@@ -666,7 +666,8 @@ function svAll(){sv('lb_mbr',MBR);sv('lb_ch',CH);sv('lb_pr',PR);sv('lb_msg',MSG)
 
 // ═══ STATE ═══
 let MBR=ld('lb_mbr')||{florian:{name:'Florian',color:'#E8722A',role:'referent'},henri:{name:'Henri',color:'#E24B4A',role:'referent'},franck:{name:'Franck',color:'#4A90D9',role:'referent'},yoan:{name:'Yoan',color:'#2D9E5F',role:'referent'},thomas:{name:'Thomas',color:'#8B7FD4',role:'referent'},frederic:{name:'Frederic',color:'#F5C842',role:'referent'},tony:{name:'Tony',color:'#D4A843',role:'collaborateur'},camille:{name:'Camille',color:'#3BB8A8',role:'collaborateur'},sebastien:{name:'Sebastien',color:'#C67AB8',role:'collaborateur'},alexandre:{name:'Alexandre',color:'#7BB5E8',role:'collaborateur'}};
-let TYPES = JSON.parse(localStorage.getItem('lb_types')||'["Facade","Vitres","Toiture","Nettoyage industriel","Autre"]');
+const TYPES_DEFAULT = ['Facade','Vitres','Toiture','Nettoyage industriel','Autre'];
+let TYPES = JSON.parse(localStorage.getItem('lb_types')||JSON.stringify(TYPES_DEFAULT));
 function saveTypes(){ localStorage.setItem('lb_types', JSON.stringify(TYPES)); }
 
 const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KGiR',color:'#E24B4A'},flightdrone:{name:'Flight Drone Service',color:'#4A90D9'},wdrones:{name:'W-Drones',color:'#F5C842'},droneoperation:{name:'Drone Operations',color:'#2D9E5F'},orizondrone:{name:'OrizonDrone',color:'#8B7FD4'}};
@@ -1416,12 +1417,14 @@ function openModCh(){editId=null;document.getElementById('modchtit').textContent
 function editCh(id){
   const c=CH.find(x=>x.id===id);if(!c)return;editId=id;document.getElementById('modchtit').textContent='Modifier le chantier';
   document.getElementById('fnom').value=c.nom;document.getElementById('fcli').value=c.client;document.getElementById('fadr').value=c.adresse;document.getElementById('ftyp').value=c.type;document.getElementById('fsta').value=c.statut;document.getElementById('fche').value=c.chef;document.getElementById('fctv').value=c.ctv||'';document.getElementById('fdeb').value=c.debut;document.getElementById('ffin').value=c.fin;document.getElementById('fmat').value=c.materiel;document.getElementById('fnot').value=c.notes;
-  setSelCollabs(c.collabs);openM('modch');
+  setSelCollabs(c.collabs);bldTypeSel();document.getElementById('ftyp').value=c.type||'';document.getElementById('fche').value=c.chef||'';document.getElementById('fctv').value=c.ctv||'';openM('modch');
 }
 function saveCh(){
   const nom=document.getElementById('fnom').value.trim();const debut=document.getElementById('fdeb').value;const fin=document.getElementById('ffin').value;
   if(!nom||!debut||!fin){toast('Nom, debut et fin sont obligatoires');return;}
-  const typ=document.getElementById('ftyp').value;if(!typ){toast('Veuillez choisir un type de travaux');return;}
+  const typVal=document.getElementById('ftyp').value;
+  const typFinal=typVal||(editId?(CH.find(function(c){return c.id===editId;})||{}).type||'':'');
+  if(!typFinal){toast('Veuillez choisir un type de travaux');return;}
   const sta=document.getElementById('fsta').value;if(!sta){toast('Veuillez choisir un statut');return;}
   const che=document.getElementById('fche').value;if(!che||che===''){toast('Veuillez choisir un Maitre d\'oeuvre');return;}
   const ctv=document.getElementById('fctv').value;if(!ctv||ctv===''){toast('Veuillez choisir un charge de travaux');return;}
@@ -1439,7 +1442,7 @@ function saveCh(){
     toast(refDuMoe+' ('+che+') est indisponible a ces dates !');return;
   }
 
-  const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:typ,statut:sta,chef:che,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
+  const data={nom,client:document.getElementById('fcli').value.trim(),adresse:document.getElementById('fadr').value.trim(),type:typFinal,statut:sta,chef:che,ctv,collabs:getSelCollabs(),debut,fin,materiel:document.getElementById('fmat').value.trim(),notes:document.getElementById('fnot').value.trim()};
   if(editId){const idx=CH.findIndex(c=>c.id===editId);if(idx>=0)CH[idx]={...CH[idx],...data};toast('Chantier mis a jour');}
   else{const newC={id:'c'+Date.now(),...data};CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);
       addN(nmsg);
