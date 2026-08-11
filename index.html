@@ -1167,9 +1167,22 @@ function renderRoulement(){
       var col=REF_COLORS[nom]||'#666';
       var init=REF_INITIALS[nom]||nom.slice(0,2).toUpperCase();
       var indispo=isEnConges(nom,deb,fin);
-      var conflit=CH.some(function(c){return STATOK.includes(c.statut)&&c.ctv===nom&&c.debut<=fin&&c.fin>=deb;});
+      var soc=REF_SOC[nom]||'';
+      // Bloquant : indispo declaree
+      // Avertissement : CTV, MOE ou collab sur autre chantier
+      var autresChantiers=CH.filter(function(c){
+        if(!STATOK.includes(c.statut))return false;
+        if(c.debut>fin||c.fin<deb)return false;
+        return c.ctv===nom||c.chef===soc||(c.collabs&&c.collabs.indexOf(nom)>=0);
+      });
+      var conflit=false; // plus de blocage pour les chevauchements
+      var avertissements=autresChantiers.map(function(c){
+        if(c.chef===soc)return 'MOE sur "'+c.nom+'" du '+fd(c.debut)+' au '+fd(c.fin);
+        if(c.ctv===nom)return 'CTV sur "'+c.nom+'" du '+fd(c.debut)+' au '+fd(c.fin);
+        return 'Collab sur "'+c.nom+'" du '+fd(c.debut)+' au '+fd(c.fin);
+      });
       var ok=!indispo&&!conflit;
-      var raison=indispo?'Indisponible à ces dates':conflit?'Déjà sur un chantier':'';
+      var raison=indispo?'Indisponible à ces dates':'';
       html2+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--b);">'
         +'<div style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+(ok?'var(--gr)':'var(--re)')+'"></div>'
         +'<div style="width:34px;height:34px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:'+(col==='#F5C842'?'#1a1a1a':'white')+';flex-shrink:0;">'+init+'</div>'
