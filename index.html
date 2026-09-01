@@ -762,7 +762,7 @@ let CH=ld('lb_ch')||[];
 let PR=ld('lb_pr')||{};
 let MSG=ld('lb_msg')||[{id:'m1',user:'florian',text:'Bonjour tout le monde ! Chantier CDISCOUNT confirme pour le 13 juin.',time:'09:12'},{id:'m2',user:'henri',text:'Parfait, je prepare le materiel.',time:'09:45'}];
 
-let CU=null,CR=null,calY=2026,calM=5,editId=null,repCh=null,selColor='#E8722A',pinBuf='',pinStep='',pinFirst='',notifs=[],sessTimer=null;
+let CU=null,CR=null,calY=2026,calM=8,editId=null,repCh=null,selColor='#E8722A',pinBuf='',pinStep='',pinFirst='',notifs=[],sessTimer=null;
 
 
 // ═══ FIREBASE ═══
@@ -1419,7 +1419,7 @@ function showPg(name,btn){
   const titles={planning:['Planning','Vue globale de tous les chantiers'],cal:['Calendrier','Vue mensuelle'],equipe:['Equipe','Disponibilites et affectations'],membres:['Membres','Gestion de l\'equipe'],moncal:['Mon planning','Vos chantiers a venir']};
   const t=titles[name]||['',''];
   document.getElementById('pgtit').textContent=t[0];document.getElementById('pgsub').textContent=t[1];
-  if(name==='cal')renderCal();if(name==='equipe')renderTeam();if(name==='membres')renderMbr();if(name==='moncal')renderMonCal();if(name==='roulement')renderRoulement();if(name==='cal'){var _n=new Date();calMois=_n.getMonth();calAn=_n.getFullYear();renderCal();}
+  if(name==='cal')renderCal();if(name==='equipe')renderTeam();if(name==='membres')renderMbr();if(name==='moncal')renderMonCal();if(name==='roulement')renderRoulement();if(name==='cal'){var _n=new Date();calM=_n.getMonth();calY=_n.getFullYear();renderCal();}
 }
 
 // ═══ CONFLICTS ═══
