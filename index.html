@@ -1071,6 +1071,17 @@ const REF_ORDER = ['Florian','Henri','Franck','Yoan','Frederic','Thomas'];
 const REF_INITIALS = {'Florian':'FL','Henri':'HE','Franck':'FR','Yoan':'YO','Frederic':'FD','Thomas':'TH'};
 const REF_COLORS = {'Florian':'#E8722A','Henri':'#E24B4A','Franck':'#4A90D9','Yoan':'#2D9E5F','Frederic':'#F5C842','Thomas':'#8B7FD4'};
 
+
+function avatarHtml(nom, col, size){
+  size = size || 32;
+  var key = nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
+  var p = PR[key] || PR[nom] || {};
+  var init = (REF_INITIALS[nom] || nom.slice(0,2)).toUpperCase();
+  var txtCol = col === '#F5C842' ? '#1a1a1a' : 'white';
+  var img = p.avatar ? '<img src="'+p.avatar+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">' : '';
+  return '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-size:'+(size*0.35)+'px;font-weight:700;color:'+txtCol+';flex-shrink:0;overflow:hidden;">'+img+(p.avatar?'':'<span>'+init+'</span>')+'</div>';
+}
+
 function getCompteur(nom){
   var now = new Date();
   var il12 = new Date(now);
@@ -1167,7 +1178,7 @@ function renderRoulement(){
       var pct=maxV>0?Math.round(v/maxV*100):0;
       html+='<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:0.5px solid var(--b);">'
         +'<span style="font-size:11px;color:var(--tx3);min-width:16px;">'+rank+'</span>'
-        +'<div style="width:36px;height:36px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:'+(col==='#F5C842'?'#1a1a1a':'white')+';flex-shrink:0;">'+init+'</div>'
+        +avatarHtml(nom,col,36)
         +'<div style="flex:1;min-width:0;">'
         +'<div style="font-size:13px;font-weight:600;color:var(--tx);">'+nom+'</div>'
         +'<div style="font-size:11px;color:var(--tx3);">'+(REF_SOC[nom]||'')+'</div>'
@@ -1208,7 +1219,7 @@ function renderRoulement(){
       var raison=indispo?'Indisponible à ces dates':'';
       html2+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--b);">'
         +'<div style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+(ok?'var(--gr)':'var(--re)')+'"></div>'
-        +'<div style="width:34px;height:34px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:'+(col==='#F5C842'?'#1a1a1a':'white')+';flex-shrink:0;">'+init+'</div>'
+        +avatarHtml(nom,col,34)
         +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:'+(ok?'var(--tx)':'var(--tx2)')+'">'+nom+'</div>'
         +(raison?'<div style="font-size:11px;color:var(--re);">'+raison+'</div>':'<div style="font-size:11px;color:var(--tx3);">'+v+' chantier'+(v>1?'s':'')+' AOP — disponible</div>')
         +'</div>'
