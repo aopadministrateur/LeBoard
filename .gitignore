@@ -1,0 +1,4 @@
+# Donnees personnelles de prospects (RGPD) : ne jamais commiter, depot public
+leads-seed.json
+aop-leads.html
+*.csv
