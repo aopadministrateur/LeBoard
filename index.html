@@ -960,7 +960,8 @@ function fbDoc(path){ return FB_BASE+'/'+path; }
 
 let fbBackoff = 1;
 // strict=true : renvoie null en cas d'erreur (au lieu de []) pour ne pas vider les donnees locales
-async function fbGet(collection, strict){
+// all=true : lit toutes les pages (sinon 200 documents max, comme avant : economise le quota)
+async function fbGet(collection, strict, all){
   try{
     let docs = [], tok = '';
     do{
@@ -980,7 +981,7 @@ async function fbGet(collection, strict){
     fbBackoff = 1;
     const data = await r.json();
     docs = docs.concat(data.documents||[]);
-    tok = data.nextPageToken || '';
+    tok = all ? (data.nextPageToken || '') : '';
     } while(tok);
     return docs.map(function(doc){
       const id = doc.name.split('/').pop();
@@ -1069,17 +1070,38 @@ function startFbPolling(){
   fbPoll(); // immediate first poll
 }
 
+// Etat de la synchro dans la barre du bas
+function fbSyncState(ok){
+  const dot=document.getElementById('syndot'),t=document.getElementById('syntxt');if(!dot||!t)return;
+  dot.style.background=ok?'':'var(--re)';
+  t.textContent=ok?'Connecte':'Synchro interrompue : dernieres donnees conservees';
+  if(ok){const tm=document.getElementById('syntime');if(tm)tm.textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+}
+
+let fbLastPoll = 0;
+// Au retour au premier plan, relire si la derniere lecture date de plus de 30 s
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden && fbPollInterval && Date.now()-fbLastPoll > 30000) fbPoll();
+});
+
 async function fbPoll(){
+  // App en arriere-plan : aucune lecture (economise le quota Firestore)
+  if(document.hidden) return;
+  fbLastPoll = Date.now();
   try{
+    // En cas d'erreur (quota 429, reseau, droits) fbGet strict renvoie null :
+    // on arrete ce cycle et on GARDE les donnees actuelles au lieu de les vider.
     // Load conges
-    const congesDocs = await fbGet('indispo');
+    const congesDocs = await fbGet('indispo', true);
+    if(!congesDocs){ fbSyncState(false); return; }
     const congesDoc = congesDocs.find(function(d){return d.id==='data';});
     if(congesDoc && congesDoc.list){
       try{CONGES=JSON.parse(congesDoc.list);localStorage.setItem('lb_indispo',JSON.stringify(CONGES));}catch(e){}
     }
 
     // Load avatars/profiles
-    const profileDocs = await fbGet('profiles');
+    const profileDocs = await fbGet('profiles', true);
+    if(!profileDocs){ fbSyncState(false); return; }
     profileDocs.forEach(function(p){
       if(p.id && p.avatar){
         if(!PR[p.id])PR[p.id]={};
@@ -1091,7 +1113,8 @@ async function fbPoll(){
     });
 
     // Load members
-    const mbrDocs = await fbGet('membres');
+    const mbrDocs = await fbGet('membres', true);
+    if(!mbrDocs){ fbSyncState(false); return; }
     const mbrDoc = mbrDocs.find(function(d){return d.id==='data';});
     if(mbrDoc){
       if(mbrDoc.mbr){try{MBR=JSON.parse(mbrDoc.mbr);}catch(e){}}
@@ -1102,7 +1125,9 @@ async function fbPoll(){
         bldChefSel();bldCChks();
       }
     }
-    const docs = await fbGet('chantiers');
+    const docs = await fbGet('chantiers', true);
+    if(!docs){ fbSyncState(false); return; }
+    fbSyncState(true);
     if(JSON.stringify(docs) !== JSON.stringify(CH)){
       CH = docs;
       sv('lb_ch', CH);
@@ -1452,7 +1477,7 @@ function leadPgActive(){var p=document.getElementById('pg-leads');return !!(p&&p
 async function pollLeads(){
   if(!CU||CR!=='referent')return;
   var t0=Date.now();
-  var docs=await fbGet('leads',true);
+  var docs=await fbGet('leads',true,true);
   if(!docs||!CU||CR!=='referent')return;
   if(leadWrites>0||t0<leadLastWrite)return; // une ecriture locale est plus recente que cette lecture
   var next={};docs.forEach(function(x){next[x.id]=x;});
@@ -1501,7 +1526,7 @@ async function leadCreate(d,prefId){
     leadWrites--;leadLastWrite=Date.now();
     if(ok){LEADS[id]=full;return id;}
     // id deja pris (creation simultanee) : on recharge et on retente
-    var docs=await fbGet('leads',true);if(!docs)return null;
+    var docs=await fbGet('leads',true,true);if(!docs)return null;
     docs.forEach(function(x){if(!LEADS[x.id])LEADS[x.id]=x;});
     if(!LEADS[id])return null; // echec pour une autre raison
   }
@@ -2043,7 +2068,7 @@ async function runImport(){
   if(!leadImp||!leadImp.plan)return;
   leadImpBtn(false,'Vérification…');
   // Relire la base juste avant d'ecrire pour dedoublonner sur l'etat le plus recent
-  var docs=await fbGet('leads',true);
+  var docs=await fbGet('leads',true,true);
   if(!docs){toast('Connexion à la base impossible, réessayez');leadImpBtn(true,'Importer');return;}
   LEADS={};docs.forEach(function(x){LEADS[x.id]=x;});
   leadImpPreview();
