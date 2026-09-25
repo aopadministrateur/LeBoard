@@ -1,0 +1,67 @@
+rules_version = '2';
+
+// Regles Firestore du Board.
+// Chaque personne a un compte Firebase Auth (email + mot de passe) et un document
+// acces/{uid} = { membre: "<cle du membre, ex. florian>", role: "referent" | "collaborateur" },
+// cree uniquement depuis la console Firebase (aucune ecriture possible depuis l'app).
+// A publier depuis la console (Firestore Database > Regles) une fois tous les comptes crees.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isMember() {
+      return signedIn() && exists(/databases/$(database)/documents/acces/$(request.auth.uid));
+    }
+    function acces() {
+      return get(/databases/$(database)/documents/acces/$(request.auth.uid)).data;
+    }
+    function isRef() {
+      return isMember() && acces().role == 'referent';
+    }
+
+    // Droits : chacun lit uniquement les siens, personne ne les modifie depuis l'app
+    match /acces/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Prospects (donnees personnelles) : les referents uniquement
+    match /leads/{id} {
+      allow read, write: if isRef();
+    }
+
+    // Planning : lecture par tous les membres (calendrier), modification par les referents
+    match /chantiers/{id} {
+      allow read: if isMember();
+      allow write: if isRef();
+    }
+
+    // Liste des membres et maitres d'oeuvre
+    match /membres/{id} {
+      allow read: if isMember();
+      allow write: if isRef();
+    }
+
+    // Indisponibilites (document unique partage) : chaque membre declare les siennes
+    match /indispo/{id} {
+      allow read, write: if isMember();
+    }
+
+    // Photo de profil : lecture par les membres, chacun ne modifie que la sienne
+    match /profiles/{key} {
+      allow read: if isMember();
+      allow write: if isMember() && acces().membre == key;
+    }
+
+    // Notifications internes
+    match /notifications/{id} {
+      allow read, create: if isMember();
+      allow update, delete: if isRef();
+    }
+
+    // Tout le reste est ferme
+  }
+}

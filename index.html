@@ -61,7 +61,7 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 .acbsub{font-size:11px;color:var(--tx3);margin-top:-6px;}
 
 /* LOGIN */
-#lref,#lcol{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;overflow-y:auto;}
+#lref,#lcol,#lauth{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;overflow-y:auto;}
 .linn{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
 .lbk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx3);cursor:pointer;margin-bottom:32px;border:none;background:none;font-family:inherit;}
 .lbk:hover{color:var(--tx);}
@@ -411,6 +411,23 @@ th.ldsrt:hover{color:var(--tx);}
   </div>
 </div>
 
+<!-- CONNEXION COMPTE (email + mot de passe Firebase) -->
+<div id="lauth"><div class="linn">
+  <div class="aclog">
+    <div class="acli"><div style="width:20px;height:4px;border-radius:1px;background:white;"></div><div style="width:14px;height:4px;border-radius:1px;background:white;opacity:0.6;"></div><div style="width:9px;height:4px;border-radius:1px;background:white;opacity:0.3;"></div></div>
+    <div class="aclt">LE <span>BOARD</span></div>
+  </div>
+  <div class="ltit">Connexion</div><div class="lsub">Identifiez-vous avec votre compte Le Board</div>
+  <form style="width:100%;max-width:340px;" onsubmit="event.preventDefault();authLogin();">
+    <div class="fg"><label class="fl" for="au-email">Email</label><input class="fi" type="email" id="au-email" autocomplete="username" autocapitalize="off"></div>
+    <div class="fg"><label class="fl" for="au-pwd">Mot de passe</label><input class="fi" type="password" id="au-pwd" autocomplete="current-password"></div>
+    <div class="pinerr" id="au-err"></div>
+    <button class="btn btnp" type="submit" id="au-go" style="width:100%;justify-content:center;padding:12px;">Se connecter</button>
+    <div style="text-align:center;margin-top:16px;"><a class="pinfgt" onclick="authReset()">Première connexion ou mot de passe oublié ?</a></div>
+  </form>
+  <div style="font-size:11px;color:var(--tx3);margin-top:28px;text-align:center;line-height:1.6;">Première connexion : utilisez le lien reçu par email pour choisir votre mot de passe.<br>Pas de compte ? Contactez un référent. · <a onclick="showPol()" style="color:var(--or);cursor:pointer;">Politique de confidentialité</a></div>
+</div></div>
+
 <!-- LOGIN REFERENT -->
 <div id="lref"><div class="linn">
   <button class="lbk" onclick="showAcc()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
@@ -440,7 +457,8 @@ th.ldsrt:hover{color:var(--tx);}
       <button class="pk emp"></button><button class="pk" onclick="pk('0')">0</button><button class="pk del" onclick="pdel()">&#x232B;</button>
     </div>
     <div class="pinerr" id="pinerr"></div>
-    
+    <div class="pinfgt" onclick="authSwitch()">Changer de compte</div>
+
   </div>
 </div>
 
@@ -958,6 +976,82 @@ let fbListeners = {};
 
 function fbDoc(path){ return FB_BASE+'/'+path; }
 
+// ═══ AUTH FIREBASE (email + mot de passe, API REST) ═══
+// Le compte identifie la personne aupres de Firestore (regles de securite) ;
+// le code PIN reste un deverrouillage rapide de l'appareil.
+// Les comptes et la collection acces/{uid} {membre, role} sont crees dans la console Firebase.
+const AUTH_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:';
+const TOKEN_URL = 'https://securetoken.googleapis.com/v1/token?key='+firebaseConfig.apiKey;
+let AUTH = ld('lb_auth');   // {uid, refresh, membre, role} sur cet appareil
+let authTok = null, authExp = 0, authRefreshing = null;
+
+function authErrMsg(code){
+  code = String(code||'');
+  if(/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND|INVALID_EMAIL|MISSING_PASSWORD/.test(code)) return 'Email ou mot de passe incorrect';
+  if(/USER_DISABLED/.test(code)) return 'Compte desactive, contactez un referent';
+  if(/TOO_MANY_ATTEMPTS/.test(code)) return 'Trop de tentatives, reessayez plus tard';
+  return 'Connexion impossible ('+(code||'reseau')+')';
+}
+function authForget(){
+  AUTH = null; authTok = null; authExp = 0;
+  try{ localStorage.removeItem('lb_auth'); }catch(e){}
+}
+async function authSignIn(email, pwd){
+  const r = await fetch(AUTH_URL+'signInWithPassword?key='+firebaseConfig.apiKey, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({email:email, password:pwd, returnSecureToken:true})
+  });
+  const d = await r.json().catch(function(){ return {}; });
+  if(!r.ok) throw new Error(authErrMsg(d.error && d.error.message));
+  AUTH = {uid:d.localId, refresh:d.refreshToken};
+  sv('lb_auth', AUTH);
+  authTok = d.idToken; authExp = Date.now() + (parseInt(d.expiresIn)||3600)*1000;
+}
+// Jeton valide (renouvele 5 min avant expiration) ; null si pas de compte ou hors ligne
+async function authToken(force){
+  if(!AUTH || !AUTH.refresh) return null;
+  if(!force && authTok && Date.now() < authExp - 300000) return authTok;
+  if(!authRefreshing){
+    authRefreshing = (async function(){
+      try{
+        const r = await fetch(TOKEN_URL, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(AUTH.refresh)});
+        const d = await r.json().catch(function(){ return {}; });
+        if(!r.ok){
+          // 400 : compte supprime/desactive ou jeton revoque -> reconnexion obligatoire
+          if(r.status === 400){ authForget(); authLost(); }
+          return null;
+        }
+        authTok = d.id_token; authExp = Date.now() + (parseInt(d.expires_in)||3600)*1000;
+        if(d.refresh_token && d.refresh_token !== AUTH.refresh){ AUTH.refresh = d.refresh_token; sv('lb_auth', AUTH); }
+        return authTok;
+      } catch(e){ return null; }
+      finally { authRefreshing = null; }
+    })();
+  }
+  return authRefreshing;
+}
+// fetch vers Firestore avec le jeton du compte ; un 401 (jeton refuse) force un renouvellement et une seule nouvelle tentative
+async function fbFetch(url, opt){
+  opt = Object.assign({}, opt||{});
+  const tok = await authToken();
+  if(tok) opt.headers = Object.assign({}, opt.headers||{}, {Authorization:'Bearer '+tok});
+  let r = await fetch(url, opt);
+  if(r.status === 401 && tok){
+    const t2 = await authToken(true);
+    if(t2){ opt.headers.Authorization = 'Bearer '+t2; r = await fetch(url, opt); }
+  }
+  return r;
+}
+// Droits du compte : acces/{uid} -> {membre, role}. null si le compte n'a pas d'acces.
+async function authLoadAcces(){
+  const r = await fbFetch(FB_BASE+'/acces/'+encodeURIComponent(AUTH.uid));
+  if(r.status === 404 || r.status === 403) return null;
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const d = await r.json();
+  return fbParseDoc(d.fields||{});
+}
+
 let fbBackoff = 1;
 // strict=true : renvoie null en cas d'erreur (au lieu de []) pour ne pas vider les donnees locales
 // all=true : lit toutes les pages (sinon 200 documents max, comme avant : economise le quota)
@@ -965,7 +1059,7 @@ async function fbGet(collection, strict, all){
   try{
     let docs = [], tok = '';
     do{
-    const r = await fetch(FB_BASE+'/'+collection+'?pageSize=200'+(tok?'&pageToken='+encodeURIComponent(tok):''));
+    const r = await fbFetch(FB_BASE+'/'+collection+'?pageSize=200'+(tok?'&pageToken='+encodeURIComponent(tok):''));
     if(r.status === 429){
       fbBackoff = Math.min(fbBackoff * 2, 64);
       console.warn('Firebase 429 - backoff:', fbBackoff+'min');
@@ -990,10 +1084,26 @@ async function fbGet(collection, strict, all){
   } catch(e){ console.error('fbGet error:',e); return strict ? null : []; }
 }
 
+// Requete filtree (une lecture par document renvoye, 1 minimum) ; null en cas d'erreur
+async function fbQuery(collection, field, op, value){
+  try{
+    const r = await fbFetch(FB_BASE+':runQuery', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({structuredQuery:{from:[{collectionId:collection}],
+        where:{fieldFilter:{field:{fieldPath:field}, op:op, value:{stringValue:String(value)}}}}})
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const rows = await r.json();
+    return (rows||[]).filter(function(x){ return x.document; }).map(function(x){
+      return Object.assign({id:x.document.name.split('/').pop()}, fbParseDoc(x.document.fields||{}));
+    });
+  } catch(e){ console.error('fbQuery error:',e); return null; }
+}
+
 async function fbSet(collection, id, obj){
   try{
     const fields = fbEncodeDoc(obj);
-    const r = await fetch(FB_BASE+'/'+collection+'/'+id+'?updateMask.fieldPaths='+Object.keys(obj).join('&updateMask.fieldPaths='), {
+    const r = await fbFetch(FB_BASE+'/'+collection+'/'+id+'?updateMask.fieldPaths='+Object.keys(obj).join('&updateMask.fieldPaths='), {
       method:'PATCH', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({fields:fields})
     });
@@ -1006,7 +1116,7 @@ async function fbSet(collection, id, obj){
 // Creation stricte : echoue si le document existe deja (evite d'ecraser un id pris en parallele)
 async function fbCreate(collection, id, obj){
   try{
-    const r = await fetch(FB_BASE+'/'+collection+'/'+id+'?currentDocument.exists=false', {
+    const r = await fbFetch(FB_BASE+'/'+collection+'/'+id+'?currentDocument.exists=false', {
       method:'PATCH', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({fields:fbEncodeDoc(obj)})
     });
@@ -1016,7 +1126,7 @@ async function fbCreate(collection, id, obj){
 
 async function fbDelete(collection, id){
   try{
-    const r = await fetch(FB_BASE+'/'+collection+'/'+id, {method:'DELETE'});
+    const r = await fbFetch(FB_BASE+'/'+collection+'/'+id, {method:'DELETE'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     console.log('fbDelete ok:', id);
   } catch(e){ console.error('fbDelete error:',e); }
@@ -1025,7 +1135,7 @@ async function fbDelete(collection, id){
 async function fbAdd(collection, obj){
   try{
     const fields = fbEncodeDoc(obj);
-    const r = await fetch(FB_BASE+'/'+collection, {
+    const r = await fbFetch(FB_BASE+'/'+collection, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({fields:fields})
     });
@@ -1063,9 +1173,10 @@ function fbEncodeDoc(obj){
 }
 
 // Poll Firebase every 5 seconds for real-time-like sync
-let fbPollInterval = null;
+let fbPollInterval = null, fbAppOn = false, fbProfilesDue = true;
+// La synchro ne tourne que quand l'app est deverrouillee (economise le quota, evite les lectures sans compte)
 function startFbPolling(){
-  if(fbPollInterval) return;
+  if(fbPollInterval || !fbAppOn) return;
   fbPollInterval = setInterval(fbPoll, 60000);
   fbPoll(); // immediate first poll
 }
@@ -1100,17 +1211,21 @@ async function fbPoll(){
     }
 
     // Load avatars/profiles
-    const profileDocs = await fbGet('profiles', true);
-    if(!profileDocs){ fbSyncState(false); return; }
-    profileDocs.forEach(function(p){
-      if(p.id && p.avatar){
-        if(!PR[p.id])PR[p.id]={};
-        if(PR[p.id].avatar !== p.avatar){
-          PR[p.id].avatar = p.avatar;
-          sv('lb_pr',PR);
+    // Photos de profil : lues une fois par deverrouillage seulement (elles changent rarement)
+    if(fbProfilesDue){
+      const profileDocs = await fbGet('profiles', true);
+      if(!profileDocs){ fbSyncState(false); return; }
+      profileDocs.forEach(function(p){
+        if(p.id && p.avatar){
+          if(!PR[p.id])PR[p.id]={};
+          if(PR[p.id].avatar !== p.avatar){
+            PR[p.id].avatar = p.avatar;
+            sv('lb_pr',PR);
+          }
         }
-      }
-    });
+      });
+      fbProfilesDue = false;
+    }
 
     // Load members
     const mbrDocs = await fbGet('membres', true);
@@ -1140,7 +1255,10 @@ async function pollNotifications(){
     const seenKey = 'lb_seen_notifs';
     const seen = JSON.parse(localStorage.getItem(seenKey)||'[]');
     const now = new Date();
-    const notifDocs = await fbGet('notifications');
+    // Seules les notifications recentes sont affichees : on ne lit que celles des 5 dernieres minutes
+    // (au lieu de toute la collection a chaque cycle, qui grossit sans fin)
+    const notifDocs = await fbQuery('notifications', 'ts', 'GREATER_THAN_OR_EQUAL', new Date(Date.now()-300000).toISOString());
+    if(!notifDocs) return;
     let updated = false;
     notifDocs.forEach(function(n){
       if(!n.id || seen.includes(n.id)) return;
@@ -1187,6 +1305,10 @@ function listenNotifications(){
 function syncFromFirebase(){
   console.log('Starting Firebase REST sync...');
   startFbPolling();
+}
+function stopFbPolling(){
+  fbAppOn = false;
+  if(fbPollInterval){ clearInterval(fbPollInterval); fbPollInterval = null; }
 }
 
 // ═══ SAVE TO FIREBASE ═══
@@ -2178,7 +2300,7 @@ function init(){
   }
 
   buildGrids();
-  syncFromFirebase();
+  // La synchro demarre au deverrouillage (launchApp), plus avant la connexion
   setTimeout(()=>{
     document.getElementById('splash').classList.add('hide');
     setTimeout(()=>{document.getElementById('splash').style.display='none';if(!localStorage.getItem('lb_pol'))showPol();else showAcc();},400);
@@ -2199,7 +2321,64 @@ function showPol(){document.getElementById('pol').style.display='flex';}
 function accPol(){localStorage.setItem('lb_pol','1');document.getElementById('pol').style.display='none';showAcc();}
 
 // ═══ NAVIGATION ═══
-function showAcc(){['pol','lref','lcol','pin','sec','rec'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});document.getElementById('acc').style.display='flex';}
+// Ecran d'entree : compte connu sur cet appareil -> code PIN ; sinon connexion email + mot de passe
+function showAcc(){
+  ['pol','acc','lref','lcol','pin','sec','rec','lauth'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  if(AUTH&&AUTH.membre&&MBR[AUTH.membre]){selMbr(AUTH.membre);return;}
+  showAuth();
+}
+function showAuth(){
+  ['acc','lref','lcol','pin'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  document.getElementById('au-err').textContent='';document.getElementById('au-pwd').value='';
+  document.getElementById('lauth').style.display='block';
+}
+async function authLogin(){
+  const email=document.getElementById('au-email').value.trim(),pwd=document.getElementById('au-pwd').value;
+  const err=document.getElementById('au-err'),btn=document.getElementById('au-go');
+  if(!email||!pwd){err.textContent='Saisissez votre email et votre mot de passe';return;}
+  err.textContent='';btn.disabled=true;btn.textContent='Connexion…';
+  try{
+    await authSignIn(email,pwd);
+    const a=await authLoadAcces();
+    if(a&&a.membre&&!MBR[a.membre]){ // membre ajoute recemment : recharger la liste
+      const docs=await fbGet('membres',true);const d=docs&&docs.find(function(x){return x.id==='data';});
+      if(d&&d.mbr){try{MBR=JSON.parse(d.mbr);sv('lb_mbr',MBR);}catch(e){}}
+    }
+    if(!a||!a.membre||!MBR[a.membre]){authForget();err.textContent='Ce compte n\'a pas encore d\'acces au Board. Contactez un referent.';return;}
+    AUTH.membre=a.membre;AUTH.role=a.role==='referent'?'referent':'collaborateur';sv('lb_auth',AUTH);
+    document.getElementById('au-pwd').value='';
+    document.getElementById('lauth').style.display='none';
+    selMbr(a.membre);
+  }catch(e){err.textContent=e.message||'Connexion impossible';}
+  finally{btn.disabled=false;btn.textContent='Se connecter';}
+}
+async function authReset(){
+  const email=document.getElementById('au-email').value.trim();
+  if(!email){document.getElementById('au-err').textContent='Saisissez votre email ci-dessus, puis cliquez à nouveau sur le lien';return;}
+  // Sert aussi a la premiere connexion : le compte est cree sans mot de passe connu, le membre choisit le sien via ce lien
+  try{await fetch(AUTH_URL+'sendOobCode?key='+firebaseConfig.apiKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestType:'PASSWORD_RESET',email:email})});}catch(e){}
+  document.getElementById('au-err').textContent='';
+  toast('Si ce compte existe, un email pour choisir votre mot de passe vient d\'être envoyé');
+}
+// Depuis l'ecran PIN : oublier le compte de cet appareil
+function authSwitch(){authForget();CU=null;showAuth();}
+// Jeton revoque ou compte supprime pendant l'utilisation
+function authLost(){
+  toast('Session du compte expiree : reconnectez-vous');
+  if(fbAppOn)retAcc();else if(document.getElementById('pin').style.display!=='none')showAuth();
+}
+// A chaque deverrouillage, verifie en arriere-plan que le compte a toujours ses droits
+async function authCheckAcces(){
+  if(!AUTH||!AUTH.uid)return;
+  const tok=await authToken();if(!tok||!AUTH)return; // hors ligne : on garde l'acces en cache
+  try{
+    const a=await authLoadAcces();
+    if(!AUTH)return;
+    if(!a||!a.membre){authForget();authLost();return;}
+    const role=a.role==='referent'?'referent':'collaborateur';
+    if(a.membre!==AUTH.membre||role!==AUTH.role){AUTH.membre=a.membre;AUTH.role=role;sv('lb_auth',AUTH);toast('Droits du compte modifies : reconnectez-vous');retAcc();}
+  }catch(e){} // quota ou reseau : on garde l'acces en cache
+}
 function showLRef(){document.getElementById('acc').style.display='none';document.getElementById('lref').style.display='block';}
 function showLCol(){document.getElementById('acc').style.display='none';document.getElementById('lcol').style.display='block';}
 
@@ -2233,12 +2412,15 @@ function chkPin(){
 function startSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();['click','keydown','touchstart'].forEach(e=>document.addEventListener(e,resetSess,{passive:true}));}
 function resetSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();}
 function animSess(){const f=document.getElementById('sesfil');f.style.transition='none';f.style.width='100%';setTimeout(()=>{f.style.transition=`width ${SDUR/1000}s linear`;f.style.width='0%';},60);}
-function expSess(){leadsReset();['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('app').style.display='none';document.getElementById('sexp').style.display='flex';CU=null;}
-function retAcc(){leadsReset();clearTimeout(sessTimer);['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('sexp').style.display='none';document.getElementById('app').style.display='none';CU=null;buildGrids();showAcc();}
+function expSess(){leadsReset();stopFbPolling();['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('app').style.display='none';document.getElementById('sexp').style.display='flex';CU=null;}
+function retAcc(){leadsReset();stopFbPolling();clearTimeout(sessTimer);['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('sexp').style.display='none';document.getElementById('app').style.display='none';CU=null;buildGrids();showAcc();}
 
 // ═══ LAUNCH ═══
 function launchApp(){
-  const m=MBR[CU];CR=m?m.role:'referent';setupUI();renderAll();
+  // Le role vient du compte (acces/{uid}), c'est lui que les regles Firestore verifient
+  const m=MBR[CU];CR=(AUTH&&AUTH.role)?AUTH.role:(m?m.role:'referent');setupUI();renderAll();
+  fbAppOn=true;fbProfilesDue=true;startFbPolling();
+  authCheckAcces();
   document.getElementById('app').style.display='flex';
   if(CR==='referent'){showPg('planning',document.getElementById('nvp'));}
   else{showPg('moncal',document.getElementById('mnmc'));}

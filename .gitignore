@@ -2,3 +2,4 @@
 leads-seed.json
 aop-leads.html
 *.csv
+tests/.out/
