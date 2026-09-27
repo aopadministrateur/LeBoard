@@ -7,7 +7,7 @@ const H=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
 const SEED=process.env.SEED||path.join(__dirname,'..','leads-seed.json');
 eval(H.slice(H.indexOf('// ═══ LEADS ═══'),H.indexOf('// ═══ FIN LEADS ═══')).replace(/^let /mg,'var ').replace(/^const /mg,'var '));
 let n=0;const t=(name,fn)=>{fn();n++;console.log('ok -',name);};
-const L=(o)=>Object.assign({type:'Lead client',statut:'Nouveau',membre:'',valeur:''},o);
+const L=(o)=>Object.assign({statut:'Nouveau',membre:'',valeur:''},o);
 
 t('normalisation membres et tel',()=>{
   assert.equal(leadMembre('Frédéric'),'Frederic');assert.equal(leadMembre('  yoan '),'Yoan');assert.equal(leadMembre('Bob'),'');
@@ -21,7 +21,6 @@ t('rotation : points signes 12 mois seulement',()=>{
     L({membre:'Franck',statut:'Signé',valeur:'Petit',dateSignature:'2025-09-25'}), // pile 12 mois : compte
     L({membre:'Yoan',statut:'Attribué',valeur:'Gros'}),
     L({membre:'Henri',statut:'En cours',valeur:'Gros'}),
-    L({type:'Société utile',statut:'Contact',membre:'Thomas',valeur:'Gros'}),
   ],'2026-09-25');
   assert.equal(s.pts.Franck,4);assert.equal(s.pts.Yoan,0);assert.equal(s.attrib.Yoan,1);assert.equal(s.encours.Henri,1);
   assert.deepEqual(s.plafond,['Franck']);assert.equal(s.next,'');assert.deepEqual(s.egaux,['Florian','Henri','Yoan','Frederic','Thomas']);assert.equal(s.ecart,100);assert.equal(s.clients.length,5);
@@ -51,10 +50,23 @@ if(fs.existsSync(SEED))t('seed : 23 leads, conventions Board',()=>{
   assert.equal(rows.length,23);
   const p=leadPlanImport(rows,[]);assert.equal(p.create.length,23);assert.equal(p.merge.length,0);
   assert.deepEqual(rows.map(r=>r.id),Array.from({length:23},(_,i)=>'L'+String(i+1).padStart(3,'0')));
-  const u=rows.find(r=>r.id==='L023');assert.equal(u.type,'Société utile');assert.equal(u.statut,'Contact');assert.match(u.telephone,/^0\d{9}$/);
+  const u=rows.find(r=>r.id==='L023');assert.equal(u.statut,'Nouveau');assert.match(u.telephone,/^0\d{9}$/);
+  assert.ok(rows.every(r=>!('type' in r)));
   assert.ok(rows.every(r=>r.source==='SEPEM Toulouse 2026'&&r.dateCreation==='2026-09-22'));
   assert.ok(rows.every(r=>!r.membre||REF_ORDER.includes(r.membre)));
   assert.equal(rows.filter(r=>r.statut==='Attribué').length,11);
+});
+t('plus de societe utile : ancien type et statut Contact ignores',()=>{
+  const c=leadClean({contact:'X',type:'Société utile',statut:'Contact'});
+  assert.equal(c.statut,'Nouveau');assert.ok(!('type' in c));assert.ok(!LEAD_STATUTS.includes('Contact'));
+  assert.ok(!/Soci.t. utile|trutil|LEAD_UTIL/.test(H));
+});
+const NEUTRE=path.join(__dirname,'..','leads-seed-neutre.json');
+if(fs.existsSync(NEUTRE))t('fichier neutre : 22 leads clients vierges',()=>{
+  const rows=leadRowsJSON(fs.readFileSync(NEUTRE,'utf8')).map(r=>leadClean(r,{}));
+  assert.equal(rows.length,22);
+  assert.ok(rows.every(r=>r.statut==='Nouveau'&&!r.membre&&!r.valeur&&!r.mode));
+  assert.equal(leadPlanImport(rows,[]).create.length,22);
 });
 t('import : dedoublonnage email + fusion sans ecrasement',()=>{
   const ex=[L({id:'L001',email:'A@x.fr',contact:'A',membre:'Yoan',statut:'Attribué',valeur:'Gros',notes:'n1',zone:''})];

@@ -354,7 +354,6 @@ textarea.chinp:focus{outline:none;border-color:var(--or);}
 #modlead select.fi,#modlink select.fi{appearance:auto;color-scheme:dark;}
 th.ldsrt{cursor:pointer;user-select:none;}
 th.ldsrt:hover{color:var(--tx);}
-.trutil td{background:var(--bld);}
 .ldlink{cursor:pointer;}
 .ldlink:hover{color:var(--or);}
 .ldmail{color:var(--bl);text-decoration:none;font-size:12px;}
@@ -812,7 +811,7 @@ th.ldsrt:hover{color:var(--tx);}
     <div class="fr"><div class="fg"><label class="fl">Téléphone</label><input class="fi" type="tel" id="ld-tel"></div><div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="ld-email"></div></div>
     <div class="fg"><label class="fl">Besoin</label><input class="fi" type="text" id="ld-besoin"></div>
     <div class="fr"><div class="fg"><label class="fl">Zone</label><input class="fi" type="text" id="ld-zone"></div><div class="fg"><label class="fl">Source</label><input class="fi" type="text" id="ld-source" list="ld-sources" placeholder="ex. SEPEM Toulouse 2026"></div></div>
-    <div class="fr"><div class="fg"><label class="fl">Saisi par</label><input class="fi" type="text" id="ld-saisi" list="ld-membres"></div><div class="fg"><label class="fl">Type</label><select class="fi" id="ld-type"><option>Lead client</option><option>Société utile</option></select></div></div>
+    <div class="fg"><label class="fl">Saisi par</label><input class="fi" type="text" id="ld-saisi" list="ld-membres"></div>
     <div id="ld-client">
       <div class="fr"><div class="fg"><label class="fl">Statut</label><select class="fi" id="ld-statut"></select></div><div class="fg"><label class="fl">Membre attribué</label><select class="fi" id="ld-membre"></select></div></div>
       <div id="ld-sugg"></div>
@@ -852,7 +851,7 @@ th.ldsrt:hover{color:var(--tx);}
 <div class="mlov" id="modimp">
   <div class="modal" style="max-width:480px;">
     <div class="mtit">Importer des leads</div>
-    <div class="ldbox">Fichier CSV (export du formulaire Google, séparateur virgule ou point-virgule) ou JSON, avec les colonnes : contact, societe, telephone, email, besoin, zone, saisiPar, notes, type, membre, statut, valeur, mode, source, dateCreation. Les leads déjà présents (même email) sont complétés, jamais écrasés.</div>
+    <div class="ldbox">Fichier CSV (export du formulaire Google, séparateur virgule ou point-virgule) ou JSON, avec les colonnes : contact, societe, telephone, email, besoin, zone, saisiPar, notes, membre, statut, valeur, mode, source, dateCreation. Les leads déjà présents (même email) sont complétés, jamais écrasés.</div>
     <div class="fg"><label class="fl">Fichier</label><input class="fi" type="file" id="imp-file" accept=".csv,.json,text/csv,application/json"></div>
     <div class="fr">
       <div class="fg"><label class="fl">Source par défaut</label><input class="fi" type="text" id="imp-src" placeholder="ex. SEPEM Toulouse 2026"></div>
@@ -1578,12 +1577,11 @@ function proposerAOP(nom){
 const LEAD_STATUTS=['Nouveau','Attribué','En cours','Signé','Perdu'];
 const LEAD_VAL={'Petit':1,'Moyen':2,'Gros':3};
 const LEAD_VALCOL={'Petit':'var(--gr)','Moyen':'var(--am)','Gros':'var(--re)'};
-const LEAD_STCOL={'Nouveau':'var(--tx3)','Attribué':'var(--bl)','En cours':'var(--am)','Signé':'var(--gr)','Perdu':'var(--re)','Contact':'var(--bl)'};
-const LEAD_UTIL='Société utile';
+const LEAD_STCOL={'Nouveau':'var(--tx3)','Attribué':'var(--bl)','En cours':'var(--am)','Signé':'var(--gr)','Perdu':'var(--re)'};
 const LEAD_PLAFOND=3;   // ecart de points (>=) au-dessus du plus bas : membre sorti de la suggestion
 const LEAD_SEUIL=30;    // ecart % (max-min)/max au-dela duquel on alerte pour reequilibrage en AG
 const LEAD_POLL=30000;  // relecture Firestore quand la page Leads est ouverte
-const LEAD_COLS={contact:'contact',nom:'contact',societe:'societe',entreprise:'societe',telephone:'telephone',tel:'telephone',email:'email',mail:'email',adressemail:'email',adresseemail:'email',besoin:'besoin',zone:'zone',saisipar:'saisiPar',notes:'notes',type:'type',membre:'membre',id:'id',statut:'statut',valeur:'valeur',mode:'mode',source:'source',datecreation:'dateCreation'};
+const LEAD_COLS={contact:'contact',nom:'contact',societe:'societe',entreprise:'societe',telephone:'telephone',tel:'telephone',email:'email',mail:'email',adressemail:'email',adresseemail:'email',besoin:'besoin',zone:'zone',saisipar:'saisiPar',notes:'notes',membre:'membre',id:'id',statut:'statut',valeur:'valeur',mode:'mode',source:'source',datecreation:'dateCreation'};
 
 // Donnees en memoire uniquement (jamais en localStorage : donnees personnelles de prospects)
 let LEADS={},LEADS_OK=false,leadWrites=0,leadLastWrite=0,leadTimer=null,leadDirty=false,leadBound=false;
@@ -1595,7 +1593,6 @@ function isoDay(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth(
 function leadNorm(s){return String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');}
 function leadPick(v,list){var k=leadNorm(v);return k?(list.find(function(x){return leadNorm(x)===k;})||''):'';}
 function leadMembre(s){return leadPick(s,REF_ORDER);}   // 'Frédéric' -> 'Frederic'
-function leadIsClient(l){return l.type!==LEAD_UTIL;}
 function leadTel(t){t=String(t==null?'':t).trim();if(/^\d+\.0$/.test(t))t=t.slice(0,-2);if(/^[1-9]\d{8}$/.test(t))t='0'+t;return t;}
 function leadName(l){return l.contact||l.societe||l.id;}
 
@@ -1605,7 +1602,7 @@ function leadStats(list,today){
   var cutoff=isoDay(d);
   var pts={},attrib={},encours={},signes={};
   REF_ORDER.forEach(function(n){pts[n]=0;attrib[n]=0;encours[n]=0;signes[n]=0;});
-  var clients=list.filter(leadIsClient);
+  var clients=list;
   clients.forEach(function(l){
     if(pts[l.membre]===undefined)return;
     if(l.statut==='Attribué')attrib[l.membre]++;
@@ -1707,10 +1704,9 @@ function renderLeadKpis(s,list){
   var att=cl.filter(function(l){return l.membre;}).length;
   var sig=cl.filter(function(l){return l.statut==='Signé';}).length;
   var conv=att?Math.round(100*sig/att):0;
-  var nu=list.length-cl.length;
   var scd=function(lb,v,su,col){return '<div class="scd"><div class="sclb">'+lb+'</div><div class="scvl"'+(col?' style="color:'+col+'"':'')+'>'+(LEADS_OK?v:'…')+'</div><div class="scsu">'+su+'</div></div>';};
   document.getElementById('ld-kpis').innerHTML=
-    scd('Leads clients',cl.length,nu+' société'+(nu>1?'s':'')+' utile'+(nu>1?'s':'')+' hors rotation')
+    scd('Leads clients',cl.length,'au total')
     +scd('Attribués',att,(cl.length-att)+' à attribuer')
     +scd('Signés',sig,'sur les leads clients','var(--gr)')
     +scd('Conversion',conv+'%','signés / attribués','var(--or)');
@@ -1764,7 +1760,7 @@ function renderLeadDist(s){
 }
 function leadSortVal(l,k){
   if(k==='id')return parseInt(String(l.id).slice(1))||0;
-  if(k==='statut')return leadIsClient(l)?LEAD_STATUTS.indexOf(l.statut):99;
+  if(k==='statut')return LEAD_STATUTS.indexOf(l.statut);
   if(k==='valeur')return LEAD_VAL[l.valeur]||0;
   if(k==='membre')return l.membre?REF_ORDER.indexOf(l.membre):99;
   if(k==='contact')return leadNorm(l.contact||l.societe);
@@ -1784,9 +1780,9 @@ function renderLeadTable(){
   var list=all.filter(function(l){
     if(q&&leadNorm([l.contact,l.societe,l.besoin,l.zone,l.email,l.notes,l.source,l.id].join(' ')).indexOf(q)<0)return false;
     if(LF.statut&&l.statut!==LF.statut)return false;
-    if(LF.membre==='_none'&&(l.membre||!leadIsClient(l)))return false;
+    if(LF.membre==='_none'&&l.membre)return false;
     if(LF.membre&&LF.membre!=='_none'&&l.membre!==LF.membre)return false;
-    if(LF.valeur==='_none'&&(l.valeur||!leadIsClient(l)))return false;
+    if(LF.valeur==='_none'&&l.valeur)return false;
     if(LF.valeur&&LF.valeur!=='_none'&&l.valeur!==LF.valeur)return false;
     return true;
   });
@@ -1796,26 +1792,24 @@ function renderLeadTable(){
   if(!list.length){body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--tx3);">Aucun lead ne correspond aux filtres.</td></tr>';return;}
   var dash='<span style="color:var(--tx3);">—</span>';
   body.innerHTML=list.map(function(l){
-    var util=!leadIsClient(l),id=esc(l.id);
+    var id=esc(l.id);
     var sel=function(f,opts,cur,blank){
       return '<select class="ldsel" data-lf="'+f+'" data-id="'+id+'">'+(blank!=null?'<option value="">'+blank+'</option>':'')
         +opts.map(function(o){return '<option value="'+esc(o)+'"'+(o===cur?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select>';
     };
-    var st=util?'<span class="badge bbl">Contact</span>'
-      :'<div class="crw"><div class="cdt" style="background:'+(LEAD_STCOL[l.statut]||'var(--tx3)')+'"></div>'+sel('statut',LEAD_STATUTS,l.statut)+'</div>';
+    var st='<div class="crw"><div class="cdt" style="background:'+(LEAD_STCOL[l.statut]||'var(--tx3)')+'"></div>'+sel('statut',LEAD_STATUTS,l.statut)+'</div>';
     var coord=[l.email?'<a class="ldmail" href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':'',
       l.telephone?'<a class="ldmail" style="color:var(--tx2);" href="tel:'+esc(String(l.telephone).replace(/\s/g,''))+'">'+esc(l.telephone)+'</a>':''].filter(Boolean).join('<br>')||dash;
-    return '<tr class="'+(util?'trutil':'')+'">'
+    return '<tr>'
       +'<td><div class="cn ldlink" data-open="'+id+'">'+(esc(l.contact)||esc(l.societe)||dash)+'</div>'
       +'<div class="ca">'+esc(l.societe)+(l.societe?' · ':'')+id
-      +(util?' <span class="badge bbl" style="font-size:9px;padding:1px 6px;margin-left:2px;">Société utile</span>':'')
       +(l.chantierId?' <span class="badge bgg" style="font-size:9px;padding:1px 6px;margin-left:2px;">Chantier lié</span>':'')+'</div></td>'
       +'<td style="font-size:12px;color:var(--tx2);max-width:240px;">'+(esc(l.besoin)||dash)+'</td>'
       +'<td style="font-size:12px;color:var(--tx2);">'+(esc(l.zone)||dash)+'</td>'
       +'<td style="white-space:nowrap;">'+st+'</td>'
-      +'<td>'+(util?dash:sel('membre',REF_ORDER,l.membre,'— à attribuer —'))+'</td>'
-      +'<td>'+(util?'':sel('valeur',Object.keys(LEAD_VAL),l.valeur,'—'))+'</td>'
-      +'<td>'+(util?'':sel('mode',['Seul','Groupement'],l.mode,'—'))+'</td>'
+      +'<td>'+sel('membre',REF_ORDER,l.membre,'— à attribuer —')+'</td>'
+      +'<td>'+sel('valeur',Object.keys(LEAD_VAL),l.valeur,'—')+'</td>'
+      +'<td>'+sel('mode',['Seul','Groupement'],l.mode,'—')+'</td>'
       +'<td style="white-space:nowrap;">'+coord+'</td>'
       +'</tr>';
   }).join('');
@@ -1824,7 +1818,7 @@ function renderLeadTable(){
 function leadBindOnce(){
   if(leadBound)return;leadBound=true;
   var opt=function(v,t){return '<option value="'+v+'">'+t+'</option>';};
-  document.getElementById('ld-fs').innerHTML=opt('','Tous statuts')+LEAD_STATUTS.concat(['Contact']).map(function(s){return opt(s,s);}).join('');
+  document.getElementById('ld-fs').innerHTML=opt('','Tous statuts')+LEAD_STATUTS.map(function(s){return opt(s,s);}).join('');
   document.getElementById('ld-fm').innerHTML=opt('','Tous membres')+REF_ORDER.map(function(n){return opt(n,n);}).join('')+opt('_none','Non attribués');
   document.getElementById('ld-fv').innerHTML=opt('','Toutes valeurs')+Object.keys(LEAD_VAL).map(function(v){return opt(v,v);}).join('')+opt('_none','Non évalués');
   [['ld-q','q'],['ld-fs','statut'],['ld-fm','membre'],['ld-fv','valeur']].forEach(function(p){
@@ -1839,7 +1833,7 @@ function leadBindOnce(){
   });
   pg.addEventListener('focusout',function(){if(leadDirty){leadDirty=false;setTimeout(renderLeads,0);}});
   // Formulaire lead
-  ['ld-type','ld-statut','ld-mode','ld-membre'].forEach(function(id){document.getElementById(id).addEventListener('change',leadFormSync);});
+  ['ld-statut','ld-mode','ld-membre'].forEach(function(id){document.getElementById(id).addEventListener('change',leadFormSync);});
   var grp=document.getElementById('ld-grp');
   grp.addEventListener('input',function(e){var t=e.target;if(t.dataset.pi!==undefined){leadParts[+t.dataset.pi][t.dataset.pk]=t.value;leadPartsSum();}});
   grp.addEventListener('click',function(e){var b=e.target.closest('[data-prm]');if(b){leadParts.splice(+b.dataset.prm,1);renderLeadParts();}});
@@ -1897,11 +1891,11 @@ function openLead(id,preset){
   leadBindOnce();
   leadEditId=id||null;leadPreset=preset||null;
   leadFillSelects();
-  var v=Object.assign({type:'Lead client',statut:'Nouveau'},l||{},preset||{});
+  var v=Object.assign({statut:'Nouveau'},l||{},preset||{});
   var set=function(eid,val){document.getElementById(eid).value=val==null?'':val;};
   set('ld-contact',v.contact);set('ld-societe',v.societe);set('ld-tel',v.telephone);set('ld-email',v.email);
   set('ld-besoin',v.besoin);set('ld-zone',v.zone);set('ld-source',v.source);set('ld-saisi',v.saisiPar||(l?'':(MBR[CU]?MBR[CU].name:'')));
-  set('ld-type',leadIsClient(v)?'Lead client':LEAD_UTIL);set('ld-statut',LEAD_STATUTS.indexOf(v.statut)>=0?v.statut:'Nouveau');
+  set('ld-statut',LEAD_STATUTS.indexOf(v.statut)>=0?v.statut:'Nouveau');
   set('ld-membre',v.membre);set('ld-valeur',v.valeur);set('ld-mode',v.mode);set('ld-notes',v.notes);
   set('ld-montant',v.montant!=null&&v.montant!==''?String(v.montant).replace('.',','):'');
   set('ld-dsig',v.dateSignature||isoDay());
@@ -1912,17 +1906,15 @@ function openLead(id,preset){
   openM('modlead');
 }
 function leadFormSync(){
-  var util=document.getElementById('ld-type').value===LEAD_UTIL;
   var st=document.getElementById('ld-statut').value;
   var mode=document.getElementById('ld-mode').value;
   var mb=document.getElementById('ld-membre').value;
-  document.getElementById('ld-client').style.display=util?'none':'block';
   document.getElementById('ld-sig').style.display=st==='Signé'?'block':'none';
   document.getElementById('ld-grp').style.display=mode==='Groupement'?'block':'none';
   if(mode==='Groupement'&&!leadParts.length)leadParts=[{membre:mb,prorata:''}];
   renderLeadParts();
   var sg=document.getElementById('ld-sugg');
-  if(!util&&!mb){
+  if(!mb){
     var s=leadStats(Object.values(LEADS));
     // Suggestion uniquement s'il y a un seul membre au plus bas ; egalite partielle : simple rappel, aucun bouton
     sg.innerHTML=s.next?'<div class="ldal ok" style="margin:-4px 0 14px;">✓ <div style="flex:1;">Suggestion de la rotation : <strong>'+s.next+'</strong> (seul au compteur le plus bas, '+s.min+' pt'+(s.min>1?'s':'')+'). À confirmer selon disponibilité et capacité technique.</div><button class="btn" type="button" style="padding:4px 10px;font-size:11px;" onclick="leadTakeSugg(\''+s.next+'\')">Attribuer</button></div>'
@@ -1967,35 +1959,30 @@ async function saveLead(){
   if(leadEditId&&!old){toast('Ce lead a été supprimé entre-temps');closeM('modlead');return;}
   var d={contact:g('ld-contact'),societe:g('ld-societe'),telephone:leadTel(g('ld-tel')),email:g('ld-email'),besoin:g('ld-besoin'),
     zone:g('ld-zone'),source:g('ld-source'),saisiPar:leadMembre(g('ld-saisi'))||g('ld-saisi'),notes:document.getElementById('ld-notes').value.trim(),
-    type:g('ld-type')===LEAD_UTIL?LEAD_UTIL:'Lead client'};
+    statut:g('ld-statut'),membre:g('ld-membre'),valeur:g('ld-valeur'),mode:g('ld-mode')};
   if(!d.contact&&!d.societe){toast('Indiquez au moins un contact ou une société');return;}
-  if(d.type===LEAD_UTIL){
-    Object.assign(d,{statut:'Contact',membre:'',valeur:'',mode:'',participants:null,dateSignature:null});
+  if(d.membre&&d.statut==='Nouveau')d.statut='Attribué';
+  if(d.statut==='Signé'){
+    if(!d.membre){toast('Attribuez un membre avant de passer en Signé');return;}
+    if(!d.valeur){toast('Indiquez la valeur du lead (Petit / Moyen / Gros)');return;}
+    var m=g('ld-montant').replace(/\s/g,'').replace('€','').replace(',','.');
+    if(m&&isNaN(parseFloat(m))){toast('Montant invalide');return;}
+    d.montant=m?parseFloat(m):null;
+    d.dateSignature=g('ld-dsig')||isoDay();
   } else {
-    Object.assign(d,{statut:g('ld-statut'),membre:g('ld-membre'),valeur:g('ld-valeur'),mode:g('ld-mode')});
-    if(d.membre&&d.statut==='Nouveau')d.statut='Attribué';
-    if(d.statut==='Signé'){
-      if(!d.membre){toast('Attribuez un membre avant de passer en Signé');return;}
-      if(!d.valeur){toast('Indiquez la valeur du lead (Petit / Moyen / Gros)');return;}
-      var m=g('ld-montant').replace(/\s/g,'').replace('€','').replace(',','.');
-      if(m&&isNaN(parseFloat(m))){toast('Montant invalide');return;}
-      d.montant=m?parseFloat(m):null;
-      d.dateSignature=g('ld-dsig')||isoDay();
-    } else {
-      d.dateSignature=null;
-      if(old&&old.statut==='Signé'&&!confirm('Ce lead ne sera plus compté comme signé dans la rotation. Continuer ?'))return;
-    }
-    if(d.mode==='Groupement'){
-      d.participants=leadReadParts();
-      var sum=d.participants.reduce(function(a,p){return a+p.prorata;},0);
-      if(d.participants.length&&Math.abs(sum-100)>=0.01&&!confirm('Les proratas totalisent '+(Math.round(sum*100)/100)+' % (et non 100 %). Enregistrer quand même ?'))return;
-    } else d.participants=null;
+    d.dateSignature=null;
+    if(old&&old.statut==='Signé'&&!confirm('Ce lead ne sera plus compté comme signé dans la rotation. Continuer ?'))return;
   }
+  if(d.mode==='Groupement'){
+    d.participants=leadReadParts();
+    var sum=d.participants.reduce(function(a,p){return a+p.prorata;},0);
+    if(d.participants.length&&Math.abs(sum-100)>=0.01&&!confirm('Les proratas totalisent '+(Math.round(sum*100)/100)+' % (et non 100 %). Enregistrer quand même ?'))return;
+  } else d.participants=null;
   if(d.email){
     var dup=Object.values(LEADS).find(function(x){return x.id!==leadEditId&&x.email&&x.email.toLowerCase()===d.email.toLowerCase();});
     if(dup&&!confirm('Un lead avec cet email existe déjà ('+dup.id+' : '+leadName(dup)+'). Enregistrer quand même ?'))return;
   }
-  if(old&&old.membre&&d.membre!==old.membre&&d.type!==LEAD_UTIL){
+  if(old&&old.membre&&d.membre!==old.membre){
     var motif=prompt('Réattribuer "'+leadName(old)+'" de '+old.membre+' à '+(d.membre||'personne')+'.\nMotif (facultatif, ex. proximité géographique) :','');
     if(motif===null)return;
     d.notes=leadReattrib(Object.assign({},old,{notes:d.notes}),d.membre,motif).notes;
@@ -2128,15 +2115,11 @@ function leadClean(r,def){
   var o={contact:s(r.contact),societe:s(r.societe),telephone:leadTel(r.telephone),email:s(r.email),besoin:s(r.besoin),zone:s(r.zone),
     notes:s(r.notes),source:s(r.source)||s(def.source),dateCreation:s(r.dateCreation).slice(0,10)||def.dateCreation||isoDay()};
   var sp=s(r.saisiPar);o.saisiPar=leadMembre(sp)||sp;
-  o.type=leadNorm(r.type)===leadNorm(LEAD_UTIL)?LEAD_UTIL:'Lead client';
-  if(o.type===LEAD_UTIL){o.statut='Contact';o.membre='';o.valeur='';o.mode='';}
-  else{
-    o.membre=leadMembre(r.membre);
-    o.statut=leadPick(r.statut,LEAD_STATUTS)||'Nouveau';
-    o.valeur=leadPick(r.valeur,Object.keys(LEAD_VAL));
-    o.mode=leadPick(r.mode,['Seul','Groupement']);
-    if(o.membre&&o.statut==='Nouveau')o.statut='Attribué';
-  }
+  o.membre=leadMembre(r.membre);
+  o.statut=leadPick(r.statut,LEAD_STATUTS)||'Nouveau';
+  o.valeur=leadPick(r.valeur,Object.keys(LEAD_VAL));
+  o.mode=leadPick(r.mode,['Seul','Groupement']);
+  if(o.membre&&o.statut==='Nouveau')o.statut='Attribué';
   var id=s(r.id);if(/^L\d+$/.test(id))o.id=id;
   return o;
 }
@@ -2145,11 +2128,9 @@ function leadMergeFields(ex,o){
   var upd={};
   ['contact','societe','telephone','besoin','zone','saisiPar','source'].forEach(function(k){if(!ex[k]&&o[k])upd[k]=o[k];});
   if(o.notes&&(ex.notes||'').indexOf(o.notes)<0)upd.notes=ex.notes?ex.notes+'\n'+o.notes:o.notes;
-  if(leadIsClient(ex)&&o.type!==LEAD_UTIL){
-    if(!ex.valeur&&o.valeur)upd.valeur=o.valeur;
-    if(!ex.mode&&o.mode)upd.mode=o.mode;
-    if(!ex.membre&&o.membre){upd.membre=o.membre;if(ex.statut==='Nouveau')upd.statut='Attribué';}
-  }
+  if(!ex.valeur&&o.valeur)upd.valeur=o.valeur;
+  if(!ex.mode&&o.mode)upd.mode=o.mode;
+  if(!ex.membre&&o.membre){upd.membre=o.membre;if(ex.statut==='Nouveau')upd.statut='Attribué';}
   return upd;
 }
 function leadPlanImport(rows,existing){
