@@ -45,6 +45,24 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
 .polact{display:flex;gap:10px;}
 .bpol{flex:1;padding:13px;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.14s;}
 
+/* NOUVEAUTES */
+#nouv{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;padding:16px;}
+#nouv.open{display:flex;}
+.nvbox{background:var(--bg2);border:0.5px solid var(--b2);border-radius:var(--rx);width:100%;max-width:460px;max-height:90vh;display:flex;flex-direction:column;animation:fup 0.35s both;}
+.nvhd{padding:26px 26px 6px;}
+.nvlg{width:36px;height:36px;border-radius:10px;background:var(--or);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-bottom:18px;}
+.nvti{font-size:21px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;}
+.nvin{font-size:13px;color:var(--tx2);margin-top:8px;}
+.nvsc{overflow-y:auto;padding:14px 26px 4px;display:flex;flex-direction:column;gap:10px;}
+.nvbl{display:flex;gap:14px;padding:14px;background:var(--bg3);border:0.5px solid var(--b);border-radius:var(--r);}
+.nvic{width:38px;height:38px;border-radius:10px;background:var(--ord);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.nvbt{font-size:14px;font-weight:600;margin-bottom:4px;}
+.nvbx{font-size:13px;color:var(--tx2);line-height:1.6;}
+.nvft{padding:16px 26px 24px;display:flex;flex-direction:column;gap:14px;}
+.nvfn{font-size:13px;color:var(--tx2);}
+.nvok{width:100%;padding:13px;border-radius:var(--r);border:none;background:var(--or);color:white;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;}
+.nvok:hover{background:var(--or2);}
+
 /* ACCUEIL */
 #acc{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
 .acci{width:100%;max-width:380px;text-align:center;}
@@ -485,7 +503,7 @@ th.ldsrt:hover{color:var(--tx);}
         <button class="ni" id="nve" onclick="showPg('equipe',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Equipe</button>
 
         <button class="ni" id="nvmb" onclick="showPg('membres',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Membres</button>
-        <button class="ni" id="nvr" onclick="showPg('roulement',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>Roulement AOP <span id="new-badge-desk" style="background:#F5C842;color:#1a1a1a;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;margin-left:4px;">NEW</span></button>
+        <button class="ni" id="nvr" onclick="showPg('roulement',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>Roulement AOP</button>
         <button class="ni" id="nvl" onclick="showPg('leads',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>Leads</button>
         <button class="ni" id="nvmc" onclick="showPg('moncal',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mon planning</button>
       </nav>
@@ -659,7 +677,7 @@ th.ldsrt:hover{color:var(--tx);}
     <button class="mni" id="mne" onclick="showPg('equipe',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Equipe</button>
 
     <button class="mni" id="mnmb" onclick="showPg('membres',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Membres</button>
-    <button class="mni" id="mnr" onclick="showPg('roulement',this)" style="display:none" style="position:relative;"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>Roulement<span style="position:absolute;top:2px;right:4px;background:#F5C842;color:#1a1a1a;font-size:8px;font-weight:700;padding:1px 4px;border-radius:3px;">NEW</span></button>
+    <button class="mni" id="mnr" onclick="showPg('roulement',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>Roulement</button>
     <button class="mni" id="mnl" onclick="showPg('leads',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>Leads</button>
     <button class="mni" id="mnmc" onclick="showPg('moncal',this)" style="display:none"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mon planning</button>
     <button class="mni" id="mnprofil" onclick="openProf()" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;">
@@ -845,23 +863,18 @@ th.ldsrt:hover{color:var(--tx);}
   </div>
 </div>
 
-<!-- TUTO ROULEMENT AOP -->
-<div id="tuto-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;flex-direction:column;">
-  <div style="background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.08);padding:14px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
-    <div style="width:28px;height:28px;border-radius:8px;background:#E8722A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0;">
-      <div style="background:white;border-radius:1px;width:14px;height:2px;"></div>
-      <div style="background:white;border-radius:1px;width:10px;height:2px;opacity:0.6;"></div>
-      <div style="background:white;border-radius:1px;width:6px;height:2px;opacity:0.3;"></div>
+<!-- NOUVEAUTES (contenu : constante NOUVEAUTES en haut du script) -->
+<div id="nouv">
+  <div class="nvbox">
+    <div class="nvhd">
+      <div class="nvlg"><div class="sb2" style="width:18px;height:2.5px;"></div><div class="sb2" style="width:13px;height:2.5px;opacity:0.6;"></div><div class="sb2" style="width:8px;height:2.5px;opacity:0.3;"></div></div>
+      <div class="nvti" id="nouv-titre"></div>
+      <div class="nvin" id="nouv-intro"></div>
     </div>
-    <div style="font-size:13px;font-weight:700;color:white;letter-spacing:-0.02em;line-height:1.3;">Nouvelle fonctionnalité<br>Le Roulement AOP</div>
-    <button onclick="closeTuto()" style="margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.3);font-size:20px;cursor:pointer;padding:0 4px;">×</button>
-  </div>
-  <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;" id="tuto-slides"></div>
-  <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);background:#0a0a0a;flex-shrink:0;">
-    <div style="display:flex;gap:4px;margin-bottom:12px;" id="tuto-progress"></div>
-    <div style="display:flex;gap:8px;">
-      <button id="tuto-prev" onclick="tutoPrev()" style="flex:1;padding:11px;border-radius:9px;border:1px solid rgba(255,255,255,0.1);background:none;color:rgba(255,255,255,0.5);font-size:14px;font-weight:500;cursor:pointer;visibility:hidden;">Précédent</button>
-      <button id="tuto-next" onclick="tutoNext()" style="flex:2;padding:11px;border-radius:9px;border:none;background:#E8722A;color:white;font-size:14px;font-weight:700;cursor:pointer;">Suivant</button>
+    <div class="nvsc" id="nouv-blocs"></div>
+    <div class="nvft">
+      <div class="nvfn" id="nouv-fin"></div>
+      <button class="nvok" onclick="nouvClose()">C'est parti</button>
     </div>
   </div>
 </div>
@@ -869,8 +882,23 @@ th.ldsrt:hover{color:var(--tx);}
 <div class="toast" id="toastel"></div>
 
 <script>
+// ═══ ECRAN DES NOUVEAUTES ═══
+// Pour annoncer de nouvelles nouveautes : augmenter "version" (2, 3...) et remplacer le texte.
+// L'ecran reapparait alors une fois pour chaque membre (version vue enregistree dans profiles/{membre}.nouveautesVues).
+const NOUVEAUTES = {
+  version: 1,
+  titre: 'Bienvenue sur la nouvelle version du Board',
+  intro: 'Deux nouveautés :',
+  blocs: [
+    {icone:'🔐', titre:'Connexion sécurisée',
+     texte:'Vous vous connectez maintenant avec votre email et votre mot de passe, puis un code PIN sur votre appareil. Vos données sont protégées.'},
+    {icone:'🎯', titre:'Module Leads',
+     texte:"Un nouvel onglet pour suivre et répartir les prospects de l'alliance. Chaque lead est attribué selon la rotation par points, et les compteurs se calculent tout seuls. Réservé aux référents."}
+  ],
+  fin: 'Bon boulot à tous.'
+};
+
 // ═══ CONSTANTS ═══
-if(new Date()>new Date("2026-09-01")){var bd=document.getElementById("new-badge-desk");var bm=document.getElementById("new-badge-mob");if(bd)bd.style.display="none";if(bm)bm.style.display="none";}
 console.log('Le Board v3.5 - REST API - loaded at ' + new Date().toISOString());
 const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Opérations':'#2D9E5F','OrizonDrone':'#8B7FD4'};
 const STATOK=['Confirme','Prevu'];
@@ -1216,6 +1244,10 @@ async function fbPoll(){
       const profileDocs = await fbGet('profiles', true);
       if(!profileDocs){ fbSyncState(false); return; }
       profileDocs.forEach(function(p){
+        if(p.id && typeof p.nouveautesVues==='number'){
+          if(!PR[p.id])PR[p.id]={};
+          if((PR[p.id].nouveautesVues||0) < p.nouveautesVues){ PR[p.id].nouveautesVues = p.nouveautesVues; sv('lb_pr',PR); }
+        }
         if(p.id && p.avatar){
           if(!PR[p.id])PR[p.id]={};
           if(PR[p.id].avatar !== p.avatar){
@@ -1225,6 +1257,7 @@ async function fbPoll(){
         }
       });
       fbProfilesDue = false;
+      nouvCheck();
     }
 
     // Load members
@@ -2209,85 +2242,25 @@ async function runImport(){
 // ═══ FIN LEADS ═══
 
 
-// ═══ TUTORIEL ROULEMENT AOP ═══
-var TUTO_CUR = 0;
-var TUTO_SLIDES = [
-  {
-    num:'01 / 06', title:'Le Roulement AOP',
-    desc:'Un nouvel onglet pour suivre et équilibrer la répartition des chantiers AOP entre les 6 référents.',
-    html:'<div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:16px;"><div style="background:#1e1e1e;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:10px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Classement 12 mois glissants</div><div style="padding:10px;display:flex;flex-direction:column;gap:5px;"><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><span style="font-size:10px;color:#555;min-width:14px;">1</span><div style="width:28px;height:28px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">HE</div><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:#f0f0f0;">Henri</div><div style="font-size:10px;color:#555;">KGiR</div></div><div style="flex:1;height:4px;background:#282828;border-radius:99px;overflow:hidden;margin:0 8px;"><div style="height:100%;width:100%;background:#aaa;border-radius:99px;"></div></div><div style="font-size:15px;font-weight:700;color:#f0f0f0;">4</div></div><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><span style="font-size:10px;color:#555;min-width:14px;">2</span><div style="width:28px;height:28px;border-radius:50%;background:#444;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">TH</div><div style="flex:1;"><div style="font-size:12px;font-weight:600;color:#f0f0f0;">Thomas</div><div style="font-size:10px;color:#555;">OrizonDrone</div></div><div style="flex:1;height:4px;background:#282828;border-radius:99px;overflow:hidden;margin:0 8px;"><div style="height:100%;width:4%;background:#3DDC84;border-radius:99px;"></div></div><div style="font-size:15px;font-weight:700;color:#3DDC84;">0</div><span style="background:#3DDC84;color:#0a1a0a;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;">PROCHAIN</span></div></div></div><div style="border-left:3px solid #E8722A;padding:10px 12px;background:rgba(232,114,42,0.06);border-radius:0 8px 8px 0;font-size:12px;color:#aaa;line-height:1.6;">Seuls les chantiers marqués <strong style="color:#f0f0f0;">AOP</strong> comptent. Vos chantiers propres restent hors compteur.</div>'
-  },
-  {
-    num:'02 / 06', title:'Marquer un chantier AOP',
-    desc:'Dans la fiche de création, une case est maintenant disponible. Cochez-la uniquement si ce chantier vient du canal commun AOP.',
-    html:'<div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:16px;"><div style="background:#1e1e1e;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:10px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Nouveau chantier</div><div style="padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><div style="width:18px;height:18px;border-radius:5px;background:#E8722A;border:1.5px solid #E8722A;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox=\"0 0 12 12\" width=\"12\" height=\"12\"><polyline points=\"2,6 5,9 10,3\" stroke=\"white\" stroke-width=\"1.5\" fill=\"none\" stroke-linecap=\"round\"/></svg></div><div style=\"font-size:13px;font-weight:600;color:#f0f0f0;\">Chantier AOP</div></div><div style="padding:10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><div style="font-size:10px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;">Canal arrivee</div><div style="display:flex;flex-wrap:wrap;gap:5px;"><span style="padding:4px 10px;border-radius:99px;font-size:11px;background:#E8722A;color:white;border:1px solid #E8722A;">Numéro commun</span><span style="padding:4px 10px;border-radius:99px;font-size:11px;border:1px solid rgba(255,255,255,0.08);color:#555;">Salon</span><span style="padding:4px 10px;border-radius:99px;font-size:11px;border:1px solid rgba(255,255,255,0.08);color:#555;">Partenariat</span><span style="padding:4px 10px;border-radius:99px;font-size:11px;border:1px solid rgba(255,255,255,0.08);color:#555;">Autre</span></div></div></div></div><div style="border-left:3px solid #E8722A;padding:10px 12px;background:rgba(232,114,42,0.06);border-radius:0 8px 8px 0;font-size:12px;color:#aaa;line-height:1.6;">Ce marquage est <strong style="color:#f0f0f0;">volontaire</strong>. Activez uniquement si ce chantier provient de l\'AOP.</div>'
-  },
-  {
-    num:'03 / 06', title:'Qui est comptabilisé',
-    desc:"Le compteur compte pour le maitre d'oeuvre, la société qui facture, pas le chargé de travaux.",
-    html:'<div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:16px;"><div style="background:#1e1e1e;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:10px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Chantier AOP : attribution</div><div style="padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><div style="font-size:10px;color:#555;min-width:90px;">Maitre oeuvre</div><div style="width:28px;height:28px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">YO</div><div style="flex:1;margin-left:6px;font-size:12px;font-weight:600;color:#f0f0f0;">Drone Opérations</div><span style="background:rgba(61,220,132,0.12);color:#3DDC84;font-size:9px;font-weight:700;padding:2px 9px;border-radius:4px;">+1 compteur</span></div><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;opacity:0.3;"><div style="font-size:10px;color:#555;min-width:90px;">Charge de travaux</div><div style="width:28px;height:28px;border-radius:50%;background:#555;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">FL</div><div style="flex:1;margin-left:6px;font-size:12px;color:#555;">Florian</div><span style="border:1px solid rgba(255,255,255,0.08);color:#555;font-size:9px;padding:2px 9px;border-radius:4px;">non comptabilisé</span></div></div></div><div style="border-left:3px solid #E8722A;padding:10px 12px;background:rgba(232,114,42,0.06);border-radius:0 8px 8px 0;font-size:12px;color:#aaa;line-height:1.6;">La société qui décroche et facture le chantier AOP est celle qui avance dans le roulement.</div>'
-  },
-  {
-    num:'04 / 06', title:'Alerte déséquilibre',
-    desc:"Si l'écart entre le compteur le plus haut et le plus bas dépasse 30%, une alerte s'affiche en haut de l'onglet.",
-    html:'<div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:16px;"><div style="padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="padding:11px 13px;background:rgba(255,179,64,0.08);border:1px solid rgba(255,179,64,0.2);border-radius:9px;font-size:12px;color:#FFB340;">Ecart de <strong>42%</strong> entre Henri (4) et Thomas (0). Rééquilibrage recommandé.</div><div style="padding:10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:9px;"><div style="font-size:10px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;">Indicateur equilibre</div><div style="height:6px;background:#282828;border-radius:99px;overflow:hidden;position:relative;"><div style="height:100%;width:42%;background:#FFB340;border-radius:99px;"></div><div style="position:absolute;top:0;left:30%;width:1px;height:100%;background:rgba(255,255,255,0.15);"></div></div><div style="display:flex;justify-content:space-between;font-size:9px;color:#555;margin-top:5px;"><span>0%</span><span style="color:#FFB340;">Limite 30%</span><span>100%</span></div></div></div></div><div style="border-left:3px solid #E8722A;padding:10px 12px;background:rgba(232,114,42,0.06);border-radius:0 8px 8px 0;font-size:12px;color:#aaa;line-height:1.6;">Cette alerte est un signal. <strong style="color:#f0f0f0;">C\'est vous qui decidez</strong> de la suite lors de votre prochaine réunion.</div>'
-  },
-  {
-    num:'05 / 06', title:'Qui peut prendre le prochain',
-    desc:"Entrez les dates d'un chantier AOP entrant. L\'app croise compteurs, indisponibilités et chantiers en cours pour vous dire qui est disponible.",
-    html:'<div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:16px;"><div style="background:#1e1e1e;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:10px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Dates : 22 au 24 sept</div><div style="padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><div style="width:8px;height:8px;border-radius:50%;background:#3DDC84;flex-shrink:0;"></div><div style="width:28px;height:28px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">TH</div><div style="flex:1;margin-left:4px;"><div style="font-size:12px;font-weight:600;color:#f0f0f0;">Thomas</div><div style="font-size:10px;color:#555;">0 chantier AOP</div></div><div style="background:#E8722A;color:white;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">Proposer</div></div><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;"><div style="width:8px;height:8px;border-radius:50%;background:#FFB340;flex-shrink:0;"></div><div style="width:28px;height:28px;border-radius:50%;background:#444;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">HE</div><div style="flex:1;margin-left:4px;"><div style="font-size:12px;font-weight:600;color:#f0f0f0;">Henri</div><div style="font-size:10px;color:#555;">4 chantiers AOP</div><div style="margin-top:4px;padding:3px 7px;background:rgba(255,179,64,0.08);border:1px solid rgba(255,179,64,0.2);border-radius:5px;font-size:10px;color:#FFB340;">MOE sur un autre chantier à ces dates</div></div><div style="background:#E8722A;color:white;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;">Proposer</div></div><div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;opacity:0.35;"><div style="width:8px;height:8px;border-radius:50%;background:#FF5C5C;flex-shrink:0;"></div><div style="width:28px;height:28px;border-radius:50%;background:#555;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">FR</div><div style="flex:1;margin-left:4px;"><div style="font-size:12px;color:#555;">Franck</div><span style="background:rgba(255,92,92,0.12);color:#FF5C5C;font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;">Indisponible</span></div><div style="background:#1e1e1e;border:1px solid rgba(255,255,255,0.06);color:#555;padding:4px 10px;border-radius:6px;font-size:11px;">Indispo</div></div></div></div>'
-  },
-  {
-    num:'06 / 06', title:'En résumé',
-    desc:"Trois réflexes à adopter pour que le roulement fonctionne bien pour tout le monde.",
-    html:'<div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" style=\"stroke:#aaa;fill:none;stroke-width:2;\"><polyline points=\"2,8 6,12 14,4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></div><div><div style="font-size:13px;font-weight:600;color:#f0f0f0;">Cochez Chantier AOP à chaque fois</div><div style="font-size:11px;color:#555;margin-top:2px;">Sans ce marquage, le chantier ne compte pas dans le roulement.</div></div></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" style=\"stroke:#aaa;fill:none;stroke-width:2;\"><rect x=\"2\" y=\"3\" width=\"12\" height=\"11\" rx=\"1.5\"/><line x1=\"5\" y1=\"1\" x2=\"5\" y2=\"5\"/><line x1=\"11\" y1=\"1\" x2=\"11\" y2=\"5\"/><line x1=\"2\" y1=\"7\" x2=\"14\" y2=\"7\"/></svg></div><div><div style="font-size:13px;font-weight:600;color:#f0f0f0;">Declarez vos indisponibilites a l\'avance</div><div style="font-size:11px;color:#555;margin-top:2px;">Depuis votre Profil, avant toute absence.</div></div></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:10px;"><div style="width:28px;height:28px;border-radius:7px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" style=\"stroke:#aaa;fill:none;stroke-width:2;\"><path d=\"M14 8A6 6 0 1 1 8 2c1.52 0 2.96.56 4.05 1.58L14 5\"/><path d=\"M14 2v3h-3\"/></svg></div><div><div style="font-size:13px;font-weight:600;color:#f0f0f0;">Consultez le classement avant d\'attribuer</div><div style="font-size:11px;color:#555;margin-top:2px;">L\'onglet Roulement AOP est mis a jour en temps reel.</div></div></div></div>'
-  }
-];
-
-function renderTuto(){
-  var s=TUTO_SLIDES[TUTO_CUR];
-  var slides=document.getElementById('tuto-slides');
-  slides.style.overflowY='auto';
-  slides.innerHTML='<div style="padding:20px 16px;display:flex;flex-direction:column;">'
-    +'<div style="font-size:10px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px;">'+s.num+'</div>'
-    +'<div style="font-size:clamp(18px,5vw,22px);font-weight:800;letter-spacing:-0.03em;color:#f0f0f0;margin-bottom:8px;line-height:1.2;">'+s.title+'</div>'
-    +'<div style="font-size:14px;color:#aaa;line-height:1.7;margin-bottom:20px;">'+s.desc+'</div>'
-    +s.html
-    +'</div>';
-  var prog=document.getElementById('tuto-progress');
-  prog.innerHTML='';
-  TUTO_SLIDES.forEach(function(_,i){
-    var p=document.createElement('div');
-    p.style.cssText='height:3px;border-radius:99px;flex:1;transition:all 0.3s;background:'+(i===TUTO_CUR?'#E8722A':i<TUTO_CUR?'rgba(232,114,42,0.3)':'rgba(255,255,255,0.1)')+';';
-    prog.appendChild(p);
-  });
-  document.getElementById('tuto-prev').style.visibility=TUTO_CUR===0?'hidden':'visible';
-  var nb=document.getElementById('tuto-next');
-  if(TUTO_CUR===TUTO_SLIDES.length-1){
-    nb.textContent='Ouvrir Le Board';
-    nb.style.background='#3DDC84';
-    nb.style.color='#0a1a0a';
-    nb.onclick=function(){closeTuto();localStorage.setItem('lb_tuto_roulement','1');};
-  } else {
-    nb.textContent='Suivant';
-    nb.style.background='#E8722A';
-    nb.style.color='white';
-    nb.onclick=tutoNext;
-  }
+// ═══ NOUVEAUTES ═══
+// Appele apres la lecture des profils : la version vue est alors connue (Firestore, ou appareil si l'ecriture avait echoue)
+function nouvCheck(){
+  if(!CU||document.getElementById('app').style.display==='none')return;
+  if(((PR[CU]||{}).nouveautesVues||0) >= NOUVEAUTES.version)return;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  document.getElementById('nouv-titre').textContent=NOUVEAUTES.titre;
+  document.getElementById('nouv-intro').textContent=NOUVEAUTES.intro||'';
+  document.getElementById('nouv-fin').textContent=NOUVEAUTES.fin||'';
+  document.getElementById('nouv-blocs').innerHTML=NOUVEAUTES.blocs.map(b=>'<div class="nvbl"><div class="nvic">'+esc(b.icone)+'</div><div><div class="nvbt">'+esc(b.titre)+'</div><div class="nvbx">'+esc(b.texte)+'</div></div></div>').join('');
+  document.getElementById('nouv').classList.add('open');
 }
-
-function tutoNext(){if(TUTO_CUR<TUTO_SLIDES.length-1){TUTO_CUR++;renderTuto();}}
-function tutoPrev(){if(TUTO_CUR>0){TUTO_CUR--;renderTuto();}}
-function closeTuto(){
-  localStorage.setItem('lb_tuto_roulement','1');
-  document.getElementById('tuto-overlay').style.display='none';
-}
-function showTutoIfNeeded(){
-  if(!localStorage.getItem('lb_tuto_roulement')){
-    TUTO_CUR=0;
-    document.getElementById('tuto-overlay').style.display='flex';
-    renderTuto();
-  }
+function nouvHide(){document.getElementById('nouv').classList.remove('open');}
+function nouvClose(){
+  nouvHide();
+  if(!CU)return;
+  if(!PR[CU])PR[CU]={};
+  PR[CU].nouveautesVues=NOUVEAUTES.version;sv('lb_pr',PR);
+  fbSet('profiles',CU,{nouveautesVues:NOUVEAUTES.version});
 }
 
 // ═══ INIT ═══
@@ -2412,8 +2385,8 @@ function chkPin(){
 function startSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();['click','keydown','touchstart'].forEach(e=>document.addEventListener(e,resetSess,{passive:true}));}
 function resetSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();}
 function animSess(){const f=document.getElementById('sesfil');f.style.transition='none';f.style.width='100%';setTimeout(()=>{f.style.transition=`width ${SDUR/1000}s linear`;f.style.width='0%';},60);}
-function expSess(){leadsReset();stopFbPolling();['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('app').style.display='none';document.getElementById('sexp').style.display='flex';CU=null;}
-function retAcc(){leadsReset();stopFbPolling();clearTimeout(sessTimer);['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('sexp').style.display='none';document.getElementById('app').style.display='none';CU=null;buildGrids();showAcc();}
+function expSess(){nouvHide();leadsReset();stopFbPolling();['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('app').style.display='none';document.getElementById('sexp').style.display='flex';CU=null;}
+function retAcc(){nouvHide();leadsReset();stopFbPolling();clearTimeout(sessTimer);['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('sexp').style.display='none';document.getElementById('app').style.display='none';CU=null;buildGrids();showAcc();}
 
 // ═══ LAUNCH ═══
 function launchApp(){
@@ -2426,7 +2399,6 @@ function launchApp(){
   else{showPg('moncal',document.getElementById('mnmc'));}
   startSess();
   listenNotifications();
-  setTimeout(showTutoIfNeeded, 800);
   document.getElementById('syntime').textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
 }
 
