@@ -46,16 +46,16 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .bpol{flex:1;height:32px;padding:0 13px;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.14s;}
 
 /* NOUVEAUTES */
-#nouv{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;padding:16px;}
+#nouv{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:16px;}
 #nouv.open{display:flex;}
-.nvbox{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rx);width:100%;max-width:460px;max-height:90vh;display:flex;flex-direction:column;animation:fup 0.35s both;}
+.nvbox{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,0.45);width:100%;max-width:460px;max-height:90vh;display:flex;flex-direction:column;animation:fup 0.35s both;}
 .nvhd{padding:26px 26px 6px;}
 .nvlg{width:36px;height:36px;border-radius:10px;background:var(--or);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-bottom:18px;}
 .nvti{font-size:21px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;}
 .nvin{font-size:13px;color:var(--tx2);margin-top:8px;}
 .nvsc{overflow-y:auto;padding:14px 26px 4px;display:flex;flex-direction:column;gap:10px;}
-.nvbl{display:flex;gap:14px;padding:14px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);}
-.nvic{width:38px;height:38px;border-radius:10px;background:var(--ord);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.nvbl{display:flex;gap:14px;padding:14px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
+.nvic{width:38px;height:38px;border-radius:10px;background:var(--ord);display:flex;align-items:center;justify-content:center;font-size:19px;color:var(--or);flex-shrink:0;}
 .nvbt{font-size:14px;font-weight:600;margin-bottom:4px;}
 .nvbx{font-size:13px;color:var(--tx2);line-height:1.6;}
 .nvft{padding:16px 26px 24px;display:flex;flex-direction:column;gap:14px;}
@@ -114,6 +114,13 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .secbox{width:100%;max-width:380px;}
 
 /* SESSION EXPIREE */
+.sxbox{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:32px 28px 24px;text-align:center;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.45);}
+.sxic{width:48px;height:48px;border-radius:12px;background:var(--ord);color:var(--or);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.sxic .ico{width:24px;height:24px;}
+.sxti{font-size:16px;font-weight:600;margin-bottom:8px;}
+.sxtx{font-size:13px;color:var(--tx2);margin-bottom:24px;line-height:1.6;}
+.sxbox .btn-block{margin-bottom:0;}
+.nvic .ico{width:20px;height:20px;}
 #sexp{position:fixed;inset:0;z-index:450;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;padding:20px;}
 
 /* APP */
@@ -281,8 +288,8 @@ textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rg
 .mbit{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--b);transition:background 0.12s;}
 .mbit:last-child{border-bottom:none;}
 .mbit:hover{background:var(--bg3);}
-.csw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.12s;flex-shrink:0;}
-.csw.sel{border-color:white;transform:scale(1.1);}
+.csw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:0;transition:box-shadow 0.12s;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);}
+.csw.sel{box-shadow:0 0 0 2px rgba(0,0,0,0.7),0 0 0 4px var(--tx);}
 
 /* COLLAB VIEW */
 .cccard{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:18px;margin-bottom:12px;}
@@ -294,22 +301,62 @@ textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rg
 .repbtn:hover{background:var(--am-hv);}
 
 /* MODAL */
-.mlov{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;}
+.mlov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;}
 .mlov.open{display:flex;}
-.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rx);padding:26px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;}
-.mtit{font-size:17px;font-weight:700;margin-bottom:22px;letter-spacing:-0.02em;}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.fg{margin-bottom:14px;}
+.modal{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:0 24px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.3);}
+.modal>*{flex-shrink:0;}
+.modal.msm{max-width:480px;}
+.modal.mlg{max-width:720px;}
+/* En-tete et pied fixes : restent visibles quand le corps defile */
+.mhd{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 -24px 4px;padding:18px 16px 10px 24px;background:var(--bg3);}
+.mtit{font-size:16px;font-weight:600;letter-spacing:-0.01em;}
+.mclose{width:32px;height:32px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;color:var(--tx2);border-radius:var(--r);cursor:pointer;}
+.mclose:hover{background:var(--bg4);color:var(--tx);}
+.mclose svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;}
+.msub{font-size:13px;color:var(--tx2);margin:4px 0 16px;}
+.msec{font-size:12px;font-weight:600;color:var(--tx2);margin:8px 0 12px;}
+.mhd+.msec{margin-top:4px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
+.fg{margin-bottom:16px;}
 .fl{font-size:12px;color:var(--tx3);margin-bottom:6px;display:block;font-weight:500;}
 .fi{width:100%;height:34px;padding:0 12px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r);color:var(--tx);font-family:inherit;font-size:13px;appearance:none;}
 .fi:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(232,114,42,0.18);}
-textarea.fi{height:auto;padding:9px 12px;line-height:1.5;}
+textarea.fi{height:auto;padding:9px 12px;line-height:1.5;resize:vertical;}
 input[type=file].fi{padding:6px 12px;}
 select.fi{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:32px;}
-.fa{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--b);}
+.fa{position:sticky;bottom:0;z-index:3;display:flex;gap:10px;justify-content:flex-end;margin:auto -24px 0;padding:14px 24px;background:var(--bg3);border-top:1px solid var(--b);}
+.fa .btnd{margin-right:auto;background:transparent;border-color:transparent;}
+.fa .btnd:hover{background:var(--red);}
+/* Champs et encadres en retrait sur le fond de la modale */
+.modal .fi{background-color:var(--bg2);}
+.modal .ldbox,.modal .pavz{background:var(--bg2);border:1px solid var(--b);}
+.modal .btn:not(.btnp):not(.btnd):not(.btn-ico){background:var(--bg4);}
+.modal .btn:not(.btnp):not(.btnd):not(.btn-ico):hover{background:var(--bg5);}
+.fhint{font-size:12px;color:var(--tx3);}
+.fhint-up{margin:-8px 0 16px;}
+.fempty{font-size:12px;color:var(--tx3);font-style:italic;margin-bottom:12px;}
+.frow{display:flex;align-items:center;gap:8px;}
+.frow .fi{flex:1;min-width:0;}
+.grow{flex:1;min-width:0;}
+.dn{display:none;}
+.btn-block{width:100%;justify-content:center;margin-bottom:16px;}
+.btn.btn-sm{height:28px;padding:0 10px;font-size:12px;}
+.btn.btn-ico{width:32px;height:32px;padding:0;justify-content:center;background:none;border-color:transparent;color:var(--tx3);flex-shrink:0;}
+.btn.btn-ico:hover{background:var(--bg4);color:var(--tx);}
+.btn-ico .ico{width:14px;height:14px;}
+.faop{display:flex;align-items:center;gap:12px;padding:8px 8px 8px 12px;min-height:50px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
+.faopl{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap;}
+.faop input[type=checkbox]{width:16px;height:16px;margin:0;accent-color:var(--or);cursor:pointer;}
+#fcanaop{flex:1;width:auto;min-width:0;}
+.conglist{margin-bottom:4px;}
+.congrow{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);margin-bottom:6px;}
+.congd{flex:1;font-size:13px;font-variant-numeric:tabular-nums;}
+.cswrow{display:flex;flex-wrap:wrap;gap:10px;}
 .cchks{display:flex;flex-wrap:wrap;gap:8px;}
-.cchk{display:flex;align-items:center;gap:7px;padding:7px 12px;background:var(--bg3);border:1px solid var(--b);border-radius:99px;cursor:pointer;transition:all 0.12s;user-select:none;font-size:13px;}
-.cchk.sel{background:var(--ord);border-color:var(--or-bds);color:var(--or);}
+.cchk{display:flex;align-items:center;gap:7px;height:32px;padding:0 12px;background:var(--bg2);border:1px solid var(--b2);border-radius:99px;cursor:pointer;transition:background 0.12s,border-color 0.12s;user-select:none;font-size:13px;}
+.cchk:hover{border-color:var(--b3);}
+.cchk.sel{background:var(--ord);border-color:var(--or-bd);}
+.cchk.sel::before{content:"";width:12px;height:12px;flex-shrink:0;background:var(--or);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat center/contain;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat center/contain;}
 .cchkd{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 /* AVATAR */
@@ -363,10 +410,11 @@ select.fi{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .toast.show{opacity:1;}
 
 /* PROFILE */
-.pavz{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:22px;padding:20px;background:var(--bg3);border-radius:var(--rl);}
+.pavz{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 16px;padding:20px;background:var(--bg3);border-radius:var(--rl);}
 .pavb{position:relative;cursor:pointer;}
 .pavo{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;font-size:18px;}
 .pavb:hover .pavo{opacity:1;}
+.pavo .ico{width:22px;height:22px;color:#fff;}
 
 /* LEADS */
 .bam{background:var(--amd);color:var(--am);}
@@ -398,8 +446,7 @@ select.fi{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .ldflt input.fi{min-width:170px;flex:1;max-width:280px;}
 .ldsel{padding:5px 6px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r);color:var(--tx);font-family:inherit;font-size:12px;max-width:130px;color-scheme:dark;}
 .ldsel:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(232,114,42,0.18);}
-#modlead select.fi,#modlink select.fi{appearance:auto;color-scheme:dark;}
-.ldflt select.fi,#modlead select.fi,#modlink select.fi{background-image:none;padding-right:10px;}
+.ldflt select.fi{background-image:none;padding-right:10px;}
 th.ldsrt{cursor:pointer;user-select:none;}
 th.ldsrt:hover{color:var(--tx);}
 .ldlink{cursor:pointer;}
@@ -407,7 +454,21 @@ th.ldsrt:hover{color:var(--tx);}
 .ldmail{color:var(--bl);text-decoration:none;font-size:12px;}
 .ldmail:hover{text-decoration:underline;}
 .ldpart{display:grid;grid-template-columns:1fr 90px auto;gap:8px;margin-bottom:8px;align-items:center;}
-.ldbox{padding:12px;background:var(--bg3);border-radius:var(--r);margin-bottom:14px;font-size:12px;color:var(--tx2);line-height:1.6;}
+.ldbox{padding:12px;background:var(--bg3);border-radius:var(--r);margin-bottom:16px;font-size:12px;color:var(--tx2);line-height:1.6;}
+.ldbox strong{color:var(--tx);}
+.ldbox-row{display:flex;align-items:center;gap:10px;}
+.ldboxh{margin-bottom:6px;}
+.ldsug{margin:-4px 0 16px;}
+.ldal .ico{width:14px;height:14px;margin-top:2px;}
+
+/* ICONES (SVG au trait 1.6, couleur = currentColor) */
+.ico{display:inline-block;width:16px;height:16px;flex-shrink:0;background:currentColor;-webkit-mask:no-repeat center/contain;mask:no-repeat center/contain;}
+.ico-x{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");}
+.ico-check{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");}
+.ico-alert{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");}
+.ico-camera{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E");}
+.ico-lock{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");}
+.ico-target{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E");}
 
 /* FOCUS CLAVIER */
 button:focus-visible,a:focus-visible,[onclick]:focus-visible,[tabindex]:focus-visible,summary:focus-visible,input[type=checkbox]:focus-visible,input[type=file]:focus-visible{outline:2px solid var(--or);outline-offset:2px;}
@@ -418,6 +479,16 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 @media(max-width:768px){
   .btn,.bpol,.nvok{height:44px;}
+  /* Modales en plein ecran, en-tete et pied fixes */
+  .mlov{padding:0;align-items:stretch;}
+  .modal,.modal.msm,.modal.mlg{max-width:none;width:100%;height:100dvh;max-height:none;border:0;border-radius:0;box-shadow:none;padding:0 16px;}
+  .mhd{margin:0 -16px 4px;padding:calc(8px + env(safe-area-inset-top)) 6px 8px 16px;}
+  .mclose{width:44px;height:44px;}
+  .fa{margin:auto -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));}
+  .fa .btn{flex:1;justify-content:center;}
+  .fa .btnd{flex:0 0 auto;}
+  .btn.btn-ico{width:44px;height:44px;}
+  .btn.btn-sm{height:44px;}
   .synbar .btn,.btn.delbtn,.btn.rou-prop,.repbtn,.ldpart .btn,.ldsel{height:36px;}
   .mbr-grid{grid-template-columns:1fr !important;}
   .sbar{display:none;}
@@ -577,11 +648,11 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 <!-- SESSION EXPIREE -->
 <div id="sexp" style="display:none;align-items:center;justify-content:center;">
-  <div style="background:var(--bg2);border:0.5px solid var(--b2);border-radius:var(--rx);padding:36px;text-align:center;max-width:340px;width:100%;">
-    <div style="font-size:42px;margin-bottom:16px;">&#128274;</div>
-    <div style="font-size:18px;font-weight:700;margin-bottom:10px;">Session expiree</div>
-    <div style="font-size:13px;color:var(--tx2);margin-bottom:28px;line-height:1.6;">Votre session a expire apres 1h d'inactivite.</div>
-    <button onclick="retAcc()" style="width:100%;padding:13px;border-radius:10px;background:var(--or);border:none;color:white;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Se reconnecter</button>
+  <div class="sxbox">
+    <div class="sxic"><span class="ico ico-lock" aria-hidden="true"></span></div>
+    <div class="sxti">Session expirée</div>
+    <div class="sxtx">Votre session a expiré après 1 h d'inactivité.</div>
+    <button class="btn btnp btn-block" onclick="retAcc()">Se reconnecter</button>
   </div>
 </div>
 
@@ -794,29 +865,30 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 <!-- MODAL CHANTIER -->
 <div class="mlov" id="modch">
   <div class="modal">
-    <div class="mtit" id="modchtit">Nouveau chantier</div>
+    <div class="mhd"><div class="mtit" id="modchtit">Nouveau chantier</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modch')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="msec">Chantier</div>
     <div class="fr"><div class="fg"><label class="fl">Nom *</label><input class="fi" type="text" id="fnom" placeholder=""></div><div class="fg"><label class="fl">Client</label><input class="fi" type="text" id="fcli" placeholder=""></div></div>
     <div class="fg"><label class="fl">Adresse</label><input class="fi" type="text" id="fadr" placeholder=""></div>
     <div class="fr">
       <div class="fg"><label class="fl">Type</label><select class="fi" id="ftyp"><option value="">-- Choisir --</option></select></div>
       <div class="fg"><label class="fl">Statut</label><select class="fi" id="fsta"><option value="">-- Choisir --</option><option>Confirme</option><option>Prevu</option><option>Option</option><option>Termine</option></select></div>
     </div>
+    <div class="msec">Équipe</div>
     <div class="fr">
       <div class="fg"><label class="fl">Maître d'œuvre *</label><select class="fi" id="fche"></select></div>
       <div class="fg"><label class="fl">Chargé de travaux *</label><select class="fi" id="fctv"></select></div>
     </div>
-    <div class="fr">
-      <div class="fg"><label class="fl">Matériel</label><input class="fi" type="text" id="fmat" placeholder=""></div>
-      <div class="fg"></div>
-    </div>
-    <div class="fr"><div class="fg"><label class="fl">Début *</label><input class="fi" type="date" id="fdeb"></div><div class="fg"><label class="fl">Fin *</label><input class="fi" type="date" id="ffin"></div></div>
     <div class="fg"><label class="fl">Collaborateurs</label><div class="cchks" id="cchks"></div></div>
-    <div class="fg" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:var(--r);margin-bottom:4px;">
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:500;">
-        <input type="checkbox" id="faop" onchange="toggleAOP(this)" style="width:16px;height:16px;accent-color:var(--or);cursor:pointer;">
+    <div class="msec">Dates</div>
+    <div class="fr"><div class="fg"><label class="fl">Début *</label><input class="fi" type="date" id="fdeb"></div><div class="fg"><label class="fl">Fin *</label><input class="fi" type="date" id="ffin"></div></div>
+    <div class="msec">Détails</div>
+    <div class="fg"><label class="fl">Matériel</label><input class="fi" type="text" id="fmat" placeholder=""></div>
+    <div class="fg faop">
+      <label class="faopl">
+        <input type="checkbox" id="faop" onchange="toggleAOP(this)">
         Chantier AOP
       </label>
-      <select class="fi" id="fcanaop" style="display:none;flex:1;margin-left:8px;padding:6px 10px;">
+      <select class="fi" id="fcanaop" style="display:none;">
         <option value="">Canal d'arrivée…</option>
         <option value="numero_commun">Numéro commun</option>
         <option value="salon">Salon / événement</option>
@@ -831,9 +903,9 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 <!-- MODAL REMPLACER -->
 <div class="mlov" id="modrep">
-  <div class="modal" style="max-width:400px;">
-    <div class="mtit">Remplacer un collaborateur</div>
-    <div style="font-size:13px;color:var(--tx2);margin-bottom:18px;" id="repinfo"></div>
+  <div class="modal msm">
+    <div class="mhd"><div class="mtit">Remplacer un collaborateur</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modrep')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="msub" id="repinfo"></div>
     <div class="fg"><label class="fl">Remplacer</label><select class="fi" id="repfrom"></select></div>
     <div class="fg"><label class="fl">Par</label><select class="fi" id="repto"></select></div>
     <div class="fa"><button class="btn" onclick="closeM('modrep')">Annuler</button><button class="btn btnp" onclick="doRep()">Confirmer</button></div>
@@ -842,26 +914,24 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 <!-- MODAL PROFIL -->
 <div class="mlov" id="modprof">
-  <div class="modal" style="max-width:360px;">
-    <div class="mtit">Mon profil</div>
+  <div class="modal msm">
+    <div class="mhd"><div class="mtit">Mon profil</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modprof')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="pavz">
       <div class="pavb" onclick="document.getElementById('avinp').click()">
         <div class="av" id="profav" style="width:80px;height:80px;font-size:26px;"></div>
-        <div class="pavo">&#128247;</div>
+        <div class="pavo"><span class="ico ico-camera" aria-hidden="true"></span></div>
       </div>
-      <div style="font-size:12px;color:var(--tx3);">Cliquer pour changer la photo</div>
-      <input type="file" id="avinp" accept="image/*" style="display:none" onchange="handleAv(event)">
+      <div class="fhint">Cliquer pour changer la photo</div>
+      <input type="file" id="avinp" accept="image/*" class="dn" onchange="handleAv(event)">
     </div>
-    <div style="padding:12px;background:var(--bg3);border-radius:var(--r);margin-bottom:14px;font-size:12px;color:var(--tx2);line-height:1.6;">Session active. Deconnexion automatique apres <strong style="color:var(--tx);">1 heure</strong> d'inactivite.</div>
-    <div style="margin-bottom:14px;">
-      <div style="font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Mes indisponibilites</div>
-      <div id="mes-conges" style="margin-bottom:10px;"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-        <div><label class="fl">Debut</label><input class="fi" type="date" id="cong-deb"></div>
-        <div><label class="fl">Fin</label><input class="fi" type="date" id="cong-fin"></div>
-      </div>
-      <button onclick="addConge()" class="btn btnp" style="width:100%;justify-content:center;font-size:12px;">Ajouter une indisponibilite</button>
+    <div class="ldbox">Session active. Déconnexion automatique après <strong>1 heure</strong> d'inactivité.</div>
+    <div class="msec">Mes indisponibilités</div>
+    <div id="mes-conges" class="conglist"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Début</label><input class="fi" type="date" id="cong-deb"></div>
+      <div class="fg"><label class="fl">Fin</label><input class="fi" type="date" id="cong-fin"></div>
     </div>
+    <button onclick="addConge()" class="btn btn-block">Ajouter une indisponibilité</button>
     <div class="fa"><button class="btn" onclick="closeM('modprof')">Fermer</button><button class="btn btnp" onclick="saveProf()">Sauvegarder</button></div>
   </div>
 </div>
@@ -869,12 +939,12 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 <!-- MODAL NOUVEAU MOE -->
 <div class="mlov" id="modmoe">
-  <div class="modal" style="max-width:400px;">
-    <div class="mtit">Nouveau Maitre d'oeuvre</div>
-    <div class="fg"><label class="fl">Nom de la societe *</label><input class="fi" type="text" id="moe-name" placeholder=""></div>
+  <div class="modal msm">
+    <div class="mhd"><div class="mtit">Nouveau maître d'œuvre</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modmoe')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="fg"><label class="fl">Nom de la société *</label><input class="fi" type="text" id="moe-name" placeholder=""></div>
     <div class="fg">
       <label class="fl">Couleur</label>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="moe-colpick">
+      <div class="cswrow" id="moe-colpick">
         <div class="csw sel" style="background:#E8722A" onclick="selMoeCol('#E8722A',this)"></div>
         <div class="csw" style="background:#E24B4A" onclick="selMoeCol('#E24B4A',this)"></div>
         <div class="csw" style="background:#4A90D9" onclick="selMoeCol('#4A90D9',this)"></div>
@@ -897,8 +967,8 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 <!-- MODAL NOUVEAU TYPE -->
 <div class="mlov" id="modtype">
-  <div class="modal" style="max-width:380px;">
-    <div class="mtit">Nouveau type de chantier</div>
+  <div class="modal msm">
+    <div class="mhd"><div class="mtit">Nouveau type de chantier</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modtype')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="fg"><label class="fl">Nom du type *</label><input class="fi" type="text" id="newtype-name" placeholder=""></div>
     <div class="fa">
       <button class="btn" onclick="closeM('modtype')">Annuler</button>
@@ -911,42 +981,44 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 <!-- MODAL LEAD -->
 <div class="mlov" id="modlead">
   <div class="modal">
-    <div class="mtit" id="ld-tit">Nouveau lead</div>
+    <div class="mhd"><div class="mtit" id="ld-tit">Nouveau lead</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modlead')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="msec">Contact</div>
     <div class="fr"><div class="fg"><label class="fl">Contact</label><input class="fi" type="text" id="ld-contact"></div><div class="fg"><label class="fl">Société</label><input class="fi" type="text" id="ld-societe"></div></div>
     <div class="fr"><div class="fg"><label class="fl">Téléphone</label><input class="fi" type="tel" id="ld-tel"></div><div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="ld-email"></div></div>
     <div class="fg"><label class="fl">Besoin</label><input class="fi" type="text" id="ld-besoin"></div>
     <div class="fr"><div class="fg"><label class="fl">Zone</label><input class="fi" type="text" id="ld-zone"></div><div class="fg"><label class="fl">Source</label><input class="fi" type="text" id="ld-source" list="ld-sources" placeholder="ex. SEPEM Toulouse 2026"></div></div>
     <div class="fg"><label class="fl">Saisi par</label><input class="fi" type="text" id="ld-saisi" list="ld-membres"></div>
     <div id="ld-client">
+      <div class="msec">Suivi</div>
       <div class="fr"><div class="fg"><label class="fl">Statut</label><select class="fi" id="ld-statut"></select></div><div class="fg"><label class="fl">Membre attribué</label><select class="fi" id="ld-membre"></select></div></div>
       <div id="ld-sugg"></div>
       <div class="fr"><div class="fg"><label class="fl">Valeur</label><select class="fi" id="ld-valeur"></select></div><div class="fg"><label class="fl">Mode</label><select class="fi" id="ld-mode"></select></div></div>
       <div class="fg" id="ld-grp">
         <label class="fl">Participants au groupement (prorata %)</label>
         <div id="ld-parts"></div>
-        <div style="display:flex;align-items:center;gap:10px;"><button class="btn" type="button" id="ld-padd" style="padding:6px 12px;font-size:12px;">+ Ajouter un participant</button><span id="ld-psum" style="font-size:12px;"></span></div>
+        <div class="frow"><button class="btn btn-sm" type="button" id="ld-padd">+ Ajouter un participant</button><span id="ld-psum" class="fhint"></span></div>
       </div>
       <div id="ld-sig">
         <div class="fr"><div class="fg"><label class="fl">Montant du chantier (€, indicatif)</label><input class="fi" type="text" inputmode="decimal" id="ld-montant"></div><div class="fg"><label class="fl">Date de signature</label><input class="fi" type="date" id="ld-dsig"></div></div>
-        <div style="font-size:11px;color:var(--tx3);margin:-6px 0 14px;">Ajustez la valeur (Petit / Moyen / Gros) selon le montant réel : c'est elle qui compte dans la rotation. Aucun flux financier n'est géré ici.</div>
+        <div class="fhint fhint-up">Ajustez la valeur (Petit / Moyen / Gros) selon le montant réel : c'est elle qui compte dans la rotation. Aucun flux financier n'est géré ici.</div>
       </div>
       <div id="ld-chlink"></div>
     </div>
-    <div class="fg"><label class="fl">Notes</label><textarea class="fi" id="ld-notes" rows="3" style="resize:vertical;"></textarea></div>
+    <div class="fg"><label class="fl">Notes</label><textarea class="fi" id="ld-notes" rows="3"></textarea></div>
     <datalist id="ld-membres"></datalist><datalist id="ld-sources"></datalist>
-    <div class="fa"><button class="btn btnd" id="ld-del" onclick="delLead()" style="margin-right:auto;">Supprimer</button><button class="btn" onclick="closeM('modlead')">Annuler</button><button class="btn btnp" id="ld-save" onclick="saveLead()">Enregistrer</button></div>
+    <div class="fa"><button class="btn btnd" id="ld-del" onclick="delLead()">Supprimer</button><button class="btn" onclick="closeM('modlead')">Annuler</button><button class="btn btnp" id="ld-save" onclick="saveLead()">Enregistrer</button></div>
   </div>
 </div>
 
 <!-- MODAL LEAD -> CHANTIER -->
 <div class="mlov" id="modlink">
-  <div class="modal" style="max-width:460px;">
-    <div class="mtit">Lead signé : chantier</div>
+  <div class="modal msm">
+    <div class="mhd"><div class="mtit">Lead signé : chantier</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modlink')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="ldbox" id="lk-info"></div>
     <div id="lk-cur"></div>
-    <button class="btn btnp" style="width:100%;justify-content:center;margin-bottom:16px;" onclick="leadToChantier(leadLinkId)">Créer le chantier dans le planning</button>
+    <button class="btn btnp btn-block" onclick="leadToChantier(leadLinkId)">Créer le chantier dans le planning</button>
     <div class="fg"><label class="fl">Ou lier un chantier existant</label>
-      <div style="display:flex;gap:8px;"><select class="fi" id="lk-sel" style="flex:1;"></select><button class="btn" onclick="leadLinkSel()">Lier</button></div>
+      <div class="frow"><select class="fi" id="lk-sel"></select><button class="btn" onclick="leadLinkSel()">Lier</button></div>
     </div>
     <div class="fa"><button class="btn" onclick="closeM('modlink')">Plus tard</button></div>
   </div>
@@ -954,8 +1026,8 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 <!-- MODAL IMPORT LEADS -->
 <div class="mlov" id="modimp">
-  <div class="modal" style="max-width:480px;">
-    <div class="mtit">Importer des leads</div>
+  <div class="modal">
+    <div class="mhd"><div class="mtit">Importer des leads</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modimp')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="ldbox">Fichier CSV (export du formulaire Google, séparateur virgule ou point-virgule) ou JSON, avec les colonnes : contact, societe, telephone, email, besoin, zone, saisiPar, notes, membre, statut, valeur, mode, source, dateCreation. Les leads déjà présents (même email) sont complétés, jamais écrasés.</div>
     <div class="fg"><label class="fl">Fichier</label><input class="fi" type="file" id="imp-file" accept=".csv,.json,text/csv,application/json"></div>
     <div class="fr">
@@ -963,7 +1035,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
       <div class="fg"><label class="fl">Date de création par défaut</label><input class="fi" type="date" id="imp-date"></div>
     </div>
     <div id="imp-prev"></div>
-    <div class="fa"><button class="btn" onclick="closeM('modimp')">Annuler</button><button class="btn btnp" id="imp-go" onclick="runImport()" disabled style="opacity:0.4;">Importer</button></div>
+    <div class="fa"><button class="btn" onclick="closeM('modimp')">Annuler</button><button class="btn btnp" id="imp-go" onclick="runImport()" disabled>Importer</button></div>
   </div>
 </div>
 
@@ -1001,6 +1073,8 @@ const NOUVEAUTES = {
   ],
   fin: 'Bon boulot à tous.'
 };
+// Icones SVG affichees a la place des emojis connus (les autres emojis restent affiches tels quels)
+const NVICO={'🔐':'lock','🎯':'target'};
 
 // ═══ CONSTANTS ═══
 console.log('Le Board v3.5 - REST API - loaded at ' + new Date().toISOString());
@@ -1022,9 +1096,9 @@ let selMoeColor='#E8722A';
 function selMoeCol(c,el){selMoeColor=c;document.querySelectorAll('#moe-colpick .csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}
 function saveMoe(){
   const nom=document.getElementById('moe-name').value.trim();
-  if(!nom){toast('Entrez un nom de societe');return;}
+  if(!nom){toast('Entrez un nom de société');return;}
   const key=nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
-  if(MOE[key]){toast('Cette societe existe deja');return;}
+  if(MOE[key]){toast('Cette société existe déjà');return;}
   MOE[key]={name:nom,color:selMoeColor};
   svAll();bldChefSel();
   closeM('modmoe');
@@ -2025,16 +2099,16 @@ function leadFormSync(){
   if(!mb){
     var s=leadStats(Object.values(LEADS));
     // Suggestion uniquement s'il y a un seul membre au plus bas ; egalite partielle : simple rappel, aucun bouton
-    sg.innerHTML=s.next?'<div class="ldal ok" style="margin:-4px 0 14px;">✓ <div style="flex:1;">Suggestion de la rotation : <strong>'+s.next+'</strong> (seul au compteur le plus bas, '+s.min+' pt'+(s.min>1?'s':'')+'). À confirmer selon disponibilité et capacité technique.</div><button class="btn" type="button" style="padding:4px 10px;font-size:11px;" onclick="leadTakeSugg(\''+s.next+'\')">Attribuer</button></div>'
-      :(s.egaux.length<REF_ORDER.length?'<div class="ldal ok" style="margin:-4px 0 14px;">✓ <div style="flex:1;">'+leadSuggMsg(s)+'</div></div>':'');
+    sg.innerHTML=s.next?'<div class="ldal ok ldsug"><span class="ico ico-check" aria-hidden="true"></span><div class="grow">Suggestion de la rotation : <strong>'+s.next+'</strong> (seul au compteur le plus bas, '+s.min+' pt'+(s.min>1?'s':'')+'). À confirmer selon disponibilité et capacité technique.</div><button class="btn btn-sm" type="button" onclick="leadTakeSugg(\''+s.next+'\')">Attribuer</button></div>'
+      :(s.egaux.length<REF_ORDER.length?'<div class="ldal ok ldsug"><span class="ico ico-check" aria-hidden="true"></span><div class="grow">'+leadSuggMsg(s)+'</div></div>':'');
   } else sg.innerHTML='';
   var ch=document.getElementById('ld-chlink');
   var l=leadEditId?LEADS[leadEditId]:null;
   if(l&&l.statut==='Signé'&&st==='Signé'){
     var c=l.chantierId?CH.find(function(x){return x.id===l.chantierId;}):null;
-    ch.innerHTML='<div class="ldbox" style="display:flex;align-items:center;gap:10px;">'
-      +'<div style="flex:1;">'+(l.chantierId?(c?'Chantier lié : <strong style="color:var(--tx);">'+esc(c.nom)+'</strong> ('+fd(c.debut)+')':'Chantier lié introuvable (supprimé ?)'):'Aucun chantier lié à ce lead.')+'</div>'
-      +'<button class="btn" type="button" style="padding:5px 10px;font-size:12px;" onclick="closeM(\'modlead\');openLink(\''+esc(l.id)+'\')">'+(l.chantierId?'Gérer':'Créer / lier')+'</button></div>';
+    ch.innerHTML='<div class="ldbox ldbox-row">'
+      +'<div class="grow">'+(l.chantierId?(c?'Chantier lié : <strong>'+esc(c.nom)+'</strong> ('+fd(c.debut)+')':'Chantier lié introuvable (supprimé ?)'):'Aucun chantier lié à ce lead.')+'</div>'
+      +'<button class="btn btn-sm" type="button" onclick="closeM(\'modlead\');openLink(\''+esc(l.id)+'\')">'+(l.chantierId?'Gérer':'Créer / lier')+'</button></div>';
   } else ch.innerHTML='';
 }
 function leadTakeSugg(n){
@@ -2047,7 +2121,7 @@ function renderLeadParts(){
     return '<div class="ldpart"><select class="fi" data-pi="'+i+'" data-pk="membre"><option value="">— Membre —</option>'
       +REF_ORDER.map(function(n){return '<option value="'+n+'"'+(p.membre===n?' selected':'')+'>'+n+' ('+esc(REF_SOC[n])+')</option>';}).join('')+'</select>'
       +'<input class="fi" type="text" inputmode="decimal" placeholder="%" data-pi="'+i+'" data-pk="prorata" value="'+esc(p.prorata)+'">'
-      +'<button class="btn" type="button" data-prm="'+i+'" style="padding:6px 10px;">✕</button></div>';
+      +'<button class="btn btn-ico" type="button" data-prm="'+i+'" aria-label="Retirer ce participant"><span class="ico ico-x" aria-hidden="true"></span></button></div>';
   }).join('');
   leadPartsSum();
 }
@@ -2130,14 +2204,14 @@ function openLink(id){
   leadLinkId=id;
   var soc=REF_SOC[l.membre]||'';
   var parts=(l.participants||[]).map(function(p){return esc(p.membre)+' '+p.prorata+' %';}).join(', ');
-  document.getElementById('lk-info').innerHTML='<strong style="color:var(--tx);">'+esc(leadName(l))+(l.societe&&l.contact?' — '+esc(l.societe):'')+'</strong><br>'
-    +'Maître d\'œuvre : <strong style="color:var(--tx);">'+esc(soc||'—')+'</strong> ('+esc(l.membre||'non attribué')+')'
+  document.getElementById('lk-info').innerHTML='<strong>'+esc(leadName(l))+(l.societe&&l.contact?' — '+esc(l.societe):'')+'</strong><br>'
+    +'Maître d\'œuvre : <strong>'+esc(soc||'—')+'</strong> ('+esc(l.membre||'non attribué')+')'
     +(l.mode==='Groupement'?'<br>Groupement : '+(parts||'participants à définir'):'')
     +(l.besoin?'<br>Besoin : '+esc(l.besoin):'');
   var cur=document.getElementById('lk-cur');
   if(l.chantierId){
     var c=CH.find(function(x){return x.id===l.chantierId;});
-    cur.innerHTML='<div class="ldbox" style="display:flex;align-items:center;gap:10px;"><div style="flex:1;">'+(c?'Déjà lié à : <strong style="color:var(--tx);">'+esc(c.nom)+'</strong> ('+fd(c.debut)+')':'Chantier lié introuvable (supprimé ?)')+'</div><button class="btn btnd" style="padding:5px 10px;font-size:12px;" onclick="leadUnlink()">Délier</button></div>';
+    cur.innerHTML='<div class="ldbox ldbox-row"><div class="grow">'+(c?'Déjà lié à : <strong>'+esc(c.nom)+'</strong> ('+fd(c.debut)+')':'Chantier lié introuvable (supprimé ?)')+'</div><button class="btn btnd btn-sm" onclick="leadUnlink()">Délier</button></div>';
   } else cur.innerHTML='';
   var avail=CH.filter(function(c){return !c.leadId||c.leadId===id;}).slice().sort(function(a,b){return a.debut<b.debut?1:-1;});
   document.getElementById('lk-sel').innerHTML='<option value="">— Choisir un chantier —</option>'+avail.map(function(c){
@@ -2285,7 +2359,7 @@ function leadImpFile(e){
       leadImpPreview();
     }catch(err){
       leadImp=null;leadImpBtn(false);
-      document.getElementById('imp-prev').innerHTML='<div class="ldal w">⚠️ <div>Fichier illisible : '+esc(err.message)+'</div></div>';
+      document.getElementById('imp-prev').innerHTML='<div class="ldal w"><span class="ico ico-alert" aria-hidden="true"></span><div>Fichier illisible : '+esc(err.message)+'</div></div>';
     }
   };
   rd.readAsText(f,'utf-8');
@@ -2295,10 +2369,10 @@ function leadImpPreview(){
   var def={source:document.getElementById('imp-src').value.trim(),dateCreation:document.getElementById('imp-date').value};
   var plan=leadPlanImport(leadImp.rows.map(function(r){return leadClean(r,def);}),Object.values(LEADS));
   leadImp.plan=plan;
-  var li=function(n,t){return n?'<div>• <strong style="color:var(--tx);">'+n+'</strong> '+t+'</div>':'';};
+  var li=function(n,t){return n?'<div>• <strong>'+n+'</strong> '+t+'</div>':'';};
   var names=plan.create.slice(0,6).map(function(o){return esc(o.contact||o.societe);}).join(', ')+(plan.create.length>6?'…':'');
   document.getElementById('imp-prev').innerHTML='<div class="ldbox">'
-    +'<div style="margin-bottom:6px;">'+esc(leadImp.name)+' : '+leadImp.rows.length+' ligne'+(leadImp.rows.length>1?'s':'')+'</div>'
+    +'<div class="ldboxh">'+esc(leadImp.name)+' : '+leadImp.rows.length+' ligne'+(leadImp.rows.length>1?'s':'')+'</div>'
     +li(plan.create.length,'nouveau'+(plan.create.length>1?'x':'')+' lead'+(plan.create.length>1?'s':'')+(names?' ('+names+')':''))
     +li(plan.merge.length,'lead'+(plan.merge.length>1?'s':'')+' existant'+(plan.merge.length>1?'s':'')+' complété'+(plan.merge.length>1?'s':'')+' (même email)')
     +li(plan.same,'déjà à jour, ignoré'+(plan.same>1?'s':''))
@@ -2340,7 +2414,7 @@ function nouvCheck(){
   document.getElementById('nouv-titre').textContent=NOUVEAUTES.titre;
   document.getElementById('nouv-intro').textContent=NOUVEAUTES.intro||'';
   document.getElementById('nouv-fin').textContent=NOUVEAUTES.fin||'';
-  document.getElementById('nouv-blocs').innerHTML=NOUVEAUTES.blocs.map(b=>'<div class="nvbl"><div class="nvic">'+esc(b.icone)+'</div><div><div class="nvbt">'+esc(b.titre)+'</div><div class="nvbx">'+esc(b.texte)+'</div></div></div>').join('');
+  document.getElementById('nouv-blocs').innerHTML=NOUVEAUTES.blocs.map(b=>'<div class="nvbl"><div class="nvic">'+(NVICO[b.icone]?'<span class="ico ico-'+NVICO[b.icone]+'" aria-hidden="true"></span>':esc(b.icone))+'</div><div><div class="nvbt">'+esc(b.titre)+'</div><div class="nvbx">'+esc(b.texte)+'</div></div></div>').join('');
   document.getElementById('nouv').classList.add('open');
 }
 function nouvHide(){document.getElementById('nouv').classList.remove('open');}
@@ -2922,11 +2996,11 @@ function doRep(){
 function renderCongesProf(){
   const el=document.getElementById('mes-conges');if(!el)return;
   const mesConges=CONGES.filter(function(c){return c.nom===(MBR[CU]?MBR[CU].name:'');});
-  if(!mesConges.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);font-style:italic;">Aucune indisponibilite declaree</div>';return;}
+  if(!mesConges.length){el.innerHTML='<div class="fempty">Aucune indisponibilité déclarée</div>';return;}
   el.innerHTML=mesConges.map(function(c,i){
-    return '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg3);border-radius:8px;margin-bottom:6px;">'
-      +'<span style="font-size:12px;color:var(--tx);flex:1;">'+fd(c.debut)+' → '+fd(c.fin)+'</span>'
-      +'<button onclick="delConge('+c.id+')" style="background:none;border:none;cursor:pointer;color:var(--tx3);font-size:14px;padding:0 4px;">✕</button>'
+    return '<div class="congrow">'
+      +'<span class="congd">'+fd(c.debut)+' → '+fd(c.fin)+'</span>'
+      +'<button class="btn btn-ico" onclick="delConge('+c.id+')" aria-label="Supprimer cette indisponibilité"><span class="ico ico-x" aria-hidden="true"></span></button>'
       +'</div>';
   }).join('');
 }
@@ -2936,19 +3010,19 @@ function addConge(){
   const fin=document.getElementById('cong-fin').value;
   const m=MBR[CU];if(!m)return;
   if(!deb||!fin){toast('Entrez les dates');return;}
-  if(deb>fin){toast('La date de fin doit etre apres le debut');return;}
+  if(deb>fin){toast('La date de fin doit être après le début');return;}
   const id=Date.now();
   CONGES.push({id:id,nom:m.name,debut:deb,fin:fin});
   saveConges();
   document.getElementById('cong-deb').value='';
   document.getElementById('cong-fin').value='';
   renderCongesProf();
-  toast('Indisponibilite ajoutee !');
+  toast('Indisponibilité ajoutée !');
 }
 
 function delConge(id){
   CONGES=CONGES.filter(function(c){return c.id!==id;});
-  saveConges();renderCongesProf();toast('Indisponibilite supprimee');
+  saveConges();renderCongesProf();toast('Indisponibilité supprimée');
 }
 
 function openProf(){
@@ -2978,7 +3052,7 @@ function handleAv(e){
       sv('lb_pr',PR);
       // Save to Firestore
       fbSet('profiles', CU, {avatar:data, user:CU});
-      toast('Photo mise a jour !');
+      toast('Photo mise à jour !');
       setupUI();
       if(document.getElementById('pg-equipe').classList.contains('active'))renderTeam();
     };
@@ -2986,7 +3060,7 @@ function handleAv(e){
   reader.readAsDataURL(file);
   e.target.value='';
 }
-function saveProf(){svAll();closeM('modprof');setupUI();toast('Profil sauvegarde');}
+function saveProf(){svAll();closeM('modprof');setupUI();toast('Profil sauvegardé');}
 
 // ═══ MODAL ═══
 function openM(id){document.getElementById(id).classList.add('open');}
