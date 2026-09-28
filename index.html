@@ -296,34 +296,6 @@ tr[data-kbd]:focus-visible{outline:none;}
 .tci .badge+.badge{margin-left:-4px;}
 .tcem{font-size:12px;color:var(--tx3);padding:8px 10px;background:var(--bg3);border:1px dashed var(--b2);border-radius:var(--r);}
 
-/* MESSAGERIE */
-.chlay{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 200px);}
-.chhdr{padding:16px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px;}
-.chicon{width:38px;height:38px;border-radius:10px;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:18px;}
-.chmsgs{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
-.chmsg{display:flex;align-items:flex-end;gap:8px;}
-.chmsg.mine{flex-direction:row-reverse;}
-.chbub{max-width:65%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;}
-.bubo{background:var(--bg3);border-bottom-left-radius:4px;}
-.bubm{background:var(--or);color:white;border-bottom-right-radius:4px;}
-.chsnd{font-size:11px;color:var(--tx3);margin-bottom:4px;font-weight:500;}
-.chtm{font-size:10px;margin-top:4px;color:var(--tx3);}
-.chtm.m{color:rgba(255,255,255,0.6);text-align:right;}
-.chinrow{padding:10px 16px;border-top:1px solid var(--b);}
-.chmedia{display:none;padding:8px;background:var(--bg3);border-radius:var(--r);margin-bottom:8px;}
-.chmedia.open{display:block;}
-.emgrd{display:flex;flex-wrap:wrap;gap:4px;}
-.gifgrd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;}
-.chtb{display:flex;gap:8px;align-items:flex-end;}
-.chtbtn{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--b2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;transition:all 0.12s;}
-.chtbtn:hover{background:var(--bg4);}
-.chtbtn svg{width:15px;height:15px;stroke:var(--tx2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-textarea.chinp{flex:1;padding:10px 14px;background:var(--bg3);border:1px solid var(--b2);border-radius:22px;color:var(--tx);font-family:inherit;font-size:13px;resize:none;max-height:100px;line-height:1.4;}
-textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(232,114,42,0.18);}
-.chsend{width:38px;height:38px;border-radius:50%;background:var(--or);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.chsend:hover{background:var(--or2);}
-.chsend svg{width:16px;height:16px;stroke:#141416;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
-
 /* MEMBRES */
 .mblay{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .mbcrd{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);overflow:hidden;}
@@ -1318,8 +1290,6 @@ const STATLBL={Confirme:'Confirmé',Prevu:'Prévu',Termine:'Terminé'};
 function statLbl(s){return STATLBL[s]||s;}
 const MOIS=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
 const SDUR=3600000;
-const EMOJIS=['😀','😂','😍','🔥','👍','✅','❌','⚠️','📅','🏗','🚧','🔧','🔨','📋','📞','👷','🦺','🚛','📦','⏰','💪','🎯','✨','👏','🙏','😅','😎','🤝','💡','🎉','👌','💯'];
-const GIFS=['https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif','https://media.giphy.com/media/xT9IgG50Lg7russPIQ/giphy.gif','https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif','https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif','https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif','https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif','https://media.giphy.com/media/3o6Zt6KHxJTbXCnSvu/giphy.gif','https://media.giphy.com/media/l4FGuhL4U2WyjdkaY/giphy.gif'];
 
 // ═══ STORAGE ═══
 function ld(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}}
@@ -1339,7 +1309,7 @@ function saveMoe(){
   toast(nom+' ajouté !');
 }
 
-function svAll(){sv('lb_mbr',MBR);sv('lb_ch',CH);sv('lb_pr',PR);sv('lb_msg',MSG);sv('lb_moe',MOE);}
+function svAll(){sv('lb_mbr',MBR);sv('lb_ch',CH);sv('lb_pr',PR);sv('lb_moe',MOE);}
 
 // ═══ STATE ═══
 let MBR=ld('lb_mbr')||{florian:{name:'Florian',color:'#E8722A',role:'referent'},henri:{name:'Henri',color:'#E24B4A',role:'referent'},franck:{name:'Franck',color:'#4A90D9',role:'referent'},yoan:{name:'Yoan',color:'#2D9E5F',role:'referent'},thomas:{name:'Thomas',color:'#8B7FD4',role:'referent'},frederic:{name:'Frederic',color:'#F5C842',role:'referent'},tony:{name:'Tony',color:'#D4A843',role:'collaborateur'},camille:{name:'Camille',color:'#3BB8A8',role:'collaborateur'},sebastien:{name:'Sebastien',color:'#C67AB8',role:'collaborateur'},alexandre:{name:'Alexandre',color:'#7BB5E8',role:'collaborateur'}};
@@ -1351,7 +1321,6 @@ const MOE_DEFAULT={polydrones:{name:'Polydrones',color:'#E8722A'},kgir:{name:'KG
 let MOE=Object.assign({},MOE_DEFAULT,ld('lb_moe')||{});
 let CH=ld('lb_ch')||[];
 let PR=ld('lb_pr')||{};
-let MSG=ld('lb_msg')||[{id:'m1',user:'florian',text:'Bonjour tout le monde ! Chantier CDISCOUNT confirme pour le 13 juin.',time:'09:12'},{id:'m2',user:'henri',text:'Parfait, je prepare le materiel.',time:'09:45'}];
 
 let CU=null,CR=null,calY=2026,calM=8,editId=null,repCh=null,selColor='#E8722A',pinBuf='',pinStep='',pinFirst='',notifs=[],sessTimer=null;
 
@@ -1772,8 +1741,6 @@ function deleteChantierFB(id){
 function saveMembersFB(){
   fbSet('membres', 'data', {mbr:JSON.stringify(MBR), moe:JSON.stringify(MOE)});
 }
-
-function saveMsgFB(msg){}
 
 function sendPushNotif(title, body, targetRole){
   fbAdd('notifications', {title:title, body:body, from:CU, targetRole:targetRole||'all', read:[], ts:new Date().toISOString()});
