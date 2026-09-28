@@ -444,29 +444,61 @@ input[type=checkbox]{accent-color:var(--or);}
 .ldht{font-size:13px;font-weight:600;}
 .ldhs{font-size:11px;color:var(--tx3);}
 .ldrota{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
-.ldm{position:relative;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:16px 8px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;min-width:0;}
-.ldm.next{border-color:var(--gr-bds);}
-.ldm.cap{border-color:var(--am-bds);}
-.ldtag{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;letter-spacing:0.04em;}
-.ldpts{font-size:24px;font-weight:700;letter-spacing:-0.04em;line-height:1;margin-top:4px;}
-.ldbar{width:100%;height:5px;background:var(--bg5);border-radius:99px;overflow:hidden;margin-top:6px;}
+.ldm{position:relative;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:38px 10px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;min-width:0;}
+/* Prochain : mis en avant (bordure orange, badge dans la carte) */
+.ldm.next{border-color:var(--or-bd);background:linear-gradient(var(--ord),var(--ord)),var(--bg3);}
+.ldtag{position:absolute;top:10px;left:50%;transform:translateX(-50%);white-space:nowrap;}
+.ldbn{background:var(--or);color:#141416;}
+.ldmn{font-size:13px;font-weight:600;margin-top:6px;}
+.ldms{font-size:11px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.ldpts{font-size:24px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-top:8px;font-variant-numeric:tabular-nums;}
+.ldmu{font-size:11px;color:var(--tx3);}
+.ldbar{width:100%;height:4px;background:var(--bg5);border-radius:99px;overflow:hidden;margin-top:8px;}
 .ldbar>i{display:block;height:100%;border-radius:99px;}
+.ldmf{font-size:11px;color:var(--tx3);margin-top:6px;font-variant-numeric:tabular-nums;}
+/* Regles de rotation : un seul bloc neutre, une ligne par regle */
+.ldrules{margin-top:14px;padding:12px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);}
+.ldrh{font-size:12px;font-weight:600;color:var(--tx2);margin-bottom:8px;}
+.ldrule{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.5;color:var(--tx2);padding:3px 0;}
+.ldrule strong{color:var(--tx);}
+.ldrule .ico{width:14px;height:14px;margin-top:2px;}
+.ldrule.w .ico{color:var(--am);}
+.ldrule.ok .ico{color:var(--gr);}
+/* Bandeaux restant utilises dans les modales (suggestion, import) */
 .ldal{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;border-radius:var(--r);font-size:12px;margin-top:10px;line-height:1.5;}
 .ldal.w{background:var(--amd);border:1px solid var(--am-bd);color:var(--am);}
 .ldal.ok{background:var(--grd);border:1px solid var(--gr-bd);color:var(--gr);}
 .lddist{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
 .lddist .ldcard{margin-bottom:0;}
-.ldrow{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12px;}
-.ldrow .k{width:100px;flex-shrink:0;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ldrow .t{flex:1;height:14px;background:var(--bg4);border-radius:4px;overflow:hidden;}
-.ldrow .t>i{display:block;height:100%;border-radius:4px;}
-.ldrow .v{width:22px;text-align:right;color:var(--tx3);flex-shrink:0;}
-.ldflt{display:flex;gap:8px;flex-wrap:wrap;flex:1;justify-content:flex-end;}
-.ldflt .fi{width:auto;padding:0 10px;font-size:12px;appearance:auto;color-scheme:dark;}
+.ldrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;}
+.ldrow .k{width:110px;flex-shrink:0;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:7px;}
+.ldd{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ldrow .t{flex:1;height:8px;background:var(--bg5);border-radius:99px;overflow:hidden;}
+.ldrow .t>i{display:block;height:100%;border-radius:99px;background:var(--tx3);}
+.ldrow .v{width:24px;text-align:right;color:var(--tx2);flex-shrink:0;font-variant-numeric:tabular-nums;}
+.ldflt{display:flex;gap:8px;flex-wrap:wrap;flex:1;justify-content:flex-end;align-items:center;}
+.ldflt .fi{width:auto;font-size:12px;}
+.ldsortw{display:none;}
 .ldflt input.fi{min-width:170px;flex:1;max-width:280px;}
-.ldsel{padding:5px 6px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r);color:var(--tx);font-family:inherit;font-size:12px;max-width:130px;color-scheme:dark;}
+.ldsel{height:28px;padding:0 24px 0 8px;background:var(--bg3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 8px center;border:1px solid var(--b2);border-radius:var(--r);color:var(--tx);font-family:inherit;font-size:12px;max-width:140px;appearance:none;-webkit-appearance:none;cursor:pointer;}
+.ldsel:hover{border-color:var(--b3);}
+/* Statut du lead : liste deroulante au format des badges */
+.ldst{height:24px;border-radius:99px;font-weight:600;border-color:transparent;padding-left:10px;}
+.ldst[data-st="Nouveau"]{background-color:rgba(255,255,255,0.06);color:var(--tx2);}
+.ldst[data-st="Attribué"]{background-color:var(--bld);color:var(--bl);}
+.ldst[data-st="En cours"]{background-color:var(--amd);color:var(--am);}
+.ldst[data-st="Signé"]{background-color:var(--grd);color:var(--gr);}
+.ldst[data-st="Perdu"]{background-color:var(--red);color:var(--re);}
+.ldst option{color:var(--tx);background:var(--bg2);}
+.ldc-bes,.ldc-zn{font-size:12px;color:var(--tx2);}
+.ldc-bes{max-width:240px;}
+.ldc-st,.ldc-co{white-space:nowrap;}
+.ldtel{color:var(--tx2);}
+.dash{color:var(--tx3);}
+.ldlk{font-size:11px;padding:1px 7px;margin-left:4px;}
+.tdempty{text-align:center;padding:36px 16px;color:var(--tx3);font-size:13px;}
+.tdempty strong{color:var(--tx);}
 .ldsel:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(232,114,42,0.18);}
-.ldflt select.fi{background-image:none;padding-right:10px;}
 th.ldsrt{cursor:pointer;user-select:none;}
 th.ldsrt:hover{color:var(--tx);}
 .ldlink{cursor:pointer;}
@@ -526,7 +558,43 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .sbar:has(#syndot[style*="--re"]) .syntm,.sbar:has(#syndot[style*="--re"]) .synbtn{display:none;}
   .fr{grid-template-columns:1fr;}
   .mnav{display:flex;}
-  .ldrota{grid-template-columns:repeat(3,1fr);}
+  /* Rotation : liste de lignes */
+  .ldrota{display:flex;flex-direction:column;gap:6px;}
+  .ldm{display:grid;grid-template-columns:34px minmax(0,1fr) auto auto;grid-template-areas:"av nm tg pt" "av so tg un" "av ft ft ft" "br br br br";column-gap:10px;row-gap:1px;align-items:center;text-align:left;padding:10px 12px;}
+  .ldav{grid-area:av;}
+  .ldmn{grid-area:nm;margin:0;}
+  .ldms{grid-area:so;}
+  .ldtag{grid-area:tg;position:static;transform:none;justify-self:end;}
+  .ldpts{grid-area:pt;margin:0;font-size:20px;text-align:right;}
+  .ldmu{grid-area:un;text-align:right;}
+  .ldbar{grid-area:br;margin-top:8px;}
+  .ldmf{grid-area:ft;margin-top:1px;font-size:11px;color:var(--tx3);}
+  /* Filtres : recherche sur toute la largeur, puis les trois listes */
+  #pg-leads .ttb{flex-direction:column;align-items:stretch;}
+  .ldflt{justify-content:stretch;}
+  .ldflt input.fi{flex:1 1 100%;min-width:0;}
+  .ldflt select.fi{flex:1 1 0;min-width:0;}
+  /* Tri : les en-tetes de colonnes sont masques en cartes */
+  .ldsortw{display:flex;align-items:center;gap:10px;flex:1 1 100%;}
+  .ldsortw .fl{margin:0;white-space:nowrap;}
+  .ldflt .ldsortw select.fi{flex:1;}
+  /* Tableau des leads en cartes */
+  #pg-leads table,#ld-body{display:block;min-width:0;}
+  #ld-thead{display:none;}
+  #ld-body tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"ct ct st" "bes bes bes" "zn zn zn" "mb vl md" "co co co";gap:4px 8px;padding:14px 16px;border-bottom:1px solid var(--b);}
+  #ld-body tr:last-child{border-bottom:none;}
+  #ld-body td{display:block;padding:0;border:0;min-width:0;}
+  #ld-body td.tdempty{grid-column:1/-1;padding:28px 0;}
+  #ld-body .ldc-ct{grid-area:ct;} #ld-body .ldc-ct .cn{font-size:15px;font-weight:500;}
+  #ld-body .ldc-st{grid-area:st;justify-self:end;}
+  #ld-body .ldc-bes{grid-area:bes;max-width:none;margin-top:4px;}
+  #ld-body .ldc-zn{grid-area:zn;}
+  #ld-body .ldc-zn::before{content:"Zone : ";color:var(--tx3);}
+  #ld-body .ldc-mb{grid-area:mb;} #ld-body .ldc-vl{grid-area:vl;} #ld-body .ldc-md{grid-area:md;}
+  #ld-body .ldc-mb,#ld-body .ldc-vl,#ld-body .ldc-md{margin-top:6px;}
+  #ld-body .ldc-mb .ldsel,#ld-body .ldc-vl .ldsel,#ld-body .ldc-md .ldsel{width:100%;max-width:none;}
+  #ld-body .ldc-co{grid-area:co;white-space:normal;margin-top:4px;}
+  #ld-body .ldst{height:28px;}
   .lddist{grid-template-columns:1fr;}
   .ldflt input.fi{max-width:none;}
   /* Calendrier : liste par semaine (CSS seul, la grille generee est conservee) */
@@ -549,11 +617,11 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   #calgrd .calce.td .caldt{background:none;color:var(--or);}
   #calgrd .calce.td.sans::after{content:"Aucun chantier";display:block;font-size:12px;color:var(--tx3);padding-top:10px;}
   #calgrd .calev{height:24px;line-height:24px;font-size:12px;margin-bottom:4px;}
-  #sgrd{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:16px;}
-  #sgrd .scd{padding:10px 10px 9px;}
-  #sgrd .sclb{font-size:11px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  #sgrd .scvl{font-size:18px;}
-  #sgrd .scsu{display:none;}
+  #sgrd,#ld-kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:16px;}
+  :is(#sgrd,#ld-kpis) .scd{padding:10px 10px 9px;}
+  :is(#sgrd,#ld-kpis) .sclb{font-size:11px;line-height:1.25;min-height:2.5em;margin-bottom:4px;}
+  :is(#sgrd,#ld-kpis) .scvl{font-size:18px;}
+  :is(#sgrd,#ld-kpis) .scsu{display:none;}
   /* Planning en cartes : la structure generee est conservee, seule la mise en page change */
   #pg-planning table,#plbody{display:block;min-width:0;}
   #pg-planning thead{display:none;}
@@ -579,8 +647,8 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   #plbody tr.trc{background:var(--re-row);}
   #plbody tr.trt{opacity:0.55;}
   #plbody tr.trt td{opacity:1;}
-  #tbact .btnp[onclick^="openModCh"]{width:44px;padding:0;gap:0;font-size:0;justify-content:center;}
-  #tbact .btnp[onclick^="openModCh"] svg{width:18px;height:18px;}
+  #tbact .btn{width:44px;padding:0;gap:0;font-size:0;justify-content:center;}
+  #tbact .btn svg{width:18px;height:18px;}
   .lgcf{display:none;}
 }
 </style>
@@ -876,6 +944,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
                 <select class="fi" id="ld-fs"></select>
                 <select class="fi" id="ld-fm"></select>
                 <select class="fi" id="ld-fv"></select>
+                <label class="ldsortw"><span class="fl">Trier par</span><select class="fi" id="ld-sort" onchange="var p=this.value.split('|');LF.sort=p[0];LF.dir=+p[1];renderLeadTable();"><option value="id|1">Référence, croissant</option><option value="id|-1">Référence, décroissant</option><option value="contact|1">Contact / Société, croissant</option><option value="contact|-1">Contact / Société, décroissant</option><option value="besoin|1">Besoin, croissant</option><option value="besoin|-1">Besoin, décroissant</option><option value="zone|1">Zone, croissant</option><option value="zone|-1">Zone, décroissant</option><option value="statut|1">Statut, croissant</option><option value="statut|-1">Statut, décroissant</option><option value="membre|1">Membre, croissant</option><option value="membre|-1">Membre, décroissant</option><option value="valeur|1">Valeur, croissant</option><option value="valeur|-1">Valeur, décroissant</option><option value="mode|1">Mode, croissant</option><option value="mode|-1">Mode, décroissant</option></select></label>
               </div>
             </div>
             <div class="twrp"><table><thead id="ld-thead"></thead><tbody id="ld-body"></tbody></table></div>
@@ -1801,7 +1870,7 @@ function proposerAOP(nom){
 // Distinct du Roulement AOP (aval, chantiers realises). Aucun flux financier.
 const LEAD_STATUTS=['Nouveau','Attribué','En cours','Signé','Perdu'];
 const LEAD_VAL={'Petit':1,'Moyen':2,'Gros':3};
-const LEAD_VALCOL={'Petit':'var(--gr)','Moyen':'var(--am)','Gros':'var(--re)'};
+const LEAD_VALCOL={'Petit':'var(--or)','Moyen':'var(--or)','Gros':'var(--or)'};  // couleurs d'affichage des repartitions
 const LEAD_STCOL={'Nouveau':'var(--tx3)','Attribué':'var(--bl)','En cours':'var(--am)','Signé':'var(--gr)','Perdu':'var(--re)'};
 const LEAD_PLAFOND=3;   // ecart de points (>=) au-dessus du plus bas : membre sorti de la suggestion
 const LEAD_SEUIL=30;    // ecart % (max-min)/max au-dela duquel on alerte pour reequilibrage en AG
@@ -1942,27 +2011,27 @@ function renderLeadRota(s){
     var p=s.pts[n],isNext=n===s.next,cap=s.plafond.indexOf(n)>=0,col=REF_COLORS[n]||'#666';
     // Egalite partielle au plus bas : on signale les membres concernes, sans en designer un
     var tie=s.egaux.length<REF_ORDER.length&&s.egaux.indexOf(n)>=0;
-    var tag=isNext?'<span class="ldtag" style="background:var(--gr);color:#0a1a0a;">PROCHAIN</span>'
-      :tie?'<span class="ldtag" style="background:var(--bl);color:white;">À ÉGALITÉ</span>'
-      :cap?'<span class="ldtag" style="background:var(--am);color:#1a1a1a;">PLAFOND</span>':'';
-    return '<div class="ldm'+(isNext?' next':cap?' cap':'')+'">'+tag+avatarHtml(n,col,34)
-      +'<div style="font-size:13px;font-weight:600;margin-top:4px;">'+n+'</div>'
-      +'<div style="font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;">'+esc(REF_SOC[n]||'')+'</div>'
-      +'<div class="ldpts">'+p+'</div><div style="font-size:10px;color:var(--tx3);">point'+(p>1?'s':'')+' signé'+(p>1?'s':'')+'</div>'
+    var tag=isNext?'<span class="badge ldtag ldbn">Prochain</span>'
+      :tie?'<span class="badge ldtag bbl">À égalité</span>'
+      :cap?'<span class="badge ldtag bam">Plafond</span>':'';
+    return '<div class="ldm'+(isNext?' next':cap?' cap':'')+'">'+tag+'<div class="ldav">'+avatarHtml(n,col,34)+'</div>'
+      +'<div class="ldmn">'+n+'</div>'
+      +'<div class="ldms">'+esc(REF_SOC[n]||'')+'</div>'
+      +'<div class="ldpts">'+p+'</div><div class="ldmu">point'+(p>1?'s':'')+' signé'+(p>1?'s':'')+'</div>'
       +'<div class="ldbar"><i style="width:'+Math.round(100*p/scale)+'%;background:'+col+';"></i></div>'
-      +'<div style="font-size:10px;color:var(--tx3);margin-top:5px;">'+s.attrib[n]+' attribué'+(s.attrib[n]>1?'s':'')+' · '+s.encours[n]+' en cours</div>'
+      +'<div class="ldmf">'+s.attrib[n]+' attribué'+(s.attrib[n]>1?'s':'')+' · '+s.encours[n]+' en cours</div>'
       +'</div>';
   }).join('');
   var al='';
   if(s.plafond.length){
-    al+='<div class="ldal w">⚠️ <div>Plafond d\'écart atteint (+'+LEAD_PLAFOND+' pts ou plus au-dessus du plus bas) : <strong>'+s.plafond.join(', ')+'</strong>. Momentanément en fin de rotation, plus suggéré'+(s.plafond.length>1?'s':'')+'.</div></div>';
+    al+='<div class="ldrule w"><span class="ico ico-alert" aria-hidden="true"></span><div>Plafond d\'écart atteint (+'+LEAD_PLAFOND+' pts ou plus au-dessus du plus bas) : <strong>'+s.plafond.join(', ')+'</strong>. Momentanément en fin de rotation, plus suggéré'+(s.plafond.length>1?'s':'')+'.</div></div>';
   }
   if(s.ecart>LEAD_SEUIL){
     var hi=REF_ORDER.find(function(n){return s.pts[n]===s.max;}),lo=REF_ORDER.find(function(n){return s.pts[n]===s.min;});
-    al+='<div class="ldal w">⚠️ <div>Écart de <strong>'+s.ecart+'%</strong> entre '+hi+' ('+s.max+' pts) et '+lo+' ('+s.min+' pts), au-delà du seuil de '+LEAD_SEUIL+'%. À rééquilibrer en AG.</div></div>';
+    al+='<div class="ldrule w"><span class="ico ico-alert" aria-hidden="true"></span><div>Écart de <strong>'+s.ecart+'%</strong> entre '+hi+' ('+s.max+' pts) et '+lo+' ('+s.min+' pts), au-delà du seuil de '+LEAD_SEUIL+'%. À rééquilibrer en AG.</div></div>';
   }
-  al+='<div class="ldal ok">✓ <div>'+leadSuggMsg(s)+'</div></div>';
-  document.getElementById('ld-alerts').innerHTML=al;
+  al+='<div class="ldrule ok"><span class="ico ico-check" aria-hidden="true"></span><div>'+leadSuggMsg(s)+'</div></div>';
+  document.getElementById('ld-alerts').innerHTML='<div class="ldrules"><div class="ldrh">Règles de rotation</div>'+al+'</div>';
 }
 // Message de suggestion : un seul membre strictement au plus bas, sinon egalite et choix libre
 function leadSuggMsg(s){
@@ -1972,14 +2041,15 @@ function leadSuggMsg(s){
   return 'Égalité au compteur le plus bas ('+pt(s.min)+') entre <strong>'+s.egaux.join(', ')+'</strong> : pas de désignation, choisissez parmi eux.';
 }
 function renderLeadDist(s){
-  var bars=function(rows){
+  // pastille=true : couleur en pastille devant le libelle, barre neutre ; sinon la barre prend la couleur
+  var bars=function(rows,pastille){
     var mx=Math.max.apply(null,[1].concat(rows.map(function(r){return r.v;})));
-    return rows.map(function(r){return '<div class="ldrow"><div class="k">'+r.k+'</div><div class="t"><i style="width:'+Math.round(100*r.v/mx)+'%;background:'+r.c+';"></i></div><div class="v">'+r.v+'</div></div>';}).join('');
+    return rows.map(function(r){return '<div class="ldrow"><div class="k">'+(pastille?'<span class="ldd" style="background:'+r.c+';"></span>':'')+r.k+'</div><div class="t"><i style="width:'+Math.round(100*r.v/mx)+'%;'+(pastille?'':'background:'+r.c+';')+'"></i></div><div class="v">'+r.v+'</div></div>';}).join('');
   };
   var cl=s.clients;
   var cnt=function(f){return cl.filter(f).length;};
   document.getElementById('ld-dmbr').innerHTML=bars(REF_ORDER.map(function(n){return {k:n,v:cnt(function(l){return l.membre===n;}),c:REF_COLORS[n]||'#666'};})
-    .concat([{k:'Non attribué',v:cnt(function(l){return !l.membre;}),c:'var(--tx3)'}]));
+    .concat([{k:'Non attribué',v:cnt(function(l){return !l.membre;}),c:'var(--tx3)'}]),true);
   document.getElementById('ld-dval').innerHTML=bars(['Gros','Moyen','Petit'].map(function(v){return {k:v+' ('+LEAD_VAL[v]+' pt'+(LEAD_VAL[v]>1?'s':'')+')',v:cnt(function(l){return l.valeur===v;}),c:LEAD_VALCOL[v]};})
     .concat([{k:'Non évalué',v:cnt(function(l){return !l.valeur;}),c:'var(--tx3)'}]));
 }
@@ -1999,7 +2069,7 @@ function renderLeadTable(){
     return '<th class="ldsrt" data-sort="'+c[0]+'">'+c[1]+arrow+'</th>';
   }).join('')+'</tr>';
   var body=document.getElementById('ld-body');
-  if(!LEADS_OK){body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--tx3);">Chargement des leads…</td></tr>';document.getElementById('ld-count').textContent='';return;}
+  if(!LEADS_OK){body.innerHTML='<tr><td colspan="8" class="tdempty">Chargement des leads…</td></tr>';document.getElementById('ld-count').textContent='';return;}
   var all=Object.values(LEADS);
   var q=leadNorm(LF.q);
   var list=all.filter(function(l){
@@ -2013,29 +2083,29 @@ function renderLeadTable(){
   });
   list.sort(function(a,b){var x=leadSortVal(a,LF.sort),y=leadSortVal(b,LF.sort);if(x<y)return -LF.dir;if(x>y)return LF.dir;return leadSortVal(a,'id')-leadSortVal(b,'id');});
   document.getElementById('ld-count').textContent=list.length+' affiché'+(list.length>1?'s':'')+' / '+all.length;
-  if(!all.length){body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--tx3);">Aucun lead pour le moment. Utilisez <strong style="color:var(--tx);">Importer</strong> ou <strong style="color:var(--tx);">Nouveau lead</strong>.</td></tr>';return;}
-  if(!list.length){body.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--tx3);">Aucun lead ne correspond aux filtres.</td></tr>';return;}
-  var dash='<span style="color:var(--tx3);">—</span>';
+  if(!all.length){body.innerHTML='<tr><td colspan="8" class="tdempty">Aucun lead pour le moment. Utilisez <strong>Importer</strong> ou <strong>Nouveau lead</strong>.</td></tr>';return;}
+  if(!list.length){body.innerHTML='<tr><td colspan="8" class="tdempty">Aucun lead ne correspond aux filtres.</td></tr>';return;}
+  var dash='<span class="dash">—</span>';
   body.innerHTML=list.map(function(l){
     var id=esc(l.id);
     var sel=function(f,opts,cur,blank){
-      return '<select class="ldsel" data-lf="'+f+'" data-id="'+id+'">'+(blank!=null?'<option value="">'+blank+'</option>':'')
+      return '<select class="ldsel'+(f==='statut'?' ldst':'')+'" data-lf="'+f+'" data-id="'+id+'"'+(f==='statut'?' data-st="'+esc(cur)+'"':'')+'>'+(blank!=null?'<option value="">'+blank+'</option>':'')
         +opts.map(function(o){return '<option value="'+esc(o)+'"'+(o===cur?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select>';
     };
-    var st='<div class="crw"><div class="cdt" style="background:'+(LEAD_STCOL[l.statut]||'var(--tx3)')+'"></div>'+sel('statut',LEAD_STATUTS,l.statut)+'</div>';
+    var st=sel('statut',LEAD_STATUTS,l.statut);
     var coord=[l.email?'<a class="ldmail" href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':'',
-      l.telephone?'<a class="ldmail" style="color:var(--tx2);" href="tel:'+esc(String(l.telephone).replace(/\s/g,''))+'">'+esc(l.telephone)+'</a>':''].filter(Boolean).join('<br>')||dash;
+      l.telephone?'<a class="ldmail ldtel" href="tel:'+esc(String(l.telephone).replace(/\s/g,''))+'">'+esc(l.telephone)+'</a>':''].filter(Boolean).join('<br>')||dash;
     return '<tr>'
-      +'<td><div class="cn ldlink" data-open="'+id+'">'+(esc(l.contact)||esc(l.societe)||dash)+'</div>'
+      +'<td class="ldc-ct"><div class="cn ldlink" data-open="'+id+'">'+(esc(l.contact)||esc(l.societe)||dash)+'</div>'
       +'<div class="ca">'+esc(l.societe)+(l.societe?' · ':'')+id
-      +(l.chantierId?' <span class="badge bgg" style="font-size:9px;padding:1px 6px;margin-left:2px;">Chantier lié</span>':'')+'</div></td>'
-      +'<td style="font-size:12px;color:var(--tx2);max-width:240px;">'+(esc(l.besoin)||dash)+'</td>'
-      +'<td style="font-size:12px;color:var(--tx2);">'+(esc(l.zone)||dash)+'</td>'
-      +'<td style="white-space:nowrap;">'+st+'</td>'
-      +'<td>'+sel('membre',REF_ORDER,l.membre,'— à attribuer —')+'</td>'
-      +'<td>'+sel('valeur',Object.keys(LEAD_VAL),l.valeur,'—')+'</td>'
-      +'<td>'+sel('mode',['Seul','Groupement'],l.mode,'—')+'</td>'
-      +'<td style="white-space:nowrap;">'+coord+'</td>'
+      +(l.chantierId?' <span class="badge bgg ldlk">Chantier lié</span>':'')+'</div></td>'
+      +'<td class="ldc-bes">'+(esc(l.besoin)||dash)+'</td>'
+      +'<td class="ldc-zn">'+(esc(l.zone)||dash)+'</td>'
+      +'<td class="ldc-st">'+st+'</td>'
+      +'<td class="ldc-mb">'+sel('membre',REF_ORDER,l.membre,'— à attribuer —')+'</td>'
+      +'<td class="ldc-vl">'+sel('valeur',Object.keys(LEAD_VAL),l.valeur,'—')+'</td>'
+      +'<td class="ldc-md">'+sel('mode',['Seul','Groupement'],l.mode,'—')+'</td>'
+      +'<td class="ldc-co">'+coord+'</td>'
       +'</tr>';
   }).join('');
 }
