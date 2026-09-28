@@ -29,7 +29,7 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .sb2{border-radius:2px;background:white;}
 .st{font-size:34px;font-weight:700;letter-spacing:-0.05em;animation:fup 0.5s 0.3s both;}
 .st span{color:var(--or);font-weight:300;}
-.ss{font-size:12px;color:var(--tx3);letter-spacing:0.1em;text-transform:uppercase;animation:fup 0.5s 0.5s both;}
+.ss{font-size:13px;color:var(--tx3);animation:fup 0.5s 0.5s both;}
 .sl{width:48px;height:2px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-top:8px;animation:fup 0.5s 0.6s both;}
 .slf{height:100%;background:var(--or);animation:ld 1.8s ease forwards;}
 @keyframes ld{from{width:0;}to{width:100%;}}
@@ -37,13 +37,18 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 
 /* POLITIQUE */
 #pol{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.95);display:none;align-items:center;justify-content:center;padding:20px;}
-.polbox{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rx);padding:32px;width:100%;max-width:480px;max-height:90vh;display:flex;flex-direction:column;gap:18px;}
-.polscr{overflow-y:auto;flex:1;padding-right:4px;font-size:13px;color:var(--tx2);line-height:1.7;}
-.polscr h4{font-size:12px;font-weight:600;color:var(--tx);margin:14px 0 6px;}
-.polchk{display:flex;align-items:flex-start;gap:10px;padding:14px;background:var(--bg3);border-radius:var(--r);cursor:pointer;}
+.polbox{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:28px;width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;gap:18px;box-shadow:0 24px 64px rgba(0,0,0,0.45);}
+.poltit{font-size:22px;font-weight:600;letter-spacing:-0.02em;}
+.polscr{overflow-y:auto;flex:1;padding-right:8px;font-size:14px;color:var(--tx2);line-height:1.7;}
+.polscr p{max-width:65ch;}
+.polscr h4{font-size:14px;font-weight:600;color:var(--tx);margin:20px 0 6px;}
+.polscr h4:first-child{margin-top:0;}
+.polchk{display:flex;align-items:flex-start;gap:10px;padding:14px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);cursor:pointer;font-size:13px;line-height:1.5;}
 .polchk input{width:18px;height:18px;accent-color:var(--or);cursor:pointer;flex-shrink:0;margin-top:1px;}
-.polact{display:flex;gap:10px;}
-.bpol{flex:1;height:32px;padding:0 13px;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.14s;}
+.polact{display:flex;gap:10px;justify-content:flex-end;}
+.bpol.bsec{background:var(--bg4);color:var(--tx2);}
+.bpol.bsec:hover{background:var(--bg5);}
+.bpol{flex:0 0 auto;height:36px;padding:0 18px;border-radius:var(--r);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.14s;}
 
 /* NOUVEAUTES */
 #nouv{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:16px;}
@@ -51,7 +56,7 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .nvbox{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,0.45);width:100%;max-width:460px;max-height:90vh;display:flex;flex-direction:column;animation:fup 0.35s both;}
 .nvhd{padding:26px 26px 6px;}
 .nvlg{width:36px;height:36px;border-radius:10px;background:var(--or);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-bottom:18px;}
-.nvti{font-size:21px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;}
+.nvti{font-size:20px;font-weight:600;letter-spacing:-0.02em;line-height:1.3;}
 .nvin{font-size:13px;color:var(--tx2);margin-top:8px;}
 .nvsc{overflow-y:auto;padding:14px 26px 4px;display:flex;flex-direction:column;gap:10px;}
 .nvbl{display:flex;gap:14px;padding:14px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
@@ -66,7 +71,8 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 /* ACCUEIL */
 #acc{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
 .acci{width:100%;max-width:380px;text-align:center;}
-.aclog{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:48px;}
+.aclog{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:40px;}
+.acq{font-size:13px;color:var(--tx2);margin-bottom:32px;}
 .acli{width:48px;height:48px;border-radius:13px;background:var(--or);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
 .aclt{font-size:26px;font-weight:700;letter-spacing:-0.04em;}
 .aclt span{color:var(--or);font-weight:300;}
@@ -84,8 +90,17 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .lbk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx3);cursor:pointer;margin-bottom:32px;border:none;background:none;font-family:inherit;}
 .lbk:hover{color:var(--tx);}
 .lbk svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
-.ltit{font-size:20px;font-weight:700;letter-spacing:-0.03em;margin-bottom:6px;}
-.lsub{font-size:13px;color:var(--tx3);margin-bottom:28px;text-align:center;}
+.ltit{font-size:22px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px;}
+.lsub{font-size:13px;color:var(--tx2);margin-bottom:28px;text-align:center;}
+.authform{width:100%;max-width:360px;}
+.authform .btn-block{margin-bottom:0;}
+.authlnk{text-align:center;margin-top:12px;}
+.authfoot{font-size:12px;color:var(--tx3);margin-top:28px;text-align:center;line-height:1.6;max-width:360px;}
+.lnk{color:var(--or);cursor:pointer;text-decoration:none;}
+.lnk:hover{text-decoration:underline;}
+/* Erreur de connexion : sous le mot de passe, avec icone */
+#au-err{display:flex;align-items:flex-start;gap:6px;font-size:12px;min-height:18px;margin:-8px 0 12px;text-align:left;}
+#au-err:not(:empty)::before{content:"";width:14px;height:14px;margin-top:1px;flex-shrink:0;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") center/contain no-repeat;}
 .rgrd{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:400px;}
 .rbtn{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 12px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);cursor:pointer;transition:all 0.14s;}
 .rbtn:hover{background:var(--bg3);border-color:var(--b2);}
@@ -94,20 +109,23 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 #pin{position:fixed;inset:0;z-index:350;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
 .pinbox{width:100%;max-width:320px;text-align:center;}
 .pinav{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:white;}
-.pinam{font-size:18px;font-weight:700;margin-bottom:6px;}
-.pinlb{font-size:13px;color:var(--tx3);margin-bottom:24px;}
-.pindts{display:flex;justify-content:center;gap:14px;margin-bottom:28px;}
-.pindt{width:14px;height:14px;border-radius:50%;background:var(--bg4);border:1.5px solid var(--b2);transition:all 0.15s;}
+.pinam{font-size:20px;font-weight:600;margin-bottom:6px;}
+.pinlb{font-size:13px;color:var(--tx2);margin-bottom:24px;}
+.pindts{display:flex;justify-content:center;gap:16px;margin-bottom:28px;}
+.pindt{width:14px;height:14px;border-radius:50%;background:transparent;border:2px solid var(--b3);transition:background 0.15s,border-color 0.15s;}
+/* Erreur de code : points soulignes en rouge tant que le message est affiche */
+#pin:has(#pinerr:not(:empty)) .pindt{border-color:var(--re);}
 .pindt.f{background:var(--or);border-color:var(--or);}
 .pininfo{font-size:12px;color:var(--tx2);margin-bottom:20px;line-height:1.6;max-width:260px;margin-left:auto;margin-right:auto;}
-.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:260px;margin:0 auto 16px;}
-.pk{padding:17px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);font-size:20px;font-weight:500;cursor:pointer;transition:all 0.12s;font-family:inherit;color:var(--tx);}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:280px;margin:0 auto 16px;}
+.pk{height:60px;padding:0;background:var(--bg2);border:1px solid var(--b);border-radius:14px;font-size:24px;font-weight:500;cursor:pointer;transition:background 0.12s,transform 0.12s;font-family:inherit;color:var(--tx);font-variant-numeric:tabular-nums;}
 .pk:hover{background:var(--bg3);}
-.pk:active{transform:scale(0.93);}
-.pk.del{font-size:15px;color:var(--tx2);}
+.pk:active{transform:scale(0.96);background:var(--bg4);}
+.pk.del{font-size:20px;color:var(--tx2);}
 .pk.emp{background:transparent;border:none;cursor:default;}
 .pinerr{color:var(--re);font-size:13px;min-height:20px;margin-bottom:6px;}
-.pinfgt{font-size:12px;color:var(--or);cursor:pointer;}
+.pinfgt{display:inline-block;font-size:13px;color:var(--or);cursor:pointer;padding:6px 4px;}
+.pinfgt:hover{text-decoration:underline;}
 
 /* SECRET / RECOVERY */
 #sec,#rec{position:fixed;inset:0;z-index:360;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
@@ -684,6 +702,11 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   #ld-body .ldst{height:28px;}
   .lddist{grid-template-columns:1fr;}
   .ldflt input.fi{max-width:none;}
+  /* Connexion et politique sur mobile */
+  .authform .fi{height:44px;font-size:16px;}
+  .pinfgt{padding:12px 4px;}
+  .polbox{padding:20px;}
+  .polact .bpol{flex:1;}
   /* Calendrier : liste par semaine (CSS seul, la grille generee est conservee) */
   .calnv{gap:8px;}
   .calml{font-size:18px;white-space:nowrap;}
@@ -753,16 +776,16 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 <!-- POLITIQUE -->
 <div id="pol" style="display:none;align-items:center;justify-content:center;">
   <div class="polbox">
-    <div style="font-size:18px;font-weight:700;">Politique de confidentialite</div>
+    <div class="poltit">Politique de confidentialité</div>
     <div class="polscr">
-      <h4>1. Donnees collectees</h4><p>Le Board collecte uniquement les donnees necessaires : noms des membres, affectations aux chantiers et photo de profil (facultative). Aucune donnee sensible n'est collectee.</p>
-      <h4>2. Utilisation</h4><p>Ces donnees sont utilisees exclusivement pour l'organisation interne. Elles ne sont jamais transmises a des tiers ni utilisees a des fins commerciales.</p>
-      <h4>3. Securite</h4><p>Acces protege par un code PIN personnel choisi a la premiere connexion. Toute session inactive depuis plus d'1 heure est automatiquement fermee.</p>
-      <h4>4. Vos droits (RGPD)</h4><p>Droit d'acces, de rectification et de suppression de vos donnees. Contactez un referent pour exercer ces droits.</p>
+      <h4>1. Données collectées</h4><p>Le Board collecte uniquement les données nécessaires : noms des membres, affectations aux chantiers et photo de profil (facultative). Aucune donnée sensible n'est collectée.</p>
+      <h4>2. Utilisation</h4><p>Ces données sont utilisées exclusivement pour l'organisation interne. Elles ne sont jamais transmises à des tiers ni utilisées à des fins commerciales.</p>
+      <h4>3. Sécurité</h4><p>Accès protégé par un code PIN personnel choisi à la première connexion. Toute session inactive depuis plus d'1 heure est automatiquement fermée.</p>
+      <h4>4. Vos droits (RGPD)</h4><p>Droit d'accès, de rectification et de suppression de vos données. Contactez un référent pour exercer ces droits.</p>
     </div>
-    <label class="polchk"><input type="checkbox" id="chkpol" onchange="document.getElementById('btnpol').disabled=!this.checked;document.getElementById('btnpol').style.opacity=this.checked?'1':'0.35';"><span style="font-size:13px;line-height:1.5;">J'ai lu et j'accepte la politique de confidentialite.</span></label>
+    <label class="polchk"><input type="checkbox" id="chkpol" onchange="document.getElementById('btnpol').disabled=!this.checked;document.getElementById('btnpol').style.opacity=this.checked?'1':'0.35';"><span>J'ai lu et j'accepte la politique de confidentialité.</span></label>
     <div class="polact">
-      <button class="bpol" style="background:var(--bg4);color:var(--tx3);" onclick="toast('Vous devez accepter pour continuer')">Refuser</button>
+      <button class="bpol bsec" onclick="toast('Vous devez accepter pour continuer')">Refuser</button>
       <button class="bpol btnp" id="btnpol" disabled onclick="accPol()" style="opacity:0.35;">Accepter et continuer</button>
     </div>
   </div>
@@ -775,18 +798,18 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
       <div class="acli"><div style="width:20px;height:4px;border-radius:1px;background:white;"></div><div style="width:14px;height:4px;border-radius:1px;background:white;opacity:0.6;"></div><div style="width:9px;height:4px;border-radius:1px;background:white;opacity:0.3;"></div></div>
       <div class="aclt">LE <span>BOARD</span></div>
     </div>
-    <div style="font-size:13px;color:var(--tx3);margin-bottom:36px;">Qui etes-vous ?</div>
+    <div class="acq">Qui êtes-vous ?</div>
     <div class="acbtns">
       <div class="acbtn" onclick="showLRef()">
         <div class="acbic" style="background:var(--or);"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
-        <div class="acblbl">Referent</div><div class="acbsub">Acces complet</div>
+        <div class="acblbl">Référent</div><div class="acbsub">Accès complet</div>
       </div>
       <div class="acbtn" onclick="showLCol()">
         <div class="acbic" style="background:var(--bl);"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="acblbl">Collaborateur</div><div class="acbsub">Mon planning</div>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--tx3);"><a onclick="showPol()" style="color:var(--or);cursor:pointer;">Politique de confidentialite</a></div>
+    <div class="authfoot"><a class="lnk" onclick="showPol()">Politique de confidentialité</a></div>
   </div>
 </div>
 
@@ -797,27 +820,27 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
     <div class="aclt">LE <span>BOARD</span></div>
   </div>
   <div class="ltit">Connexion</div><div class="lsub">Identifiez-vous avec votre compte Le Board</div>
-  <form style="width:100%;max-width:340px;" onsubmit="event.preventDefault();authLogin();">
+  <form class="authform" onsubmit="event.preventDefault();authLogin();">
     <div class="fg"><label class="fl" for="au-email">Email</label><input class="fi" type="email" id="au-email" autocomplete="username" autocapitalize="off"></div>
     <div class="fg"><label class="fl" for="au-pwd">Mot de passe</label><input class="fi" type="password" id="au-pwd" autocomplete="current-password"></div>
     <div class="pinerr" id="au-err"></div>
-    <button class="btn btnp" type="submit" id="au-go" style="width:100%;justify-content:center;padding:12px;">Se connecter</button>
-    <div style="text-align:center;margin-top:16px;"><a class="pinfgt" onclick="authReset()">Première connexion ou mot de passe oublié ?</a></div>
+    <button class="btn btnp btn-block" type="submit" id="au-go">Se connecter</button>
+    <div class="authlnk"><a class="pinfgt" onclick="authReset()">Première connexion ou mot de passe oublié ?</a></div>
   </form>
-  <div style="font-size:11px;color:var(--tx3);margin-top:28px;text-align:center;line-height:1.6;">Première connexion : utilisez le lien reçu par email pour choisir votre mot de passe.<br>Pas de compte ? Contactez un référent. · <a onclick="showPol()" style="color:var(--or);cursor:pointer;">Politique de confidentialité</a></div>
+  <div class="authfoot">Pas de compte ? Contactez un référent. · <a class="lnk" onclick="showPol()">Politique de confidentialité</a></div>
 </div></div>
 
 <!-- LOGIN REFERENT -->
 <div id="lref"><div class="linn">
   <button class="lbk" onclick="showAcc()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
-  <div class="ltit">Referents</div><div class="lsub">Selectionnez votre profil</div>
+  <div class="ltit">Référents</div><div class="lsub">Sélectionnez votre profil</div>
   <div class="rgrd" id="refgrd"></div>
 </div></div>
 
 <!-- LOGIN COLLABORATEUR -->
 <div id="lcol"><div class="linn">
   <button class="lbk" onclick="showAcc()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
-  <div class="ltit">Collaborateurs</div><div class="lsub">Selectionnez votre profil</div>
+  <div class="ltit">Collaborateurs</div><div class="lsub">Sélectionnez votre profil</div>
   <div class="rgrd" id="colgrd"></div>
 </div></div>
 
@@ -876,7 +899,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
         </div>
       </nav>
       <div class="synbar"><div class="syndot" id="syndot"></div><span class="syntx" id="syntxt">Connecté</span><span class="syntm" id="syntime"></span><button class="btn synbtn" onclick="syncGCal()" aria-label="Sync Google" title="Sync Google"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button></div>
-      <div class="sbbot"><div class="sbusr" onclick="openProf()"><div class="av" id="sbav" style="width:32px;height:32px;font-size:12px;"></div><div class="sbunm" id="sbnm"></div><button class="lgbtn" onclick="event.stopPropagation();retAcc()" title="Deconnexion"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button></div></div>
+      <div class="sbbot"><div class="sbusr" onclick="openProf()"><div class="av" id="sbav" style="width:32px;height:32px;font-size:12px;"></div><div class="sbunm" id="sbnm"></div><button class="lgbtn" onclick="event.stopPropagation();retAcc()" title="Déconnexion"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button></div></div>
     </aside>
     <div class="main">
       <div class="topbar"><div class="tprow"><div><div class="pgtit" id="pgtit">Planning</div><div class="pgsub" id="pgsub">Vue globale</div></div><div style="display:flex;gap:8px;flex-shrink:0;" id="tbact"></div></div></div>
@@ -1392,8 +1415,8 @@ let authTok = null, authExp = 0, authRefreshing = null;
 function authErrMsg(code){
   code = String(code||'');
   if(/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND|INVALID_EMAIL|MISSING_PASSWORD/.test(code)) return 'Email ou mot de passe incorrect';
-  if(/USER_DISABLED/.test(code)) return 'Compte desactive, contactez un referent';
-  if(/TOO_MANY_ATTEMPTS/.test(code)) return 'Trop de tentatives, reessayez plus tard';
+  if(/USER_DISABLED/.test(code)) return 'Compte désactivé, contactez un référent';
+  if(/TOO_MANY_ATTEMPTS/.test(code)) return 'Trop de tentatives, réessayez plus tard';
   return 'Connexion impossible ('+(code||'reseau')+')';
 }
 function authForget(){
@@ -2642,7 +2665,7 @@ function buildGrids(){
   const refs=Object.entries(MBR).filter(([k,m])=>m.role==='referent');
   const cols=Object.entries(MBR).filter(([k,m])=>m.role==='collaborateur');
   document.getElementById('refgrd').innerHTML=refs.map(([k,m])=>`<div class="rbtn" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('');
-  document.getElementById('colgrd').innerHTML=cols.map(([k,m])=>`<div class="rbtn" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('')+`<div class="rbtn" style="grid-column:1/-1;flex-direction:row;gap:12px;" onclick="toast('Contactez un referent pour obtenir un acces')"><div style="width:48px;height:48px;border-radius:14px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">+</div><div style="text-align:left;"><div style="font-size:14px;font-weight:600;">Nouveau collaborateur</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">Contactez un referent</div></div></div>`;
+  document.getElementById('colgrd').innerHTML=cols.map(([k,m])=>`<div class="rbtn" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('')+`<div class="rbtn" style="grid-column:1/-1;flex-direction:row;gap:12px;" onclick="toast('Contactez un référent pour obtenir un accès')"><div style="width:48px;height:48px;border-radius:14px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">+</div><div style="text-align:left;"><div style="font-size:14px;font-weight:600;">Nouveau collaborateur</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">Contactez un référent</div></div></div>`;
 }
 
 // ═══ POLITIQUE ═══
@@ -2673,7 +2696,7 @@ async function authLogin(){
       const docs=await fbGet('membres',true);const d=docs&&docs.find(function(x){return x.id==='data';});
       if(d&&d.mbr){try{MBR=JSON.parse(d.mbr);sv('lb_mbr',MBR);}catch(e){}}
     }
-    if(!a||!a.membre||!MBR[a.membre]){authForget();err.textContent='Ce compte n\'a pas encore d\'acces au Board. Contactez un referent.';return;}
+    if(!a||!a.membre||!MBR[a.membre]){authForget();err.textContent='Ce compte n\'a pas encore d\'accès au Board. Contactez un référent.';return;}
     AUTH.membre=a.membre;AUTH.role=a.role==='referent'?'referent':'collaborateur';sv('lb_auth',AUTH);
     document.getElementById('au-pwd').value='';
     document.getElementById('lauth').style.display='none';
@@ -2693,7 +2716,7 @@ async function authReset(){
 function authSwitch(){authForget();CU=null;showAuth();}
 // Jeton revoque ou compte supprime pendant l'utilisation
 function authLost(){
-  toast('Session du compte expiree : reconnectez-vous');
+  toast('Session du compte expirée : reconnectez-vous');
   if(fbAppOn)retAcc();else if(document.getElementById('pin').style.display!=='none')showAuth();
 }
 // A chaque deverrouillage, verifie en arriere-plan que le compte a toujours ses droits
@@ -2705,7 +2728,7 @@ async function authCheckAcces(){
     if(!AUTH)return;
     if(!a||!a.membre){authForget();authLost();return;}
     const role=a.role==='referent'?'referent':'collaborateur';
-    if(a.membre!==AUTH.membre||role!==AUTH.role){AUTH.membre=a.membre;AUTH.role=role;sv('lb_auth',AUTH);toast('Droits du compte modifies : reconnectez-vous');retAcc();}
+    if(a.membre!==AUTH.membre||role!==AUTH.role){AUTH.membre=a.membre;AUTH.role=role;sv('lb_auth',AUTH);toast('Droits du compte modifiés : reconnectez-vous');retAcc();}
   }catch(e){} // quota ou reseau : on garde l'acces en cache
 }
 function showLRef(){document.getElementById('acc').style.display='none';document.getElementById('lref').style.display='block';}
@@ -2721,7 +2744,7 @@ function selMbr(key){
   av.innerHTML=img+`<span class="avt">${p.avatar?'':m.name.slice(0,2).toUpperCase()}</span>`;
   document.getElementById('pinam').textContent=m.name;
   document.getElementById('pinerr').textContent='';
-  if(!hasPin){pinStep='c1';document.getElementById('pinlb').textContent='Choisissez votre code a 4 chiffres';document.getElementById('pininfo').style.display='block';document.getElementById('pininfo').textContent='Premiere connexion : choisissez un code personnel a 4 chiffres. Notez-le et conservez-le precieusement.';}
+  if(!hasPin){pinStep='c1';document.getElementById('pinlb').textContent='Choisissez votre code à 4 chiffres';document.getElementById('pininfo').style.display='block';document.getElementById('pininfo').textContent='Première connexion : choisissez un code personnel à 4 chiffres. Notez-le et conservez-le précieusement.';}
   else{pinStep='v';document.getElementById('pinlb').textContent='Entrez votre code';document.getElementById('pininfo').style.display='none';}
   updDots();['lref','lcol','acc'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
   document.getElementById('pin').style.display='flex';
@@ -2732,7 +2755,7 @@ function updDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).className=
 function chkPin(){
   const pins=ld('lb_pins')||{};
   if(pinStep==='c1'){pinFirst=pinBuf;pinBuf='';updDots();pinStep='c2';document.getElementById('pinlb').textContent='Confirmez votre code';document.getElementById('pininfo').textContent='';return;}
-  if(pinStep==='c2'){if(pinBuf===pinFirst){pins[CU]=pinBuf;sv('lb_pins',pins);pinBuf='';updDots();document.getElementById('pin').style.display='none';launchApp();}else{document.getElementById('pinerr').textContent='Codes differents, recommencez';pinBuf='';pinStep='c1';updDots();document.getElementById('pinlb').textContent='Choisissez votre code a 4 chiffres';}return;}
+  if(pinStep==='c2'){if(pinBuf===pinFirst){pins[CU]=pinBuf;sv('lb_pins',pins);pinBuf='';updDots();document.getElementById('pin').style.display='none';launchApp();}else{document.getElementById('pinerr').textContent='Codes différents, recommencez';pinBuf='';pinStep='c1';updDots();document.getElementById('pinlb').textContent='Choisissez votre code à 4 chiffres';}return;}
   if(pinStep==='v'){if(pinBuf===pins[CU]){document.getElementById('pin').style.display='none';launchApp();}else{document.getElementById('pinerr').textContent='Code incorrect';pinBuf='';updDots();}}
 }
 
