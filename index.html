@@ -2828,7 +2828,7 @@ function detectCf(){
     for(const o of actifs){
       if(o.id===c.id)continue;
       const os=new Date(o.debut),oe=new Date(o.fin);
-      if(!(cs<oe&&ce>os))continue;
+      if(!(cs<=oe&&ce>=os))continue;   // dates inclusives : un jour commun suffit
       if(!res[c.id].col)for(const col of c.collabs)if(o.collabs.includes(col)){res[c.id].col="Conflit collab. : "+col+' déjà sur "'+o.nom+'"';break;}
       if(!res[c.id].col&&c.ctv&&o.ctv&&c.ctv===o.ctv)res[c.id].col="Conflit chargé de travaux : "+c.ctv+' déjà sur "'+o.nom+'"';
       if(!res[c.id].col&&c.ctv&&o.collabs.includes(c.ctv))res[c.id].col="Conflit : "+c.ctv+' déjà sur "'+o.nom+'"';

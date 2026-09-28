@@ -12,6 +12,10 @@ Prérequis : Node et Chrome. Les tests n'utilisent que des données fictives : l
 
     node tests/test-cal.js
 
+## Conflits entre chantiers (dates inclusives)
+
+    node tests/test-conflits.js
+
 ## Scénarios dans le navigateur
 
     sh tests/run.sh logout                                 # module Leads de bout en bout
