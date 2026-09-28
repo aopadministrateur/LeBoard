@@ -3019,7 +3019,7 @@ function renderMonCal(){
 }
 
 // ═══ MEMBRES ═══
-function selCol(c,el){selColor=c;document.querySelectorAll('.csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}
+function selCol(c,el){selColor=c;el.parentElement.querySelectorAll('.csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}  // seulement le selecteur clique
 function renderMbr(){
   const refs=Object.entries(MBR).filter(function(e){return e[1].role==='referent';});
   const cols=Object.entries(MBR).filter(function(e){return e[1].role==='collaborateur';});
