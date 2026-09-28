@@ -270,6 +270,9 @@ tr:last-child td{border-bottom:none;}
 .calev::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--c,var(--tx3));opacity:0.2;}
 .calev.opt{border-left-style:dashed;color:var(--tx2);}
 .calev.ter{opacity:0.5;}
+/* Conflit : pastille rouge discrete a droite, message complet au survol (title) */
+.calev.cf{padding-right:16px;}
+.calev.cf::after{content:"";position:absolute;right:5px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--re);box-shadow:0 0 0 2px var(--bg2);}
 /* Indisponibilite : ambre hachure discret */
 .calind{border-left:2px solid var(--am);color:var(--am);background:repeating-linear-gradient(135deg,var(--amd) 0 4px,transparent 4px 8px);}
 .calind::before{display:none;}
@@ -2912,6 +2915,8 @@ function renderCal(){
   const first=new Date(calY,calM,1);let dow=first.getDay();if(dow===0)dow=7;
   const dim=new Date(calY,calM+1,0).getDate();const dip=new Date(calY,calM,0).getDate();
   const today=new Date();let cells=[];
+  // Conflits (lecture seule de la detection existante) : marqueur rouge + message complet dans title
+  const cfs=detectCf();
   for(let i=dow-1;i>0;i--)cells.push({d:dip-i+1,cur:false});
   for(let d=1;d<=dim;d++)cells.push({d,cur:true});
   while(cells.length%7!==0)cells.push({d:cells.length-dim-(dow-1)+1,cur:false});
@@ -2932,7 +2937,7 @@ function renderCal(){
     if(ds)for(const c of CH){if(ds>=c.debut&&ds<=c.fin){
   const m=MBR[CU];
   if(CR!=='referent'&&m&&c.chef!==m.name&&!c.collabs.includes(m.name)&&c.ctv!==m.name)continue;
-  const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' ['+statLbl('Termine')+']':'';const op=isOpt?'0.6':'1';evts+=`<div class="calev${isOpt?' opt':isTer?' ter':''}" style="--c:${col};" title="${c.nom}${lbl}">${c.nom}${lbl}</div>`;}}
+  const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' ['+statLbl('Termine')+']':'';const op=isOpt?'0.6':'1';const cfm=(cfs[c.id]||{}).col;evts+=`<div class="calev${isOpt?' opt':isTer?' ter':''}${cfm?' cf':''}" style="--c:${col};" title="${esc(c.nom+lbl+(cfm?' — '+cfm:''))}">${c.nom}${lbl}</div>`;}}
     return {cls:`calce ${!cell.cur?'om':''} ${isT?'td':''}${i%7>4?' we':''}${evts?'':' sans'}`,j:CAL_JOURS[i%7],d:cell.d,evts:evts,plein:!!evts||isT};
   });
   // Affichage par semaine : en-tete « S38 · 14 – 20 sept. » (mobile), numero dans la case du lundi (ordinateur)
