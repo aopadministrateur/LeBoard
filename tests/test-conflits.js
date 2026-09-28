@@ -1,8 +1,9 @@
 // Tests de la detection des conflits (detectCf) : dates de debut et de fin inclusives.
 // Usage : node tests/test-conflits.js
 const fs=require('fs'),assert=require('assert'),path=require('path');
-const H=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
+const H=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8').replace(/\r\n/g,'\n');  // CRLF ou LF selon la copie de travail
 const src=H.slice(H.indexOf('function detectCf(){'),H.indexOf('\n}\n',H.indexOf('function detectCf(){'))+2);
+if(!src.startsWith('function detectCf(){')||!src.endsWith('}\n'))throw new Error('detectCf introuvable dans index.html');
 var STATOK=['Confirme','Prevu'],CH=[];eval(src.replace('function detectCf(){','var detectCf=function(){'));
 let n=0;const t=(name,fn)=>{fn();n++;console.log('ok -',name);};
 const C=(id,debut,fin,o)=>Object.assign({id,nom:'Chantier '+id,statut:'Confirme',ctv:'',collabs:[],debut,fin},o);
