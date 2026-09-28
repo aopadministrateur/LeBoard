@@ -345,6 +345,13 @@ textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rg
 .cciv.ccnote{font-weight:400;color:var(--tx2);}
 .mcvide{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:48px 16px;color:var(--tx3);font-size:13px;border:1px dashed var(--b2);border-radius:var(--rl);grid-column:1/-1;}
 .mcvide .calico{width:24px;height:24px;}
+.mcsec,.mcind{grid-column:1/-1;}
+.mcsec{font-size:12px;font-weight:600;color:var(--tx2);margin-top:6px;}
+.mcind{display:flex;flex-wrap:wrap;gap:6px;}
+.mcind .cfb{margin-top:0;}
+.cccard.mcnext{grid-column:1/-1;border-color:var(--or-bd);padding:20px;}
+.mcnext .mcnm{font-size:20px;}
+.mcnext .ccig{grid-template-columns:repeat(4,minmax(0,1fr));}
 .repbtn{height:32px;padding:0 12px;background:var(--amd);border:1px solid var(--am-bd);border-radius:var(--r);color:var(--am);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;}
 .repbtn:hover{background:var(--am-hv);}
 
@@ -611,6 +618,9 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .mblien .frow{flex-direction:column;align-items:stretch;}
   .mblay{grid-template-columns:1fr;}
   #mccont{grid-template-columns:minmax(0,1fr);}
+  .mcnext .ccig{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .cccard.mcnext{padding:16px;}
+  .mcnext .mcnm{font-size:18px;}
   /* Profil : icone de photo toujours visible (pas de survol au doigt) */
   .pavo{opacity:1;inset:auto -2px -2px auto;width:28px;height:28px;background:var(--bg4);border:2px solid var(--bg3);}
   .pavo .ico{width:14px;height:14px;}
@@ -2955,12 +2965,21 @@ function renderTeam(){
 // ═══ MON CAL ═══
 function renderMonCal(){
   const m=MBR[CU];if(!m)return;
-  const mine=CH.filter(c=>STATOK.includes(c.statut)&&(c.collabs.includes(m.name)||c.chef===m.name));
-  if(!mine.length){document.getElementById('mccont').innerHTML=`<div class="mcvide"><span class="calico" aria-hidden="true"></span><div>Aucun chantier planifié pour le moment.</div></div>`;return;}
-  document.getElementById('mccont').innerHTML=mine.map(c=>{
+  // Affichage (lecture seule) : chantiers actifs non termines ou la personne est collaborateur, charge de travaux,
+  // ou maitre d'oeuvre (directement, ou via sa societe pour un referent). Un chantier qui finit aujourd'hui reste affiche.
+  const soc=REF_SOC[m.name],auj=isoDay();
+  const mine=CH.filter(c=>STATOK.includes(c.statut)&&c.fin>=auj&&(c.collabs.includes(m.name)||c.chef===m.name||c.ctv===m.name||(soc&&c.chef===soc)));
+  // Indispos a venir ou en cours
+  const dt=s=>new Date(s+'T00:00:00');
+  const ind=CONGES.filter(g=>g.nom===m.name&&g.fin>=auj).map(g=>`<span class="cfb cfa" title="Indisponible du ${fd(g.debut)} au ${fd(g.fin)}">Indispo · ${calPeriode(dt(g.debut),dt(g.fin)).replace(' – ',' → ')}</span>`).join('');
+  const indH=ind?`<div class="mcind">${ind}</div>`:'';
+  if(!mine.length){document.getElementById('mccont').innerHTML=indH+`<div class="mcvide"><span class="calico" aria-hidden="true"></span><div>Aucun chantier planifié pour le moment.</div></div>`;return;}
+  const carte=(c,prochain)=>{
     const col=getColor(c.chef);const sb=c.statut==='Confirme'?'bgg':'bbl';const isChef=c.chef===m.name;
-    return `<div class="cccard"><div class="mchd"><div class="grow"><div class="mcnm">${c.nom}</div><div class="mccl">${c.client}</div></div><span class="badge ${sb}">${statLbl(c.statut)}</span>${isChef?`<button class="repbtn" onclick="openRep('${c.id}')">Remplacer un collab.</button>`:''}</div><div class="ccig"><div class="ccib"><div class="ccil">Début</div><div class="cciv">${fd(c.debut)}</div></div><div class="ccib"><div class="ccil">Fin</div><div class="cciv">${fd(c.fin)}</div></div><div class="ccib"><div class="ccil">Maître d'œuvre</div><div class="cciv"><span class="ldd" style="background:${col};"></span>${c.chef}</div></div>${c.ctv?`<div class="ccib"><div class="ccil">Chargé de travaux</div><div class="cciv">${c.ctv}</div></div>`:''}<div class="ccib ccfull"><div class="ccil">Adresse</div><div class="cciv">${c.adresse||'—'}</div></div>${c.collabs.length?`<div class="ccib ccfull"><div class="ccil">Équipe</div><div class="cciv">${c.collabs.join(', ')}</div></div>`:''}${c.materiel?`<div class="ccib ccfull"><div class="ccil">Matériel</div><div class="cciv">${c.materiel}</div></div>`:''}${c.notes?`<div class="ccib ccfull"><div class="ccil">Notes</div><div class="cciv ccnote">${c.notes}</div></div>`:''}</div></div>`;
-  }).join('');
+    return `<div class="cccard${prochain?' mcnext':''}"><div class="mchd"><div class="grow"><div class="mcnm">${c.nom}</div><div class="mccl">${c.client}</div></div><span class="badge ${sb}">${statLbl(c.statut)}</span>${isChef?`<button class="repbtn" onclick="openRep('${c.id}')">Remplacer un collab.</button>`:''}</div><div class="ccig"><div class="ccib"><div class="ccil">Début</div><div class="cciv">${fd(c.debut)}</div></div><div class="ccib"><div class="ccil">Fin</div><div class="cciv">${fd(c.fin)}</div></div><div class="ccib"><div class="ccil">Maître d'œuvre</div><div class="cciv"><span class="ldd" style="background:${col};"></span>${c.chef}</div></div>${c.ctv?`<div class="ccib"><div class="ccil">Chargé de travaux</div><div class="cciv">${c.ctv}</div></div>`:''}<div class="ccib ccfull"><div class="ccil">Adresse</div><div class="cciv">${c.adresse||'—'}</div></div>${c.collabs.length?`<div class="ccib ccfull"><div class="ccil">Équipe</div><div class="cciv">${c.collabs.join(', ')}</div></div>`:''}${c.materiel?`<div class="ccib ccfull"><div class="ccil">Matériel</div><div class="cciv">${c.materiel}</div></div>`:''}${c.notes?`<div class="ccib ccfull"><div class="ccil">Notes</div><div class="cciv ccnote">${c.notes}</div></div>`:''}</div></div>`;
+  };
+  document.getElementById('mccont').innerHTML=indH+'<div class="mcsec">Prochain chantier</div>'+carte(mine[0],true)
+    +(mine.length>1?'<div class="mcsec">À venir</div>'+mine.slice(1).map(c=>carte(c,false)).join(''):'');
 }
 
 // ═══ MEMBRES ═══
