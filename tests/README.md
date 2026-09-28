@@ -26,6 +26,7 @@ Prérequis : Node et Chrome. Les tests n'utilisent que des données fictives : l
     SCEN=auth-scenario.js sh tests/run.sh a_revoked        # compte révoqué : retour à la connexion
     BUDGET=30000 SCEN=auth-scenario.js sh tests/run.sh a_reads    # lectures facturables par cycle
     BUDGET=30000 SCEN=modch-scenario.js sh tests/run.sh m_reset  # creation de chantier apres une edition : champs vides
+    BUDGET=40000 SCEN=dates-scenario.js sh tests/run.sh d_dates   # fin avant debut refusee, fin = debut acceptee
 
 Ajouter une taille (ex. `1440,1500`) après le mode produit une capture d'écran dans `tests/.out/` au lieu du résultat. Si « PAS DE RESULTAT » s'affiche, augmenter `BUDGET`.
 

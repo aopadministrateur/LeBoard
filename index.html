@@ -3190,6 +3190,7 @@ function editCh(id){
 function saveCh(){
   const nom=document.getElementById('fnom').value.trim();const debut=document.getElementById('fdeb').value;const fin=document.getElementById('ffin').value;
   if(!nom||!debut||!fin){toast('Nom, début et fin sont obligatoires');return;}
+  if(fin<debut){toast('La date de fin doit être après le début');return;}
   const typVal=document.getElementById('ftyp').value;
   const typFinal=typVal||(editId?(CH.find(function(c){return c.id===editId;})||{}).type||'':'');
   if(!typFinal){toast('Veuillez choisir un type de travaux');return;}
