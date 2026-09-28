@@ -226,21 +226,40 @@ tr:last-child td{border-bottom:none;}
 .bgr{background:rgba(136,135,128,0.15);color:var(--tx2);}
 
 /* CALENDAR */
-.calnv{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-.calml{font-size:16px;font-weight:700;letter-spacing:-0.02em;min-width:150px;}
-.caldh{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:3px;margin-bottom:3px;}
-.caldn{text-align:center;font-size:12px;color:var(--tx3);padding:6px;font-weight:500;}
-.calgr{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:3px;}
-.calce{min-height:88px;background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:6px 7px;}
-.calce.om{opacity:0.3;}
-.calce.td{border-color:var(--or);}
-.caldt{font-size:11px;color:var(--tx3);margin-bottom:4px;font-weight:500;}
-.calce.td .caldt{color:var(--or);font-weight:700;}
-.calind{background:var(--amd);color:var(--am);}
-.calev{font-size:10px;padding:2px 6px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
-.callg{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+.calnv{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.calml{font-size:20px;font-weight:600;letter-spacing:-0.02em;}
+.calbtns{display:flex;align-items:center;gap:6px;}
+.calbtns .btn.calnb{color:var(--tx2);border-color:var(--b2);background:var(--bg3);}
+.calbtns .btn.calnb:hover{color:var(--tx);background:var(--bg4);}
+.calnb svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.calscr{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.calin{min-width:max(700px,100%);}
+.caldh{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:4px;margin-bottom:4px;}
+.caldn{text-align:left;font-size:12px;color:var(--tx3);padding:4px 8px;font-weight:500;}
+.calgr{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:4px;}
+.calce{min-height:96px;background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:3px;min-width:0;}
+/* Week-ends tres legerement attenues */
+.calce.we{background:#131315;}
+.calce{position:relative;}
+.calsn{position:absolute;top:8px;right:8px;font-size:11px;color:var(--tx3);font-variant-numeric:tabular-nums;}
+.calwk{display:none;}
+.caldh>.caldn:nth-child(n+6){color:#5E5E66;}
+.calce.om{background:transparent;border-color:rgba(255,255,255,0.04);}
+.calce.om .caldt{color:var(--tx3);opacity:0.6;}
+.caldt{font-size:12px;color:var(--tx2);font-weight:500;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:0 0 2px -1px;flex-shrink:0;}
+/* Aujourd'hui : numero dans une pastille orange */
+.calce.td .caldt{background:var(--or);color:#141416;font-weight:600;}
+/* Evenements : barre fine, fond de la couleur du maitre d'oeuvre a faible opacite + bord gauche */
+.calev{position:relative;isolation:isolate;height:20px;line-height:20px;padding:0 6px 0 7px;border-radius:4px;border-left:2px solid var(--c,var(--tx3));font-size:11px;font-weight:500;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.calev::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--c,var(--tx3));opacity:0.2;}
+.calev.opt{border-left-style:dashed;color:var(--tx2);}
+.calev.ter{opacity:0.5;}
+/* Indisponibilite : ambre hachure discret */
+.calind{border-left:2px solid var(--am);color:var(--am);background:repeating-linear-gradient(135deg,var(--amd) 0 4px,transparent 4px 8px);}
+.calind::before{display:none;}
+.callg{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:16px;}
 .callgi{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx2);}
-.callgc{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.callgc{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 /* TEAM */
 .tgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
@@ -344,9 +363,10 @@ select.fi{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 .btn.btn-ico{width:32px;height:32px;padding:0;justify-content:center;background:none;border-color:transparent;color:var(--tx3);flex-shrink:0;}
 .btn.btn-ico:hover{background:var(--bg4);color:var(--tx);}
 .btn-ico .ico{width:14px;height:14px;}
-.faop{display:flex;align-items:center;gap:12px;padding:8px 8px 8px 12px;min-height:50px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
+.faop{display:flex;align-items:center;gap:12px;min-height:34px;}
 .faopl{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap;}
-.faop input[type=checkbox]{width:16px;height:16px;margin:0;accent-color:var(--or);cursor:pointer;}
+.faop input[type=checkbox]{width:16px;height:16px;margin:0;cursor:pointer;}
+input[type=checkbox]{accent-color:var(--or);}
 #fcanaop{flex:1;width:auto;min-width:0;}
 .conglist{margin-bottom:4px;}
 .congrow{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);margin-bottom:6px;}
@@ -509,6 +529,26 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .ldrota{grid-template-columns:repeat(3,1fr);}
   .lddist{grid-template-columns:1fr;}
   .ldflt input.fi{max-width:none;}
+  /* Calendrier : liste par semaine (CSS seul, la grille generee est conservee) */
+  .calnv{gap:8px;}
+  .calml{font-size:18px;white-space:nowrap;}
+  .calbtns{gap:4px;flex-shrink:0;}
+  .calbtns .btn:not(.calnb){padding:0 12px;}
+  .calscr{overflow:visible;}
+  .calin{min-width:0;}
+  .caldh{display:none;}
+  #calgrd{display:block;}
+  #calgrd .calwk{display:block;margin:20px 0 8px;font-size:12px;font-weight:600;color:var(--tx2);font-variant-numeric:tabular-nums;}
+  #calgrd .calwk:first-child{margin-top:0;}
+  #calgrd .calce{display:block;min-height:52px;padding:8px 12px 6px 64px;border:0;border-bottom:1px solid var(--b);border-radius:0;}
+  #calgrd .calce.om,#calgrd .calce.sans:not(.td),#calgrd .calvide{display:none;}
+  #calgrd .calsn{display:none;}
+  #calgrd .caldt{position:absolute;left:12px;top:8px;width:40px;height:auto;display:block;border-radius:0;margin:0;font-size:17px;font-weight:600;color:var(--tx);line-height:1.2;}
+  #calgrd .caldt::before{content:attr(data-j);display:block;font-size:11px;font-weight:500;color:var(--tx3);}
+  #calgrd .calce.td{background:var(--ord);}
+  #calgrd .calce.td .caldt{background:none;color:var(--or);}
+  #calgrd .calce.td.sans::after{content:"Aucun chantier";display:block;font-size:12px;color:var(--tx3);padding-top:10px;}
+  #calgrd .calev{height:24px;line-height:24px;font-size:12px;margin-bottom:4px;}
   #sgrd{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:16px;}
   #sgrd .scd{padding:10px 10px 9px;}
   #sgrd .sclb{font-size:11px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -700,12 +740,15 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
         <!-- CALENDRIER -->
         <div class="pg" id="pg-cal">
           <div class="calnv">
-            <button class="btn" onclick="prevM()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round"><polyline points="15 18 9 12 15 6"/></svg></button>
             <div class="calml" id="callbl"></div>
-            <button class="btn" onclick="nextM()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg></button>
+            <div class="calbtns">
+              <button class="btn btn-ico calnb" onclick="prevM()" aria-label="Mois précédent"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="btn" onclick="showPg('cal',document.getElementById('nvc'))">Aujourd'hui</button>
+              <button class="btn btn-ico calnb" onclick="nextM()" aria-label="Mois suivant"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
           </div>
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-            <div style="min-width:max(700px, 100%);">
+          <div class="calscr">
+            <div class="calin">
               <div class="caldh"><div class="caldn">Lun</div><div class="caldn">Mar</div><div class="caldn">Mer</div><div class="caldn">Jeu</div><div class="caldn">Ven</div><div class="caldn">Sam</div><div class="caldn">Dim</div></div>
               <div class="calgr" id="calgrd"></div>
             </div>
@@ -2708,7 +2751,7 @@ function renderCal(){
   for(let i=dow-1;i>0;i--)cells.push({d:dip-i+1,cur:false});
   for(let d=1;d<=dim;d++)cells.push({d,cur:true});
   while(cells.length%7!==0)cells.push({d:cells.length-dim-(dow-1)+1,cur:false});
-  document.getElementById('calgrd').innerHTML=cells.map(cell=>{
+  const cases=cells.map((cell,i)=>{
     const isT=cell.cur&&cell.d===today.getDate()&&calM===today.getMonth()&&calY===today.getFullYear();
     const ds=cell.cur?`${calY}-${String(calM+1).padStart(2,'0')}-${String(cell.d).padStart(2,'0')}`:null;
     let evts='';
@@ -2725,11 +2768,28 @@ function renderCal(){
     if(ds)for(const c of CH){if(ds>=c.debut&&ds<=c.fin){
   const m=MBR[CU];
   if(CR!=='referent'&&m&&c.chef!==m.name&&!c.collabs.includes(m.name)&&c.ctv!==m.name)continue;
-  const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' ['+statLbl('Termine')+']':'';const op=isOpt?'0.6':'1';evts+=`<div class="calev" style="background:${col};color:${evtTxt};${evtBorder}opacity:${op};">${c.nom}${lbl}</div>`;}}
-    return `<div class="calce ${!cell.cur?'om':''} ${isT?'td':''}"><div class="caldt">${cell.d}</div>${evts}</div>`;
-  }).join('');
-  document.getElementById('calleg').innerHTML=Object.values(MOE).map(m=>`<div class="callgi"><div class="callgc" style="background:${m.color};border:''"></div><span style="font-size:12px;color:var(--tx2)">${m.name}</span></div>`).join('');
+  const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' ['+statLbl('Termine')+']':'';const op=isOpt?'0.6':'1';evts+=`<div class="calev${isOpt?' opt':isTer?' ter':''}" style="--c:${col};" title="${c.nom}${lbl}">${c.nom}${lbl}</div>`;}}
+    return {cls:`calce ${!cell.cur?'om':''} ${isT?'td':''}${i%7>4?' we':''}${evts?'':' sans'}`,j:CAL_JOURS[i%7],d:cell.d,evts:evts,plein:!!evts||isT};
+  });
+  // Affichage par semaine : en-tete « S38 · 14 – 20 sept. » (mobile), numero dans la case du lundi (ordinateur)
+  let grille='';
+  for(let w=0;w<cases.length;w+=7){
+    const lun=new Date(calY,calM,2-dow+w),dim=new Date(calY,calM,8-dow+w);
+    const sem='S'+calSemaine(lun),vide=cases.slice(w,w+7).every(x=>!x.plein)?' calvide':'';
+    grille+=`<div class="calwk${vide}">${sem} · ${calPeriode(lun,dim)}</div>`;
+    grille+=cases.slice(w,w+7).map((x,k)=>`<div class="${x.cls}${vide}"><div class="caldt" data-j="${x.j}">${x.d}</div>${k===0?`<span class="calsn">${sem}</span>`:''}${x.evts}</div>`).join('');
+  }
+  document.getElementById('calgrd').innerHTML=grille;
+  document.getElementById('calleg').innerHTML=Object.values(MOE).map(m=>`<div class="callgi"><div class="callgc" style="background:${m.color};"></div><span>${m.name}</span></div>`).join('');
 }
+// ═══ SEMAINES ═══
+const CAL_JOURS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const CAL_MOIS=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+// Numero de semaine ISO 8601 : lundi premier jour, la semaine 1 contient le premier jeudi de l'annee
+function calSemaine(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const j=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-j);const a=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-a)/86400000+1)/7);}
+// « 14 – 20 sept. », ou a cheval sur deux mois « 29 sept. – 5 oct. »
+function calPeriode(a,b){return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.getDate()+' '+CAL_MOIS[b.getMonth()]:a.getDate()+' '+CAL_MOIS[a.getMonth()]+' – '+b.getDate()+' '+CAL_MOIS[b.getMonth()];}
+// ═══ FIN SEMAINES ═══
 function prevM(){calM--;if(calM<0){calM=11;calY--;}renderCal();}
 function nextM(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
 

@@ -8,6 +8,10 @@ Prérequis : Node, Chrome, et `leads-seed.json` à la racine du dépôt (fichier
 
     node tests/test-leads.js
 
+## Semaines du calendrier (numéro ISO 8601, période affichée)
+
+    node tests/test-cal.js
+
 ## Scénarios dans le navigateur
 
     sh tests/run.sh logout                                 # module Leads de bout en bout
