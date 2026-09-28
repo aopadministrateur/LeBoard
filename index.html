@@ -222,6 +222,8 @@ tr:last-child td{border-bottom:none;}
 .tdact{text-align:center;}
 .cdel{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:none;border:none;cursor:pointer;color:var(--tx3);border-radius:var(--r);font-family:inherit;}
 .cdel:hover{color:var(--re);}
+tr[data-kbd]:focus-visible td{background:var(--bg3);box-shadow:inset 0 2px 0 var(--or),inset 0 -2px 0 var(--or);}
+tr[data-kbd]:focus-visible{outline:none;}
 .trt td{opacity:0.55;}
 .cn{font-weight:600;}
 .ca{font-size:11px;color:var(--tx3);margin-top:2px;}
@@ -803,16 +805,16 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
     </div>
     <div class="acq">Qui êtes-vous ?</div>
     <div class="acbtns">
-      <div class="acbtn" onclick="showLRef()">
+      <div class="acbtn" tabindex="0" role="button" onclick="showLRef()">
         <div class="acbic" style="background:var(--or);"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
         <div class="acblbl">Référent</div><div class="acbsub">Accès complet</div>
       </div>
-      <div class="acbtn" onclick="showLCol()">
+      <div class="acbtn" tabindex="0" role="button" onclick="showLCol()">
         <div class="acbic" style="background:var(--bl);"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="acblbl">Collaborateur</div><div class="acbsub">Mon planning</div>
       </div>
     </div>
-    <div class="authfoot"><a class="lnk" onclick="showPol()">Politique de confidentialité</a></div>
+    <div class="authfoot"><a class="lnk" tabindex="0" role="button" onclick="showPol()">Politique de confidentialité</a></div>
   </div>
 </div>
 
@@ -828,9 +830,9 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
     <div class="fg"><label class="fl" for="au-pwd">Mot de passe</label><input class="fi" type="password" id="au-pwd" autocomplete="current-password"></div>
     <div class="pinerr" id="au-err"></div>
     <button class="btn btnp btn-block" type="submit" id="au-go">Se connecter</button>
-    <div class="authlnk"><a class="pinfgt" onclick="authReset()">Première connexion ou mot de passe oublié ?</a></div>
+    <div class="authlnk"><a class="pinfgt" tabindex="0" role="button" onclick="authReset()">Première connexion ou mot de passe oublié ?</a></div>
   </form>
-  <div class="authfoot">Pas de compte ? Contactez un référent. · <a class="lnk" onclick="showPol()">Politique de confidentialité</a></div>
+  <div class="authfoot">Pas de compte ? Contactez un référent. · <a class="lnk" tabindex="0" role="button" onclick="showPol()">Politique de confidentialité</a></div>
 </div></div>
 
 <!-- LOGIN REFERENT -->
@@ -862,7 +864,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
       <button class="pk emp"></button><button class="pk" onclick="pk('0')">0</button><button class="pk del" onclick="pdel()">&#x232B;</button>
     </div>
     <div class="pinerr" id="pinerr"></div>
-    <div class="pinfgt" onclick="authSwitch()">Changer de compte</div>
+    <div class="pinfgt" tabindex="0" role="button" onclick="authSwitch()">Changer de compte</div>
 
   </div>
 </div>
@@ -902,7 +904,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
         </div>
       </nav>
       <div class="synbar"><div class="syndot" id="syndot"></div><span class="syntx" id="syntxt">Connecté</span><span class="syntm" id="syntime"></span></div>
-      <div class="sbbot"><div class="sbusr" onclick="openProf()"><div class="av" id="sbav" style="width:32px;height:32px;font-size:12px;"></div><div class="sbunm" id="sbnm"></div><button class="lgbtn" onclick="event.stopPropagation();retAcc()" title="Déconnexion"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button></div></div>
+      <div class="sbbot"><div class="sbusr" tabindex="0" role="button" aria-label="Mon profil" onclick="openProf()"><div class="av" id="sbav" style="width:32px;height:32px;font-size:12px;"></div><div class="sbunm" id="sbnm"></div><button class="lgbtn" onclick="event.stopPropagation();retAcc()" title="Déconnexion"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button></div></div>
     </aside>
     <div class="main">
       <div class="topbar"><div class="tprow"><div><div class="pgtit" id="pgtit">Planning</div><div class="pgsub" id="pgsub">Vue globale</div></div><div style="display:flex;gap:8px;flex-shrink:0;" id="tbact"></div></div></div>
@@ -964,18 +966,18 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
               <div class="mbadd">
                 <div class="fg"><label class="fl">Couleur</label>
                   <div class="cswrow" id="colpick">
-                    <div class="csw sel" style="background:#E8722A" onclick="selCol('#E8722A',this)"></div>
-                    <div class="csw" style="background:#E24B4A" onclick="selCol('#E24B4A',this)"></div>
-                    <div class="csw" style="background:#4A90D9" onclick="selCol('#4A90D9',this)"></div>
-                    <div class="csw" style="background:#2D9E5F" onclick="selCol('#2D9E5F',this)"></div>
-                    <div class="csw" style="background:#F5C842" onclick="selCol('#F5C842',this)"></div>
-                    <div class="csw" style="background:#8B7FD4" onclick="selCol('#8B7FD4',this)"></div>
-                    <div class="csw" style="background:#3BB8A8" onclick="selCol('#3BB8A8',this)"></div>
-                    <div class="csw" style="background:#C67AB8" onclick="selCol('#C67AB8',this)"></div>
-                    <div class="csw" style="background:#D4A843" onclick="selCol('#D4A843',this)"></div>
-                    <div class="csw" style="background:#E8914A" onclick="selCol('#E8914A',this)"></div>
-                    <div class="csw" style="background:#7BB5E8" onclick="selCol('#7BB5E8',this)"></div>
-                    <div class="csw" style="background:#888780" onclick="selCol('#888780',this)"></div>
+                    <div class="csw sel" tabindex="0" role="button" aria-label="Couleur #E8722A" style="background:#E8722A" onclick="selCol('#E8722A',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #E24B4A" style="background:#E24B4A" onclick="selCol('#E24B4A',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #4A90D9" style="background:#4A90D9" onclick="selCol('#4A90D9',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #2D9E5F" style="background:#2D9E5F" onclick="selCol('#2D9E5F',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #F5C842" style="background:#F5C842" onclick="selCol('#F5C842',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #8B7FD4" style="background:#8B7FD4" onclick="selCol('#8B7FD4',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #3BB8A8" style="background:#3BB8A8" onclick="selCol('#3BB8A8',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #C67AB8" style="background:#C67AB8" onclick="selCol('#C67AB8',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #D4A843" style="background:#D4A843" onclick="selCol('#D4A843',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #E8914A" style="background:#E8914A" onclick="selCol('#E8914A',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #7BB5E8" style="background:#7BB5E8" onclick="selCol('#7BB5E8',this)"></div>
+                    <div class="csw" tabindex="0" role="button" aria-label="Couleur #888780" style="background:#888780" onclick="selCol('#888780',this)"></div>
                   </div>
                 </div>
                 <button onclick="addMbr()" class="btn btnp">Ajouter</button>
@@ -1138,7 +1140,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   <div class="modal msm">
     <div class="mhd"><div class="mtit">Mon profil</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modprof')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="pavz">
-      <div class="pavb" onclick="document.getElementById('avinp').click()">
+      <div class="pavb" tabindex="0" role="button" aria-label="Changer la photo" onclick="document.getElementById('avinp').click()">
         <div class="av" id="profav" style="width:80px;height:80px;font-size:26px;"></div>
         <div class="pavo"><span class="ico ico-camera" aria-hidden="true"></span></div>
       </div>
@@ -1166,16 +1168,16 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
     <div class="fg">
       <label class="fl">Couleur</label>
       <div class="cswrow" id="moe-colpick">
-        <div class="csw sel" style="background:#E8722A" onclick="selMoeCol('#E8722A',this)"></div>
-        <div class="csw" style="background:#E24B4A" onclick="selMoeCol('#E24B4A',this)"></div>
-        <div class="csw" style="background:#4A90D9" onclick="selMoeCol('#4A90D9',this)"></div>
-        <div class="csw" style="background:#2D9E5F" onclick="selMoeCol('#2D9E5F',this)"></div>
-        <div class="csw" style="background:#F5C842" onclick="selMoeCol('#F5C842',this)"></div>
-        <div class="csw" style="background:#f0f0f0" onclick="selMoeCol('#f0f0f0',this)"></div>
-        <div class="csw" style="background:#3BB8A8" onclick="selMoeCol('#3BB8A8',this)"></div>
-        <div class="csw" style="background:#C67AB8" onclick="selMoeCol('#C67AB8',this)"></div>
-        <div class="csw" style="background:#8B7FD4" onclick="selMoeCol('#8B7FD4',this)"></div>
-        <div class="csw" style="background:#888780" onclick="selMoeCol('#888780',this)"></div>
+        <div class="csw sel" tabindex="0" role="button" aria-label="Couleur #E8722A" style="background:#E8722A" onclick="selMoeCol('#E8722A',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #E24B4A" style="background:#E24B4A" onclick="selMoeCol('#E24B4A',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #4A90D9" style="background:#4A90D9" onclick="selMoeCol('#4A90D9',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #2D9E5F" style="background:#2D9E5F" onclick="selMoeCol('#2D9E5F',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #F5C842" style="background:#F5C842" onclick="selMoeCol('#F5C842',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #f0f0f0" style="background:#f0f0f0" onclick="selMoeCol('#f0f0f0',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #3BB8A8" style="background:#3BB8A8" onclick="selMoeCol('#3BB8A8',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #C67AB8" style="background:#C67AB8" onclick="selMoeCol('#C67AB8',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #8B7FD4" style="background:#8B7FD4" onclick="selMoeCol('#8B7FD4',this)"></div>
+        <div class="csw" tabindex="0" role="button" aria-label="Couleur #888780" style="background:#888780" onclick="selMoeCol('#888780',this)"></div>
       </div>
     </div>
     <div class="fa">
@@ -2182,7 +2184,7 @@ function renderLeadTable(){
   document.getElementById('ld-thead').innerHTML='<tr>'+cols.map(function(c){
     if(!c[0])return '<th>'+c[1]+'</th>';
     var arrow=LF.sort===c[0]?(LF.dir>0?' ↑':' ↓'):'';
-    return '<th class="ldsrt" data-sort="'+c[0]+'">'+c[1]+arrow+'</th>';
+    return '<th class="ldsrt" tabindex="0" role="button" data-sort="'+c[0]+'">'+c[1]+arrow+'</th>';
   }).join('')+'</tr>';
   var body=document.getElementById('ld-body');
   if(!LEADS_OK){body.innerHTML='<tr><td colspan="8" class="tdempty">Chargement des leads…</td></tr>';document.getElementById('ld-count').textContent='';return;}
@@ -2212,7 +2214,7 @@ function renderLeadTable(){
     var coord=[l.email?'<a class="ldmail" href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':'',
       l.telephone?'<a class="ldmail ldtel" href="tel:'+esc(String(l.telephone).replace(/\s/g,''))+'">'+esc(l.telephone)+'</a>':''].filter(Boolean).join('<br>')||dash;
     return '<tr>'
-      +'<td class="ldc-ct"><div class="cn ldlink" data-open="'+id+'">'+(esc(l.contact)||esc(l.societe)||dash)+'</div>'
+      +'<td class="ldc-ct"><div class="cn ldlink" tabindex="0" role="button" data-open="'+id+'">'+(esc(l.contact)||esc(l.societe)||dash)+'</div>'
       +'<div class="ca">'+esc(l.societe)+(l.societe?' · ':'')+id
       +(l.chantierId?' <span class="badge bgg ldlk">Chantier lié</span>':'')+'</div></td>'
       +'<td class="ldc-bes">'+(esc(l.besoin)||dash)+'</td>'
@@ -2677,8 +2679,8 @@ function mkAvHTML(key,size,fs){const m=MBR[key]||{color:'#666',name:'?'};const p
 function buildGrids(){
   const refs=Object.entries(MBR).filter(([k,m])=>m.role==='referent');
   const cols=Object.entries(MBR).filter(([k,m])=>m.role==='collaborateur');
-  document.getElementById('refgrd').innerHTML=refs.map(([k,m])=>`<div class="rbtn" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('');
-  document.getElementById('colgrd').innerHTML=cols.map(([k,m])=>`<div class="rbtn" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('')+`<div class="rbtn" style="grid-column:1/-1;flex-direction:row;gap:12px;" onclick="toast('Contactez un référent pour obtenir un accès')"><div style="width:48px;height:48px;border-radius:14px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">+</div><div style="text-align:left;"><div style="font-size:14px;font-weight:600;">Nouveau collaborateur</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">Contactez un référent</div></div></div>`;
+  document.getElementById('refgrd').innerHTML=refs.map(([k,m])=>`<div class="rbtn" tabindex="0" role="button" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('');
+  document.getElementById('colgrd').innerHTML=cols.map(([k,m])=>`<div class="rbtn" tabindex="0" role="button" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('')+`<div class="rbtn" tabindex="0" role="button" style="grid-column:1/-1;flex-direction:row;gap:12px;" onclick="toast('Contactez un référent pour obtenir un accès')"><div style="width:48px;height:48px;border-radius:14px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">+</div><div style="text-align:left;"><div style="font-size:14px;font-weight:600;">Nouveau collaborateur</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">Contactez un référent</div></div></div>`;
 }
 
 // ═══ POLITIQUE ═══
@@ -2885,7 +2887,7 @@ function renderPlan(){
     const col=getColor(c.chef);
     const txtCol='';
     const sb=c.statut==='Confirme'?'bgg':c.statut==='Prevu'?'bbl':'bgr';
-    const rowClick=isR?'data-chid="'+c.id+'" style="cursor:pointer;"':'';
+    const rowClick=isR?'data-chid="'+c.id+'" tabindex="0" data-kbd style="cursor:pointer;"':'';
     const delBtn=isR?'<button class="cdel" data-delid="'+c.id+'" aria-label="Supprimer le chantier"><span class="delico" aria-hidden="true"></span></button>':'';
     return '<tr class="'+cls+'" '+rowClick+'>'
       +'<td class="tdch"><div class="ccell">'
@@ -3189,7 +3191,7 @@ function bldCChks(){
   cont.innerHTML=all.map(function(m){
     const div=document.createElement('div');
     div.className='cchk';
-    div.setAttribute('onclick','togCChk(this,"'+m.name+'")');
+    div.setAttribute('onclick','togCChk(this,"'+m.name+'")');div.setAttribute('tabindex','0');div.setAttribute('role','button');
     div.innerHTML='<div class="cchkd" style="background:'+m.color+'"></div>'+m.name;
     return div.outerHTML;
   }).join('');
@@ -3353,6 +3355,16 @@ function askConfirm(texte,o){o=o||{};return dlgOpen({titre:o.titre||'Confirmatio
 function askPrompt(texte,valeur,o){o=o||{};return dlgOpen({titre:o.titre||'Précision',texte:texte,action:o.action||'Valider',champ:true,valeur:valeur});}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&dlgRes){e.preventDefault();dlgFin(false);}});
 document.getElementById('moddlg').addEventListener('click',function(e){if(e.target===this)dlgFin(false);});
+
+// ═══ CLAVIER ═══
+// Entree ou Espace sur un element cliquable qui n'est pas un bouton natif declenche le meme clic.
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  const t=e.target;if(!t||!t.matches||t.tagName==='BUTTON'||!t.matches('[role="button"],[data-kbd]'))return;
+  e.preventDefault();t.click();
+  // Element redessine par le clic (ex. en-tete de tri) : le focus passe a son remplacant
+  if(!t.isConnected){const at=['data-sort','data-open','data-chid'].find(x=>t.hasAttribute(x));const n=at&&document.querySelector('['+at+'="'+t.getAttribute(at)+'"]');if(n)n.focus();}
+});
 
 // ═══ MODAL ═══
 function openM(id){document.getElementById(id).classList.add('open');}
