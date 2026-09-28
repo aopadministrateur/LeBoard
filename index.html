@@ -70,26 +70,14 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 
 /* ACCUEIL */
 #acc{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
-.acci{width:100%;max-width:380px;text-align:center;}
 .aclog{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:40px;}
-.acq{font-size:13px;color:var(--tx2);margin-bottom:32px;}
 .acli{width:48px;height:48px;border-radius:13px;background:var(--or);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
 .aclt{font-size:26px;font-weight:700;letter-spacing:-0.04em;}
 .aclt span{color:var(--or);font-weight:300;}
-.acbtns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
-.acbtn{padding:28px 16px;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rl);cursor:pointer;transition:all 0.16s;display:flex;flex-direction:column;align-items:center;gap:12px;}
-.acbtn:hover{background:var(--bg3);border-color:var(--b3);transform:translateY(-2px);}
-.acbic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;}
-.acbic svg{width:26px;height:26px;stroke:white;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.acblbl{font-size:15px;font-weight:600;color:var(--tx);}
-.acbsub{font-size:11px;color:var(--tx3);margin-top:-6px;}
 
 /* LOGIN */
-#lref,#lcol,#lauth{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;overflow-y:auto;}
+#lauth{position:fixed;inset:0;z-index:300;background:var(--bg);display:none;overflow-y:auto;}
 .linn{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
-.lbk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx3);cursor:pointer;margin-bottom:32px;border:none;background:none;font-family:inherit;}
-.lbk:hover{color:var(--tx);}
-.lbk svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
 .ltit{font-size:22px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px;}
 .lsub{font-size:13px;color:var(--tx2);margin-bottom:28px;text-align:center;}
 .authform{width:100%;max-width:360px;}
@@ -101,9 +89,6 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 /* Erreur de connexion : sous le mot de passe, avec icone */
 #au-err{display:flex;align-items:flex-start;gap:6px;font-size:12px;min-height:18px;margin:-8px 0 12px;text-align:left;}
 #au-err:not(:empty)::before{content:"";width:14px;height:14px;margin-top:1px;flex-shrink:0;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") center/contain no-repeat;}
-.rgrd{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:400px;}
-.rbtn{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 12px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);cursor:pointer;transition:all 0.14s;}
-.rbtn:hover{background:var(--bg3);border-color:var(--b2);}
 
 /* PIN */
 #pin{position:fixed;inset:0;z-index:350;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
@@ -126,10 +111,6 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .pinerr{color:var(--re);font-size:13px;min-height:20px;margin-bottom:6px;}
 .pinfgt{display:inline-block;font-size:13px;color:var(--or);cursor:pointer;padding:6px 4px;}
 .pinfgt:hover{text-decoration:underline;}
-
-/* SECRET / RECOVERY */
-#sec,#rec{position:fixed;inset:0;z-index:360;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px;}
-.secbox{width:100%;max-width:380px;}
 
 /* SESSION EXPIREE */
 .sxbox{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:32px 28px 24px;text-align:center;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.45);}
@@ -768,28 +749,6 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   </div>
 </div>
 
-<!-- ACCUEIL -->
-<div id="acc" style="display:none;align-items:center;justify-content:center;">
-  <div class="acci">
-    <div class="aclog">
-      <div class="acli"><div style="width:20px;height:4px;border-radius:1px;background:white;"></div><div style="width:14px;height:4px;border-radius:1px;background:white;opacity:0.6;"></div><div style="width:9px;height:4px;border-radius:1px;background:white;opacity:0.3;"></div></div>
-      <div class="aclt">LE <span>BOARD</span></div>
-    </div>
-    <div class="acq">Qui êtes-vous ?</div>
-    <div class="acbtns">
-      <div class="acbtn" tabindex="0" role="button" onclick="showLRef()">
-        <div class="acbic" style="background:var(--or);"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
-        <div class="acblbl">Référent</div><div class="acbsub">Accès complet</div>
-      </div>
-      <div class="acbtn" tabindex="0" role="button" onclick="showLCol()">
-        <div class="acbic" style="background:var(--bl);"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div class="acblbl">Collaborateur</div><div class="acbsub">Mon planning</div>
-      </div>
-    </div>
-    <div class="authfoot"><a class="lnk" tabindex="0" role="button" onclick="showPol()">Politique de confidentialité</a></div>
-  </div>
-</div>
-
 <!-- CONNEXION COMPTE (email + mot de passe Firebase) -->
 <div id="lauth"><div class="linn">
   <div class="aclog">
@@ -805,20 +764,6 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
     <div class="authlnk"><a class="pinfgt" tabindex="0" role="button" onclick="authReset()">Première connexion ou mot de passe oublié ?</a></div>
   </form>
   <div class="authfoot">Pas de compte ? Contactez un référent. · <a class="lnk" tabindex="0" role="button" onclick="showPol()">Politique de confidentialité</a></div>
-</div></div>
-
-<!-- LOGIN REFERENT -->
-<div id="lref"><div class="linn">
-  <button class="lbk" onclick="showAcc()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
-  <div class="ltit">Référents</div><div class="lsub">Sélectionnez votre profil</div>
-  <div class="rgrd" id="refgrd"></div>
-</div></div>
-
-<!-- LOGIN COLLABORATEUR -->
-<div id="lcol"><div class="linn">
-  <button class="lbk" onclick="showAcc()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
-  <div class="ltit">Collaborateurs</div><div class="lsub">Sélectionnez votre profil</div>
-  <div class="rgrd" id="colgrd"></div>
 </div></div>
 
 <!-- PIN -->
@@ -1650,7 +1595,6 @@ async function fbPoll(){
     if(mbrDoc){
       if(mbrDoc.mbr){try{MBR=JSON.parse(mbrDoc.mbr);}catch(e){}}
       if(mbrDoc.moe){try{MOE=Object.assign({},MOE_DEFAULT,JSON.parse(mbrDoc.moe));}catch(e){}}
-      buildGrids();
       // Don't rebuild selects if modal is open (would reset user selections)
       if(!document.getElementById('modch').classList.contains('open')){
         bldChefSel();bldCChks();
@@ -2633,7 +2577,6 @@ function init(){
     localStorage.setItem('lb_pins_reset','1');
   }
 
-  buildGrids();
   // La synchro demarre au deverrouillage (launchApp), plus avant la connexion
   setTimeout(()=>{
     document.getElementById('splash').classList.add('hide');
@@ -2641,14 +2584,6 @@ function init(){
   },2000);
 }
 
-function mkAvHTML(key,size,fs){const m=MBR[key]||{color:'#666',name:'?'};const p=PR[key]||{};const init=m.name.slice(0,2).toUpperCase();const img=p.avatar?`<img src="${p.avatar}" alt="">`:'';return `<div class="av" style="width:${size}px;height:${size}px;font-size:${fs}px;background:${m.color};">${img}<span class="avt">${p.avatar?'':init}</span></div>`;}
-
-function buildGrids(){
-  const refs=Object.entries(MBR).filter(([k,m])=>m.role==='referent');
-  const cols=Object.entries(MBR).filter(([k,m])=>m.role==='collaborateur');
-  document.getElementById('refgrd').innerHTML=refs.map(([k,m])=>`<div class="rbtn" tabindex="0" role="button" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('');
-  document.getElementById('colgrd').innerHTML=cols.map(([k,m])=>`<div class="rbtn" tabindex="0" role="button" onclick="selMbr('${k}')">${mkAvHTML(k,52,17)}<div style="font-size:13px;font-weight:600;color:var(--tx);">${m.name}</div></div>`).join('')+`<div class="rbtn" tabindex="0" role="button" style="grid-column:1/-1;flex-direction:row;gap:12px;" onclick="toast('Contactez un référent pour obtenir un accès')"><div style="width:48px;height:48px;border-radius:14px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">+</div><div style="text-align:left;"><div style="font-size:14px;font-weight:600;">Nouveau collaborateur</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">Contactez un référent</div></div></div>`;
-}
 
 // ═══ POLITIQUE ═══
 function showPol(){document.getElementById('pol').style.display='flex';}
@@ -2657,12 +2592,12 @@ function accPol(){localStorage.setItem('lb_pol','1');document.getElementById('po
 // ═══ NAVIGATION ═══
 // Ecran d'entree : compte connu sur cet appareil -> code PIN ; sinon connexion email + mot de passe
 function showAcc(){
-  ['pol','acc','lref','lcol','pin','sec','rec','lauth'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  ['pol','pin','lauth'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
   if(AUTH&&AUTH.membre&&MBR[AUTH.membre]){selMbr(AUTH.membre);return;}
   showAuth();
 }
 function showAuth(){
-  ['acc','lref','lcol','pin'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  ['pin'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
   document.getElementById('au-err').textContent='';document.getElementById('au-pwd').value='';
   document.getElementById('lauth').style.display='block';
 }
@@ -2713,8 +2648,6 @@ async function authCheckAcces(){
     if(a.membre!==AUTH.membre||role!==AUTH.role){AUTH.membre=a.membre;AUTH.role=role;sv('lb_auth',AUTH);toast('Droits du compte modifiés : reconnectez-vous');retAcc();}
   }catch(e){} // quota ou reseau : on garde l'acces en cache
 }
-function showLRef(){document.getElementById('acc').style.display='none';document.getElementById('lref').style.display='block';}
-function showLCol(){document.getElementById('acc').style.display='none';document.getElementById('lcol').style.display='block';}
 
 // ═══ PIN ═══
 function selMbr(key){
@@ -2728,7 +2661,7 @@ function selMbr(key){
   document.getElementById('pinerr').textContent='';
   if(!hasPin){pinStep='c1';document.getElementById('pinlb').textContent='Choisissez votre code à 4 chiffres';document.getElementById('pininfo').style.display='block';document.getElementById('pininfo').textContent='Première connexion : choisissez un code personnel à 4 chiffres. Notez-le et conservez-le précieusement.';}
   else{pinStep='v';document.getElementById('pinlb').textContent='Entrez votre code';document.getElementById('pininfo').style.display='none';}
-  updDots();['lref','lcol','acc'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  updDots();
   document.getElementById('pin').style.display='flex';
 }
 function pk(d){if(pinBuf.length>=4)return;pinBuf+=d;updDots();if(pinBuf.length===4)setTimeout(chkPin,180);}
@@ -2747,7 +2680,7 @@ function startSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);
 function resetSess(){clearTimeout(sessTimer);sessTimer=setTimeout(expSess,SDUR);animSess();}
 function animSess(){const f=document.getElementById('sesfil');f.style.transition='none';f.style.width='100%';setTimeout(()=>{f.style.transition=`width ${SDUR/1000}s linear`;f.style.width='0%';},60);}
 function expSess(){nouvHide();leadsReset();stopFbPolling();['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('app').style.display='none';document.getElementById('sexp').style.display='flex';CU=null;}
-function retAcc(){nouvHide();leadsReset();stopFbPolling();clearTimeout(sessTimer);['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('sexp').style.display='none';document.getElementById('app').style.display='none';CU=null;buildGrids();showAcc();}
+function retAcc(){nouvHide();leadsReset();stopFbPolling();clearTimeout(sessTimer);['click','keydown','touchstart'].forEach(e=>document.removeEventListener(e,resetSess));document.getElementById('sexp').style.display='none';document.getElementById('app').style.display='none';CU=null;showAcc();}
 
 // ═══ LAUNCH ═══
 function launchApp(){
@@ -3029,7 +2962,7 @@ function renderMbr(){
     sectionHdr('Maîtres d\'œuvre')+
     (moes.length?moes.map(function(e){return mbrRow(e[0],e[1],true,'rmMoe');}).join(''):'<div class="fempty mbempty">Aucun maître d\'œuvre</div>');
 
-  buildGrids();bldChefSel();bldCChks();
+  bldChefSel();bldCChks();
   // Attach delete button events
   setTimeout(function(){
     document.querySelectorAll('.delbtn').forEach(function(btn){

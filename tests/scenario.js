@@ -9,7 +9,7 @@ function done(){const pre=document.createElement('pre');pre.id='testout';pre.tex
 async function scenario(){
   await wait(2600);
   const mode=location.hash.slice(1);
-  CU='florian';['acc','pol','lref'].forEach(i=>document.getElementById(i).style.display='none');
+  CU='florian';document.getElementById('pol').style.display='none';
   launchApp();showPg('leads',document.getElementById('nvl'));
   await wait(400);
   if(mode==='q429'){
