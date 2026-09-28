@@ -326,8 +326,6 @@ tr[data-kbd]:focus-visible{outline:none;}
 .cccard.mcnext{grid-column:1/-1;border-color:var(--or-bd);padding:20px;}
 .mcnext .mcnm{font-size:20px;}
 .mcnext .ccig{grid-template-columns:repeat(4,minmax(0,1fr));}
-.repbtn{height:32px;padding:0 12px;background:var(--amd);border:1px solid var(--am-bd);border-radius:var(--r);color:var(--am);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;}
-.repbtn:hover{background:var(--am-hv);}
 
 /* MODAL */
 .mlov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;}
@@ -584,7 +582,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   #moddlg .fa{margin-bottom:0;padding-bottom:12px;}
   .btn.btn-ico{width:44px;height:44px;}
   .btn.btn-sm{height:44px;}
-  .btn.delbtn,.btn.rou-prop,.repbtn,.ldpart .btn,.ldsel{height:36px;}
+  .btn.delbtn,.btn.rou-prop,.ldpart .btn,.ldsel{height:36px;}
   .mbr-grid{grid-template-columns:minmax(0,1fr) !important;}
   .sbar{display:none;}
   .sgrd{grid-template-columns:repeat(2,1fr);}
@@ -1041,17 +1039,6 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   </div>
 </div>
 
-<!-- MODAL REMPLACER -->
-<div class="mlov" id="modrep">
-  <div class="modal msm">
-    <div class="mhd"><div class="mtit">Remplacer un collaborateur</div><button class="mclose" type="button" aria-label="Fermer" onclick="closeM('modrep')"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-    <div class="msub" id="repinfo"></div>
-    <div class="fg"><label class="fl">Remplacer</label><select class="fi" id="repfrom"></select></div>
-    <div class="fg"><label class="fl">Par</label><select class="fi" id="repto"></select></div>
-    <div class="fa"><button class="btn" onclick="closeM('modrep')">Annuler</button><button class="btn btnp" onclick="doRep()">Confirmer</button></div>
-  </div>
-</div>
-
 <!-- MODAL PROFIL -->
 <div class="mlov" id="modprof">
   <div class="modal msm">
@@ -1267,7 +1254,7 @@ let MOE=Object.assign({},MOE_DEFAULT,ld('lb_moe')||{});
 let CH=ld('lb_ch')||[];
 let PR=ld('lb_pr')||{};
 
-let CU=null,CR=null,calY=2026,calM=8,editId=null,repCh=null,selColor='#E8722A',pinBuf='',pinStep='',pinFirst='',notifs=[],sessTimer=null;
+let CU=null,CR=null,calY=2026,calM=8,editId=null,selColor='#E8722A',pinBuf='',pinStep='',pinFirst='',notifs=[],sessTimer=null;
 
 
 // ═══ FIREBASE ═══
@@ -2913,8 +2900,8 @@ function renderMonCal(){
   const indH=ind?`<div class="mcind">${ind}</div>`:'';
   if(!mine.length){document.getElementById('mccont').innerHTML=indH+`<div class="mcvide"><span class="calico" aria-hidden="true"></span><div>Aucun chantier planifié pour le moment.</div></div>`;return;}
   const carte=(c,prochain)=>{
-    const col=getColor(c.chef);const sb=c.statut==='Confirme'?'bgg':'bbl';const isChef=c.chef===m.name;
-    return `<div class="cccard${prochain?' mcnext':''}"><div class="mchd"><div class="grow"><div class="mcnm">${c.nom}</div><div class="mccl">${c.client}</div></div><span class="badge ${sb}">${statLbl(c.statut)}</span>${isChef?`<button class="repbtn" onclick="openRep('${c.id}')">Remplacer un collab.</button>`:''}</div><div class="ccig"><div class="ccib"><div class="ccil">Début</div><div class="cciv">${fd(c.debut)}</div></div><div class="ccib"><div class="ccil">Fin</div><div class="cciv">${fd(c.fin)}</div></div><div class="ccib"><div class="ccil">Maître d'œuvre</div><div class="cciv"><span class="ldd" style="background:${col};"></span>${c.chef}</div></div>${c.ctv?`<div class="ccib"><div class="ccil">Chargé de travaux</div><div class="cciv">${c.ctv}</div></div>`:''}<div class="ccib ccfull"><div class="ccil">Adresse</div><div class="cciv">${c.adresse||'—'}</div></div>${c.collabs.length?`<div class="ccib ccfull"><div class="ccil">Équipe</div><div class="cciv">${c.collabs.join(', ')}</div></div>`:''}${c.materiel?`<div class="ccib ccfull"><div class="ccil">Matériel</div><div class="cciv">${c.materiel}</div></div>`:''}${c.notes?`<div class="ccib ccfull"><div class="ccil">Notes</div><div class="cciv ccnote">${c.notes}</div></div>`:''}</div></div>`;
+    const col=getColor(c.chef);const sb=c.statut==='Confirme'?'bgg':'bbl';
+    return `<div class="cccard${prochain?' mcnext':''}"><div class="mchd"><div class="grow"><div class="mcnm">${c.nom}</div><div class="mccl">${c.client}</div></div><span class="badge ${sb}">${statLbl(c.statut)}</span></div><div class="ccig"><div class="ccib"><div class="ccil">Début</div><div class="cciv">${fd(c.debut)}</div></div><div class="ccib"><div class="ccil">Fin</div><div class="cciv">${fd(c.fin)}</div></div><div class="ccib"><div class="ccil">Maître d'œuvre</div><div class="cciv"><span class="ldd" style="background:${col};"></span>${c.chef}</div></div>${c.ctv?`<div class="ccib"><div class="ccil">Chargé de travaux</div><div class="cciv">${c.ctv}</div></div>`:''}<div class="ccib ccfull"><div class="ccil">Adresse</div><div class="cciv">${c.adresse||'—'}</div></div>${c.collabs.length?`<div class="ccib ccfull"><div class="ccil">Équipe</div><div class="cciv">${c.collabs.join(', ')}</div></div>`:''}${c.materiel?`<div class="ccib ccfull"><div class="ccil">Matériel</div><div class="cciv">${c.materiel}</div></div>`:''}${c.notes?`<div class="ccib ccfull"><div class="ccil">Notes</div><div class="cciv ccnote">${c.notes}</div></div>`:''}</div></div>`;
   };
   document.getElementById('mccont').innerHTML=indH+'<div class="mcsec">Prochain chantier</div>'+carte(mine[0],true)
     +(mine.length>1?'<div class="mcsec">À venir</div>'+mine.slice(1).map(c=>carte(c,false)).join(''):'');
@@ -3144,22 +3131,6 @@ function saveCh(){
   }
   saveMembersFB();
   svAll();closeM('modch');editId=null;renderAll();
-}
-
-// ═══ REMPLACEMENT ═══
-function openRep(chId){
-  repCh=chId;const c=CH.find(x=>x.id===chId);if(!c)return;
-  document.getElementById('repinfo').textContent='Chantier : '+c.nom;
-  document.getElementById('repfrom').innerHTML=c.collabs.map(n=>`<option value="${n}">${n}</option>`).join('');
-  document.getElementById('repto').innerHTML=Object.values(MBR).filter(m=>!c.collabs.includes(m.name)&&m.name!==c.chef).map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
-  openM('modrep');
-}
-function doRep(){
-  const from=document.getElementById('repfrom').value;const to=document.getElementById('repto').value;
-  const c=CH.find(x=>x.id===repCh);if(!c)return;
-  c.collabs=c.collabs.map(n=>n===from?to:n);
-  addN(`${from} remplacé par ${to} sur le chantier ${c.nom}`);
-  saveChantierFB(c);svAll();closeM('modrep');renderAll();renderMonCal();toast(`${from} remplacé par ${to}`);
 }
 
 // ═══ PROFILE ═══
