@@ -45,11 +45,11 @@ async function scenario(){
   log('nav_leads',getComputedStyle(document.getElementById('nvl')).display);
   log('topbar',txt('tbact'));
   log('vide',txt('ld-body'));
-  log('preview_seed',await importFile(__SEED,'leads-seed.json'));
+  log('preview_seed',await importFile(__SEED,'leads-fictifs.json'));
   await runImport();await wait(100);
   log('nb_leads',Object.keys(LEADS).length);
-  log('preview_reimport',await importFile(__SEED,'leads-seed.json'));closeM('modimp');
-  // La ligne de fusion reprend l'email du lead L010 lu dans le seed local, en majuscules (aucune donnee reelle ici)
+  log('preview_reimport',await importFile(__SEED,'leads-fictifs.json'));closeM('modimp');
+  // La ligne de fusion reprend l'email du lead fictif L010, en majuscules
   const mailL010=JSON.parse(__SEED).find(x=>x.id==='L010').email.toUpperCase();
   log('preview_csv',await importFile('contact;societe;email;telephone;membre;zone\nNouveau Gars;Acme;nouveau@acme.fr;600000104;Frédéric;\nContact Test;Societe Test;'+mailL010+';;;31 Toulouse\n','sepem.csv'));
   await runImport();await wait(100);

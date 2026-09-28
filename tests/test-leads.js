@@ -1,10 +1,10 @@
 // Tests de la logique du module Leads (rotation, import, normalisation).
-// Usage : node tests/test-leads.js   (le test du seed est ignore si leads-seed.json est absent)
+// Usage : node tests/test-leads.js   (donnees fictives uniquement : tests/fixtures/leads-fictifs.json)
 const fs=require('fs'),assert=require('assert'),path=require('path');
 const REF_ORDER=['Florian','Henri','Franck','Yoan','Frederic','Thomas'];
 const REF_SOC={'Florian':'Polydrones','Henri':'KGiR','Franck':'Flight Drone Service','Yoan':'Drone Opérations','Frederic':'W-Drones','Thomas':'OrizonDrone'};
 const H=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
-const SEED=process.env.SEED||path.join(__dirname,'..','leads-seed.json');
+const SEED=path.join(__dirname,'fixtures','leads-fictifs.json');
 eval(H.slice(H.indexOf('// ═══ LEADS ═══'),H.indexOf('// ═══ FIN LEADS ═══')).replace(/^let /mg,'var ').replace(/^const /mg,'var '));
 let n=0;const t=(name,fn)=>{fn();n++;console.log('ok -',name);};
 const L=(o)=>Object.assign({statut:'Nouveau',membre:'',valeur:''},o);
@@ -45,7 +45,7 @@ t('CSV : ; et guillemets, BOM, colonnes seed',()=>{
   assert.equal(c.saisiPar,'Frederic');assert.equal(c.telephone,'0600000101');assert.equal(c.source,'Salon X');assert.equal(c.statut,'Nouveau');assert.equal(c.dateCreation,'2026-10-01');
   assert.throws(()=>leadParseCSV('a,b\n1,2'));
 });
-if(fs.existsSync(SEED))t('seed : 23 leads, conventions Board',()=>{
+t('fixture fictive : 23 leads, conventions Board',()=>{
   const rows=leadRowsJSON(fs.readFileSync(SEED,'utf8')).map(r=>leadClean(r,{}));
   assert.equal(rows.length,23);
   const p=leadPlanImport(rows,[]);assert.equal(p.create.length,23);assert.equal(p.merge.length,0);
@@ -61,9 +61,10 @@ t('plus de societe utile : ancien type et statut Contact ignores',()=>{
   assert.equal(c.statut,'Nouveau');assert.ok(!('type' in c));assert.ok(!LEAD_STATUTS.includes('Contact'));
   assert.ok(!/Soci.t. utile|trutil|LEAD_UTIL/.test(H));
 });
-const NEUTRE=path.join(__dirname,'..','leads-seed-neutre.json');
-if(fs.existsSync(NEUTRE))t('fichier neutre : 22 leads clients vierges',()=>{
-  const rows=leadRowsJSON(fs.readFileSync(NEUTRE,'utf8')).map(r=>leadClean(r,{}));
+t('version neutre (generee en memoire depuis la fixture) : 22 leads clients vierges',()=>{
+  // Meme regle que le fichier neutre d'import : leads clients seulement, sans attribution, valeur ni mode
+  const neutre=JSON.parse(fs.readFileSync(SEED,'utf8')).filter(r=>r.type!=='Société utile').map(r=>Object.assign({},r,{membre:'',statut:'Nouveau',valeur:'',mode:''}));
+  const rows=leadRowsJSON(JSON.stringify(neutre)).map(r=>leadClean(r,{}));
   assert.equal(rows.length,22);
   assert.ok(rows.every(r=>r.statut==='Nouveau'&&!r.membre&&!r.valeur&&!r.mode));
   assert.equal(leadPlanImport(rows,[]).create.length,22);

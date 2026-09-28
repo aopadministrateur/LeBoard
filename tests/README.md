@@ -2,7 +2,7 @@
 
 Tests locaux, sans aucun appel à la base de production : l'app est chargée dans Chrome sans interface avec un faux Firebase en mémoire (`mock.js`, Auth + Firestore REST). En mode strict, ce faux Firebase applique les mêmes règles que `firestore.rules`.
 
-Prérequis : Node, Chrome, et `leads-seed.json` à la racine du dépôt (fichier local, **jamais versionné** : données de prospects). Les fichiers générés vont dans `tests/.out/` (ignoré par git).
+Prérequis : Node et Chrome. Les tests n'utilisent que des données fictives : les leads viennent de `tests/fixtures/leads-fictifs.json` (noms inventés, emails `@exemple.test`, numéros de la plage réservée à la fiction par l'ARCEP). Aucun test ne lit `leads-seed.json` ni aucune donnée réelle de prospect. Les fichiers générés vont dans `tests/.out/` (ignoré par git).
 
 ## Logique du module Leads
 

@@ -60,7 +60,7 @@ async function scenario(){
   log('5_app',{app:vis('app'),CU:CU,CR:CR,leads_nav:vis('nvl'),lb_auth:JSON.parse(localStorage.getItem('lb_auth')||'{}').membre});
   // 6. Referent : leads (import + signature + chantier) sous regles strictes
   showPg('leads',document.getElementById('nvl'));await wait(300);
-  openImport();leadImpFile({target:{files:[new File([__SEED],'leads-seed.json')]}});for(let i=0;i<50&&!(leadImp&&leadImp.plan);i++)await wait(100);
+  openImport();leadImpFile({target:{files:[new File([__SEED],'leads-fictifs.json')]}});for(let i=0;i<50&&!(leadImp&&leadImp.plan);i++)await wait(100);
   await runImport();await wait(100);
   openLead('L015',{statut:'Signé'});await saveLead();await wait(50);leadToChantier('L015');
   document.getElementById('fdeb').value='2026-11-02';document.getElementById('ffin').value='2026-11-03';bldTypeSel();document.getElementById('ftyp').value='Facade';document.getElementById('fctv').value='Franck';
