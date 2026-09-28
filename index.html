@@ -270,6 +270,9 @@ tr:last-child td{border-bottom:none;}
 .tcd2{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .tcn{font-size:13px;font-weight:600;}
 .tct{font-size:12px;color:var(--tx2);margin-top:1px;font-variant-numeric:tabular-nums;}
+.tcind{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 10px;}
+.tcind .cfb{margin-top:0;}
+.tci .badge+.badge{margin-left:-4px;}
 .tcem{font-size:12px;color:var(--tx3);padding:8px 10px;background:var(--bg3);border:1px dashed var(--b2);border-radius:var(--r);}
 
 /* MESSAGERIE */
@@ -2922,8 +2925,17 @@ function nextM(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
 function renderTeam(){
   document.getElementById('tgrd').innerHTML=Object.entries(MBR).map(([key,m])=>{
     const p=PR[key]||{};const init=m.name.slice(0,2).toUpperCase();const img=p.avatar?`<img src="${p.avatar}" alt="">`:'';
-    let items='';for(const c of CH){if(!STATOK.includes(c.statut))continue;if(c.chef===m.name||c.collabs.includes(m.name)){const col=getColor(c.chef);const role=c.chef===m.name?'Chef':'Collab.';items+=`<div class="tci"><div class="tcd2" style="background:${col}"></div><div class="grow"><div class="tcn">${c.nom}</div><div class="tct">${fd(c.debut)} → ${fd(c.fin)}</div></div><span class="badge bgr">${role}</span></div>`;}}
+    // Affichage (lecture seule) : chantiers actifs non termines, une ligne par chantier avec tous les roles de la personne
+    const soc=REF_SOC[m.name],auj=isoDay();
+    let items='';for(const c of CH){if(!STATOK.includes(c.statut)||c.fin<auj)continue;
+      const roles=[];if(c.chef===m.name||(soc&&c.chef===soc))roles.push('Chef');if(c.ctv===m.name)roles.push('Chargé');if((c.collabs||[]).includes(m.name))roles.push('Collab.');
+      if(!roles.length)continue;const col=getColor(c.chef);
+      items+=`<div class="tci"><div class="tcd2" style="background:${col}"></div><div class="grow"><div class="tcn">${c.nom}</div><div class="tct">${fd(c.debut)} → ${fd(c.fin)}</div></div>${roles.map(r=>`<span class="badge bgr">${r}</span>`).join('')}</div>`;}
+    // Indispos a venir (y compris en cours)
+    const dt=s=>new Date(s+'T00:00:00');
+    const ind=CONGES.filter(g=>g.nom===m.name&&g.fin>=auj).map(g=>`<span class="cfb cfa" title="Indisponible du ${fd(g.debut)} au ${fd(g.fin)}">Indispo · ${calPeriode(dt(g.debut),dt(g.fin)).replace(' – ',' → ')}</span>`).join('');
     if(!items)items=`<div class="tcem">Aucun chantier planifié</div>`;
+    if(ind)items=`<div class="tcind">${ind}</div>`+items;
     return `<div class="tcrd"><div class="tcrh"><div class="av" style="width:42px;height:42px;font-size:15px;background:${m.color};flex-shrink:0;">${img}<span class="avt">${p.avatar?'':init}</span></div><div class="grow"><div class="tcnm">${m.name}</div><div class="ldms">${m.role==='referent'?'Référent':'Collaborateur'}${REF_SOC[m.name]?' · '+REF_SOC[m.name]:''}</div></div></div>${items}</div>`;
   }).join('');
 }
