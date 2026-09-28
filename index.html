@@ -262,15 +262,15 @@ tr:last-child td{border-bottom:none;}
 .callgc{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
 /* TEAM */
-.tgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.tgrd{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
 .tcrd{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:16px;}
 .tcrh{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
 .tcnm{font-size:14px;font-weight:600;}
-.tci{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:8px;margin-bottom:6px;}
-.tcd2{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-.tcn{font-size:12px;font-weight:600;}
-.tct{font-size:11px;color:var(--tx3);margin-top:1px;}
-.tcem{font-size:12px;color:var(--tx3);font-style:italic;padding:8px 0;}
+.tci{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);margin-bottom:6px;}
+.tcd2{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tcn{font-size:13px;font-weight:600;}
+.tct{font-size:12px;color:var(--tx2);margin-top:1px;font-variant-numeric:tabular-nums;}
+.tcem{font-size:12px;color:var(--tx3);padding:8px 10px;background:var(--bg3);border:1px dashed var(--b2);border-radius:var(--r);}
 
 /* MESSAGERIE */
 .chlay{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 200px);}
@@ -304,11 +304,28 @@ textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rg
 .mblay{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .mbcrd{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);overflow:hidden;}
 .mbhdr{padding:14px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
-.mbit{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--b);transition:background 0.12s;}
-.mbit:last-child{border-bottom:none;}
-.mbit:hover{background:var(--bg3);}
+.mbit{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--b);transition:background 0.12s;}
+.mbnm{font-size:13px;font-weight:600;margin-bottom:3px;}
+.mbsec{font-size:12px;font-weight:600;color:var(--tx2);padding:18px 4px 8px;}
+#mblist>.mbsec:first-child{padding-top:0;}
+.mbyou{background:rgba(255,255,255,0.06);color:var(--tx2);}
+.btn.mbdel{background:transparent;border-color:transparent;color:var(--re);}
+.btn.mbdel:hover{background:var(--red);}
+.mbdot{width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mbdot>i{width:14px;height:14px;border-radius:50%;}
+.mbempty{padding:8px 4px;margin:0;}
+.mbr-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start;}
+.mbr-grid .ldcard{margin-bottom:0;}
+.mbadd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;}
+.mbadd .btn{margin-bottom:16px;flex-shrink:0;}
+.mblien{margin-top:12px;padding:12px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);}
+.mbltxt{display:flex;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--or);font-size:12px;user-select:all;background-color:var(--bg2);min-width:0;}
+.mbit:hover{background:rgba(255,255,255,0.02);}
 .csw{width:28px;height:28px;border-radius:50%;cursor:pointer;border:0;transition:box-shadow 0.12s;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);}
 .csw.sel{box-shadow:0 0 0 2px rgba(0,0,0,0.7),0 0 0 4px var(--tx);}
+/* Zone tactile de 44px autour de la pastille visible de 28px (espacement de 16px : zones jointives, sans chevauchement) */
+.csw{position:relative;}
+.csw::before{content:"";position:absolute;inset:-8px;border-radius:50%;}
 
 /* COLLAB VIEW */
 .cccard{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:18px;margin-bottom:12px;}
@@ -371,7 +388,7 @@ input[type=checkbox]{accent-color:var(--or);}
 .conglist{margin-bottom:4px;}
 .congrow{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);margin-bottom:6px;}
 .congd{flex:1;font-size:13px;font-variant-numeric:tabular-nums;}
-.cswrow{display:flex;flex-wrap:wrap;gap:10px;}
+.cswrow{display:flex;flex-wrap:wrap;gap:16px;padding:8px;margin:-8px;}
 .cchks{display:flex;flex-wrap:wrap;gap:8px;}
 .cchk{display:flex;align-items:center;gap:7px;height:32px;padding:0 12px;background:var(--bg2);border:1px solid var(--b2);border-radius:99px;cursor:pointer;transition:background 0.12s,border-color 0.12s;user-select:none;font-size:13px;}
 .cchk:hover{border-color:var(--b3);}
@@ -572,10 +589,14 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .btn.btn-ico{width:44px;height:44px;}
   .btn.btn-sm{height:44px;}
   .synbar .btn,.btn.delbtn,.btn.rou-prop,.repbtn,.ldpart .btn,.ldsel{height:36px;}
-  .mbr-grid{grid-template-columns:1fr !important;}
+  .mbr-grid{grid-template-columns:minmax(0,1fr) !important;}
   .sbar{display:none;}
   .sgrd{grid-template-columns:repeat(2,1fr);}
-  .tgrd{grid-template-columns:1fr 1fr;}
+  .tgrd{grid-template-columns:1fr;}
+  .mbadd{flex-direction:column;align-items:stretch;gap:0;}
+  .mbadd .btn{width:100%;justify-content:center;}
+  .mbr-grid>.ldcard>.btn{width:100%;justify-content:center;}
+  .mblien .frow{flex-direction:column;align-items:stretch;}
   .mblay{grid-template-columns:1fr;}
   .ccig{grid-template-columns:1fr 1fr;}
   .topbar{padding:14px 16px 0;}
@@ -870,48 +891,49 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
         <!-- MEMBRES -->
         <div class="pg" id="pg-membres">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="mbr-grid">
+          <div class="mbr-grid">
             <!-- Liste membres -->
-            <div style="background:var(--bg2);border:0.5px solid var(--b);border-radius:var(--rl);overflow:hidden;">
-              <div style="padding:14px 18px;border-bottom:0.5px solid var(--b);display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-size:13px;font-weight:600;">Equipe</span>
-                <span id="mbcnt" style="font-size:11px;color:var(--tx3);"></span>
-              </div>
+            <div class="ldcard mbl">
+              <div class="ldh"><span class="ldht">Équipe</span><span id="mbcnt" class="ldhs"></span></div>
               <div id="mblist"></div>
             </div>
             <!-- Ajouter -->
-            <div style="background:var(--bg2);border:0.5px solid var(--b);border-radius:var(--rl);padding:20px;">
-              <div style="font-size:13px;font-weight:600;margin-bottom:18px;">Ajouter un membre</div>
-              <div class="fg"><label class="fl">Nom / Societe</label><input class="fi" type="text" id="newname" placeholder=""></div>
-              <div class="fg"><label class="fl">Categorie</label>
-                <select class="fi" id="newrole">
-                  <option value="">-- Choisir --</option>
-                  <option value="collaborateur">Collaborateur</option>
-                  <option value="maitreoeuvre">Maitre d'oeuvre (societe)</option>
-                </select>
-              </div>
-              <div class="fg"><label class="fl">Couleur</label>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;" id="colpick">
-                  <div class="csw sel" style="background:#E8722A" onclick="selCol('#E8722A',this)"></div>
-                  <div class="csw" style="background:#E24B4A" onclick="selCol('#E24B4A',this)"></div>
-                  <div class="csw" style="background:#4A90D9" onclick="selCol('#4A90D9',this)"></div>
-                  <div class="csw" style="background:#2D9E5F" onclick="selCol('#2D9E5F',this)"></div>
-                  <div class="csw" style="background:#F5C842" onclick="selCol('#F5C842',this)"></div>
-                  <div class="csw" style="background:#8B7FD4" onclick="selCol('#8B7FD4',this)"></div>
-                  <div class="csw" style="background:#3BB8A8" onclick="selCol('#3BB8A8',this)"></div>
-                  <div class="csw" style="background:#C67AB8" onclick="selCol('#C67AB8',this)"></div>
-                  <div class="csw" style="background:#D4A843" onclick="selCol('#D4A843',this)"></div>
-                  <div class="csw" style="background:#E8914A" onclick="selCol('#E8914A',this)"></div>
-                  <div class="csw" style="background:#7BB5E8" onclick="selCol('#7BB5E8',this)"></div>
-                  <div class="csw" style="background:#888780" onclick="selCol('#888780',this)"></div>
+            <div class="ldcard">
+              <div class="ldh"><span class="ldht">Ajouter un membre</span></div>
+              <div class="fr">
+                <div class="fg"><label class="fl" for="newname">Nom ou société</label><input class="fi" type="text" id="newname" placeholder=""></div>
+                <div class="fg"><label class="fl" for="newrole">Catégorie</label>
+                  <select class="fi" id="newrole">
+                    <option value="">-- Choisir --</option>
+                    <option value="collaborateur">Collaborateur</option>
+                    <option value="maitreoeuvre">Maître d'œuvre (société)</option>
+                  </select>
                 </div>
               </div>
-              <button onclick="addMbr()" class="btn btnp" style="width:100%;justify-content:center;margin-bottom:10px;">Ajouter</button>
-              <button onclick="genLien()" class="btn" style="width:100%;justify-content:center;">Generer lien invitation</button>
-              <div id="lienbox" style="display:none;margin-top:12px;padding:12px;background:var(--bg3);border-radius:var(--r);border:0.5px solid rgba(232,114,42,0.3);">
-                <div style="font-size:11px;color:var(--tx3);margin-bottom:6px;">Lien a envoyer par WhatsApp/SMS</div>
-                <div id="lientxt" style="font-size:12px;color:var(--or);word-break:break-all;margin-bottom:8px;"></div>
-                <button onclick="copyLien()" class="btn btnp" style="padding:5px 12px;font-size:12px;">Copier</button>
+              <div class="mbadd">
+                <div class="fg"><label class="fl">Couleur</label>
+                  <div class="cswrow" id="colpick">
+                    <div class="csw sel" style="background:#E8722A" onclick="selCol('#E8722A',this)"></div>
+                    <div class="csw" style="background:#E24B4A" onclick="selCol('#E24B4A',this)"></div>
+                    <div class="csw" style="background:#4A90D9" onclick="selCol('#4A90D9',this)"></div>
+                    <div class="csw" style="background:#2D9E5F" onclick="selCol('#2D9E5F',this)"></div>
+                    <div class="csw" style="background:#F5C842" onclick="selCol('#F5C842',this)"></div>
+                    <div class="csw" style="background:#8B7FD4" onclick="selCol('#8B7FD4',this)"></div>
+                    <div class="csw" style="background:#3BB8A8" onclick="selCol('#3BB8A8',this)"></div>
+                    <div class="csw" style="background:#C67AB8" onclick="selCol('#C67AB8',this)"></div>
+                    <div class="csw" style="background:#D4A843" onclick="selCol('#D4A843',this)"></div>
+                    <div class="csw" style="background:#E8914A" onclick="selCol('#E8914A',this)"></div>
+                    <div class="csw" style="background:#7BB5E8" onclick="selCol('#7BB5E8',this)"></div>
+                    <div class="csw" style="background:#888780" onclick="selCol('#888780',this)"></div>
+                  </div>
+                </div>
+                <button onclick="addMbr()" class="btn btnp">Ajouter</button>
+              </div>
+              <div class="msec">Invitation</div>
+              <button onclick="genLien()" class="btn">Générer un lien d'invitation</button>
+              <div id="lienbox" class="mblien" style="display:none;">
+                <div class="fl">Lien à envoyer par WhatsApp ou SMS</div>
+                <div class="frow"><div id="lientxt" class="fi mbltxt"></div><button onclick="copyLien()" class="btn">Copier</button></div>
               </div>
             </div>
           </div>
@@ -1251,7 +1273,7 @@ function saveMoe(){
   svAll();bldChefSel();
   closeM('modmoe');
   document.getElementById('fche').value=nom;
-  toast(nom+' ajoute !');
+  toast(nom+' ajouté !');
 }
 
 function svAll(){sv('lb_mbr',MBR);sv('lb_ch',CH);sv('lb_pr',PR);sv('lb_msg',MSG);sv('lb_moe',MOE);}
@@ -2900,9 +2922,9 @@ function nextM(){calM++;if(calM>11){calM=0;calY++;}renderCal();}
 function renderTeam(){
   document.getElementById('tgrd').innerHTML=Object.entries(MBR).map(([key,m])=>{
     const p=PR[key]||{};const init=m.name.slice(0,2).toUpperCase();const img=p.avatar?`<img src="${p.avatar}" alt="">`:'';
-    let items='';for(const c of CH){if(!STATOK.includes(c.statut))continue;if(c.chef===m.name||c.collabs.includes(m.name)){const col=getColor(c.chef);const role=c.chef===m.name?'Chef':'Collab.';items+=`<div class="tci"><div class="tcd2" style="background:${col}"></div><div><div class="tcn">${c.nom} <span style="font-size:10px;color:var(--tx3);font-weight:400">${role}</span></div><div class="tct">${fd(c.debut)} → ${fd(c.fin)}</div></div></div>`;}}
+    let items='';for(const c of CH){if(!STATOK.includes(c.statut))continue;if(c.chef===m.name||c.collabs.includes(m.name)){const col=getColor(c.chef);const role=c.chef===m.name?'Chef':'Collab.';items+=`<div class="tci"><div class="tcd2" style="background:${col}"></div><div class="grow"><div class="tcn">${c.nom}</div><div class="tct">${fd(c.debut)} → ${fd(c.fin)}</div></div><span class="badge bgr">${role}</span></div>`;}}
     if(!items)items=`<div class="tcem">Aucun chantier planifié</div>`;
-    return `<div class="tcrd"><div class="tcrh"><div class="av" style="width:42px;height:42px;font-size:15px;background:${m.color};flex-shrink:0;">${img}<span class="avt">${p.avatar?'':init}</span></div><div><div class="tcnm">${m.name}</div></div></div>${items}</div>`;
+    return `<div class="tcrd"><div class="tcrh"><div class="av" style="width:42px;height:42px;font-size:15px;background:${m.color};flex-shrink:0;">${img}<span class="avt">${p.avatar?'':init}</span></div><div class="grow"><div class="tcnm">${m.name}</div><div class="ldms">${m.role==='referent'?'Référent':'Collaborateur'}${REF_SOC[m.name]?' · '+REF_SOC[m.name]:''}</div></div></div>${items}</div>`;
   }).join('');
 }
 
@@ -2933,27 +2955,31 @@ function renderMbr(){
     const isSelf=key===CU;
     const txtCol=m.color==='#f0f0f0'||m.color==='#F5C842'?'#1a1a1a':'white';
     const delBtn=isSelf
-      ?'<span style="font-size:11px;color:var(--tx3);padding:0 6px;">Vous</span>'
+      ?'<span class="badge mbyou">Vous</span>'
       :canDelete
-        ?'<button data-fn="'+deleteFunc+'" data-key="'+key+'" class="btn btnd delbtn" style="padding:5px 10px;font-size:11px;">Retirer</button>'
+        ?'<button data-fn="'+deleteFunc+'" data-key="'+key+'" class="btn btnd delbtn mbdel">Retirer</button>'
         :'';
-    return '<div class="mbit"><div class="av" style="width:38px;height:38px;font-size:11px;background:'+m.color+';flex-shrink:0;color:'+txtCol+';">'+img+'<span class="avt">'+(p.avatar?'':init)+'</span></div><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;">'+m.name+'</div></div>'+delBtn+'</div>';
+    // Affichage : role en badge ; pastille de couleur pour un maitre d'oeuvre, avatar pour une personne
+    const rl=m.role==='referent'?'Référent':m.role==='collaborateur'?'Collaborateur':'Maître d\'œuvre';
+    const vis=deleteFunc==='rmMoe'?'<span class="mbdot"><i style="background:'+m.color+';"></i></span>'
+      :'<div class="av" style="width:38px;height:38px;font-size:11px;background:'+m.color+';flex-shrink:0;color:'+txtCol+';">'+img+'<span class="avt">'+(p.avatar?'':init)+'</span></div>';
+    return '<div class="mbit">'+vis+'<div class="grow"><div class="mbnm">'+m.name+'</div><span class="badge bgr">'+rl+'</span></div>'+delBtn+'</div>';
   }
 
   const sectionHdr = function(label){
-    return '<div style="padding:10px 16px;font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:0.08em;border-bottom:0.5px solid var(--b);background:var(--bg3);">'+label+'</div>';
+    return '<div class="mbsec">'+label+'</div>';
   };
 
   const ORDER=['florian','henri','franck','yoan','frederic','thomas'];
   const sortedRefs=ORDER.map(function(k){return [k,MBR[k]];}).filter(function(e){return !!e[1];});
 
   document.getElementById('mblist').innerHTML=
-    sectionHdr('Referents')+
+    sectionHdr('Référents')+
     sortedRefs.map(function(e){return mbrRow(e[0],e[1],false,'');}).join('')+
     sectionHdr('Collaborateurs')+
-    (cols.length?cols.map(function(e){return mbrRow(e[0],e[1],true,'rmMbr');}).join(''):'<div style="padding:12px 16px;font-size:12px;color:var(--tx3);font-style:italic;">Aucun collaborateur</div>')+
-    sectionHdr('Maitres d\'oeuvre')+
-    (moes.length?moes.map(function(e){return mbrRow(e[0],e[1],true,'rmMoe');}).join(''):'<div style="padding:12px 16px;font-size:12px;color:var(--tx3);font-style:italic;">Aucun maitre d\'oeuvre</div>');
+    (cols.length?cols.map(function(e){return mbrRow(e[0],e[1],true,'rmMbr');}).join(''):'<div class="fempty mbempty">Aucun collaborateur</div>')+
+    sectionHdr('Maîtres d\'œuvre')+
+    (moes.length?moes.map(function(e){return mbrRow(e[0],e[1],true,'rmMoe');}).join(''):'<div class="fempty mbempty">Aucun maître d\'œuvre</div>');
 
   buildGrids();bldChefSel();bldCChks();
   // Attach delete button events
@@ -2973,13 +2999,13 @@ function addMbr(){
   var name=document.getElementById('newname').value.trim();
   var role=document.getElementById('newrole').value;
   if(!name){toast('Entrez un nom');return;}
-  if(!role){toast('Choisissez une categorie');return;}
+  if(!role){toast('Choisissez une catégorie');return;}
   var key=name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
   if(role==='maitreoeuvre'){
-    if(MOE[key]){toast('Ce maitre existe deja');return;}
+    if(MOE[key]){toast('Ce maître d\'œuvre existe déjà');return;}
     MOE[key]={name:name,color:selColor};
   } else {
-    if(MBR[key]){toast('Ce membre existe deja');return;}
+    if(MBR[key]){toast('Ce membre existe déjà');return;}
     MBR[key]={name:name,color:selColor,role:role};
   }
   document.getElementById('newname').value='';
@@ -2987,18 +3013,18 @@ function addMbr(){
   saveMembersFB();svAll();renderMbr();
   // Rebuild selects so new member appears immediately
   bldChefSel();bldCChks();
-  toast(name+' ajoute !');
+  toast(name+' ajouté !');
 }
 
 function rmMoe(key){
   if(!MOE[key])return;
   var name=MOE[key].name;
   var used=CH.find(function(c){return c.chef===name&&(c.statut==='Confirme'||c.statut==='Prevu');});
-  if(used){toast('Impossible : '+name+' est utilise sur "'+used.nom+'"');return;}
+  if(used){toast('Impossible : '+name+' est utilisé sur "'+used.nom+'"');return;}
   if(!confirm('Retirer '+name+' ?'))return;
   delete MOE[key];
   saveMembersFB();svAll();renderMbr();bldChefSel();
-  toast(name+' retire');
+  toast(name+' retiré');
 }
 
 function rmMbr(key){
@@ -3012,10 +3038,10 @@ function rmMbr(key){
   renderMbr();
   bldChefSel();
   bldCChks();
-  toast(name+' retire');
+  toast(name+' retiré');
 }
 function genLien(){const name=document.getElementById('newname').value.trim()||'nouveau';const lien=`https://aopadministrateur.github.io/LeBoard?invite=${btoa(name+'-'+Date.now()).slice(0,10)}`;document.getElementById('lientxt').textContent=lien;document.getElementById('lienbox').style.display='block';}
-function copyLien(){navigator.clipboard.writeText(document.getElementById('lientxt').textContent).then(()=>toast('Lien copie !')).catch(()=>toast('Copiez manuellement'));}
+function copyLien(){navigator.clipboard.writeText(document.getElementById('lientxt').textContent).then(()=>toast('Lien copié !')).catch(()=>toast('Copiez manuellement'));}
 
 // ═══ CHANTIER MODAL ═══
 
@@ -3023,14 +3049,14 @@ function copyLien(){navigator.clipboard.writeText(document.getElementById('lient
 function saveNewType(){
   var name=document.getElementById('newtype-name').value.trim();
   if(!name){toast('Entrez un nom de type');return;}
-  if(TYPES.includes(name)){toast('Ce type existe deja');return;}
+  if(TYPES.includes(name)){toast('Ce type existe déjà');return;}
   TYPES.push(name);
   saveTypes();
   bldTypeSel();
   document.getElementById('ftyp').value=name;
   document.getElementById('newtype-name').value='';
   closeM('modtype');
-  toast(name+' ajoute !');
+  toast(name+' ajouté !');
 }
 
 function bldTypeSel(){
