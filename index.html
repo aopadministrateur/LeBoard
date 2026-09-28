@@ -331,11 +331,20 @@ textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rg
 .csw::before{content:"";position:absolute;inset:-8px;border-radius:50%;}
 
 /* COLLAB VIEW */
-.cccard{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:18px;margin-bottom:12px;}
-.ccig{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
-.ccib{background:var(--bg3);border-radius:8px;padding:10px 12px;}
-.ccil{font-size:12px;color:var(--tx3);margin-bottom:4px;font-weight:600;}
-.cciv{font-size:13px;font-weight:500;}
+/* MON PLANNING */
+#mccont{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;align-items:start;}
+.cccard{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:16px;}
+.mchd{display:flex;align-items:flex-start;gap:10px;}
+.mcnm{font-size:16px;font-weight:600;letter-spacing:-0.01em;}
+.mccl{font-size:12px;color:var(--tx3);margin-top:2px;}
+.ccig{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;}
+.ccib{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:8px 10px;min-width:0;}
+.ccib.ccfull{grid-column:1/-1;}
+.ccil{font-size:12px;color:var(--tx3);margin-bottom:2px;font-weight:500;}
+.cciv{font-size:13px;font-weight:500;color:var(--tx);display:flex;align-items:center;gap:6px;overflow-wrap:anywhere;}
+.cciv.ccnote{font-weight:400;color:var(--tx2);}
+.mcvide{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:48px 16px;color:var(--tx3);font-size:13px;border:1px dashed var(--b2);border-radius:var(--rl);grid-column:1/-1;}
+.mcvide .calico{width:24px;height:24px;}
 .repbtn{height:32px;padding:0 12px;background:var(--amd);border:1px solid var(--am-bd);border-radius:var(--r);color:var(--am);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;}
 .repbtn:hover{background:var(--am-hv);}
 
@@ -601,7 +610,10 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .mbr-grid>.ldcard>.btn{width:100%;justify-content:center;}
   .mblien .frow{flex-direction:column;align-items:stretch;}
   .mblay{grid-template-columns:1fr;}
-  .ccig{grid-template-columns:1fr 1fr;}
+  #mccont{grid-template-columns:minmax(0,1fr);}
+  /* Profil : icone de photo toujours visible (pas de survol au doigt) */
+  .pavo{opacity:1;inset:auto -2px -2px auto;width:28px;height:28px;background:var(--bg4);border:2px solid var(--bg3);}
+  .pavo .ico{width:14px;height:14px;}
   .topbar{padding:14px 16px 0;}
   .cont{padding:0 16px calc(80px + env(safe-area-inset-bottom));}
   .toast{bottom:calc(76px + env(safe-area-inset-bottom));}
@@ -2944,10 +2956,10 @@ function renderTeam(){
 function renderMonCal(){
   const m=MBR[CU];if(!m)return;
   const mine=CH.filter(c=>STATOK.includes(c.statut)&&(c.collabs.includes(m.name)||c.chef===m.name));
-  if(!mine.length){document.getElementById('mccont').innerHTML=`<div style="text-align:center;padding:60px;color:var(--tx3);">Aucun chantier planifié pour le moment.</div>`;return;}
+  if(!mine.length){document.getElementById('mccont').innerHTML=`<div class="mcvide"><span class="calico" aria-hidden="true"></span><div>Aucun chantier planifié pour le moment.</div></div>`;return;}
   document.getElementById('mccont').innerHTML=mine.map(c=>{
     const col=getColor(c.chef);const sb=c.statut==='Confirme'?'bgg':'bbl';const isChef=c.chef===m.name;
-    return `<div class="cccard"><div style="display:flex;align-items:center;gap:10px;"><div style="width:4px;height:44px;border-radius:2px;background:${col};flex-shrink:0;"></div><div style="flex:1;"><div style="font-size:16px;font-weight:700;">${c.nom} <span class="badge ${sb}" style="font-size:11px;vertical-align:middle;">${statLbl(c.statut)}</span></div><div style="font-size:12px;color:var(--tx3);">${c.client}</div></div>${isChef?`<button class="repbtn" onclick="openRep('${c.id}')">Remplacer un collab.</button>`:''}</div><div class="ccig"><div class="ccib"><div class="ccil">Début</div><div class="cciv">${fd(c.debut)}</div></div><div class="ccib"><div class="ccil">Fin</div><div class="cciv">${fd(c.fin)}</div></div><div class="ccib"><div class="ccil">Chef</div><div class="cciv">${c.chef}</div></div><div class="ccib" style="grid-column:1/-1"><div class="ccil">Adresse</div><div class="cciv">${c.adresse}</div></div>${c.ctv?`<div class="ccib"><div class="ccil">Chargé de travaux</div><div class="cciv">${c.ctv}</div></div>`:''}${c.collabs.length?`<div class="ccib" style="grid-column:1/-1"><div class="ccil">Équipe</div><div class="cciv">${c.collabs.join(', ')}</div></div>`:''}${c.materiel?`<div class="ccib" style="grid-column:1/-1"><div class="ccil">Matériel</div><div class="cciv">${c.materiel}</div></div>`:''}${c.notes?`<div class="ccib" style="grid-column:1/-1"><div class="ccil">Notes</div><div class="cciv" style="font-weight:400;color:var(--tx2);">${c.notes}</div></div>`:''}</div></div>`;
+    return `<div class="cccard"><div class="mchd"><div class="grow"><div class="mcnm">${c.nom}</div><div class="mccl">${c.client}</div></div><span class="badge ${sb}">${statLbl(c.statut)}</span>${isChef?`<button class="repbtn" onclick="openRep('${c.id}')">Remplacer un collab.</button>`:''}</div><div class="ccig"><div class="ccib"><div class="ccil">Début</div><div class="cciv">${fd(c.debut)}</div></div><div class="ccib"><div class="ccil">Fin</div><div class="cciv">${fd(c.fin)}</div></div><div class="ccib"><div class="ccil">Maître d'œuvre</div><div class="cciv"><span class="ldd" style="background:${col};"></span>${c.chef}</div></div>${c.ctv?`<div class="ccib"><div class="ccil">Chargé de travaux</div><div class="cciv">${c.ctv}</div></div>`:''}<div class="ccib ccfull"><div class="ccil">Adresse</div><div class="cciv">${c.adresse||'—'}</div></div>${c.collabs.length?`<div class="ccib ccfull"><div class="ccil">Équipe</div><div class="cciv">${c.collabs.join(', ')}</div></div>`:''}${c.materiel?`<div class="ccib ccfull"><div class="ccil">Matériel</div><div class="cciv">${c.materiel}</div></div>`:''}${c.notes?`<div class="ccib ccfull"><div class="ccil">Notes</div><div class="cciv ccnote">${c.notes}</div></div>`:''}</div></div>`;
   }).join('');
 }
 
@@ -3188,8 +3200,8 @@ function doRep(){
   const from=document.getElementById('repfrom').value;const to=document.getElementById('repto').value;
   const c=CH.find(x=>x.id===repCh);if(!c)return;
   c.collabs=c.collabs.map(n=>n===from?to:n);
-  addN(`${from} remplace par ${to} sur le chantier ${c.nom}`);
-  saveChantierFB(c);svAll();closeM('modrep');renderAll();renderMonCal();toast(`${from} remplace par ${to}`);
+  addN(`${from} remplacé par ${to} sur le chantier ${c.nom}`);
+  saveChantierFB(c);svAll();closeM('modrep');renderAll();renderMonCal();toast(`${from} remplacé par ${to}`);
 }
 
 // ═══ PROFILE ═══
