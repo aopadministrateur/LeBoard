@@ -3141,6 +3141,37 @@ function askPrompt(texte,valeur,o){o=o||{};return dlgOpen({titre:o.titre||'Préc
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&dlgRes){e.preventDefault();dlgFin(false);}});
 document.getElementById('moddlg').addEventListener('click',function(e){if(e.target===this)dlgFin(false);});
 
+// ═══ PANNEAU « PLUS » (MOBILE) ═══
+// Glisser vers le bas : le panneau suit le doigt, se ferme au-dela de 80px ou sur un geste rapide, revient sinon.
+// Toucher du voile : ferme le panneau sans que le toucher atteigne la page en dessous.
+(function(){
+  const p=document.getElementById('mplus');if(!p||!p.hidePopover)return;
+  let y0=0,dy=0,pts=[],suivi=false;
+  function fermer(){suivi=false;p.style.transition='';p.style.transform='';p.hidePopover();}
+  document.addEventListener('touchstart',function(e){
+    if(!p.matches(':popover-open')||p.contains(e.target)||e.target.closest('.mnplus'))return;
+    if(e.cancelable)e.preventDefault();fermer();
+  },{capture:true,passive:false});
+  p.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1)return;
+    suivi=true;y0=e.touches[0].clientY;dy=0;pts=[{y:0,t:Date.now()}];p.style.transition='none';
+  },{passive:true});
+  p.addEventListener('touchmove',function(e){
+    if(!suivi)return;
+    dy=Math.max(0,e.touches[0].clientY-y0);p.style.transform=dy?'translateY('+dy+'px)':'';
+    const t=Date.now();pts.push({y:dy,t:t});while(pts.length>2&&t-pts[1].t>100)pts.shift();
+    if(e.cancelable)e.preventDefault();
+  },{passive:false});
+  function lacher(){
+    if(!suivi)return;suivi=false;
+    // Vitesse sur les 100 dernieres ms du mouvement (px/ms)
+    const a=pts[0],z=pts[pts.length-1],v=(z.y-a.y)/Math.max(1,z.t-a.t);
+    if(dy>80||(dy>24&&v>0.4)){fermer();return;}
+    p.style.transition='transform .2s ease';p.style.transform='';
+  }
+  p.addEventListener('touchend',lacher);p.addEventListener('touchcancel',lacher);
+})();
+
 // ═══ CLAVIER ═══
 // Entree ou Espace sur un element cliquable qui n'est pas un bouton natif declenche le meme clic.
 document.addEventListener('keydown',function(e){
