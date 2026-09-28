@@ -2,7 +2,8 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const log=(k,v)=>{window.__OUT=window.__OUT||{};__OUT[k]=v;};
 const txt=id=>{const e=document.getElementById(id);return e?e.innerText.replace(/\s+/g,' ').trim():null;};
 const vis=id=>{const e=document.getElementById(id);return !!e&&getComputedStyle(e).display!=='none';};
-window.confirm=()=>true;window.prompt=()=>'';
+// Dialogues de l'app (askConfirm / askPrompt) acceptes automatiquement
+window.askConfirm=async()=>true;window.askPrompt=async()=>'';
 window.addEventListener('error',e=>{(window.__ERR=window.__ERR||[]).push(e.message);});
 function done(){const pre=document.createElement('pre');pre.id='testout';pre.textContent=JSON.stringify({out:window.__OUT,errors:window.__ERR||[]},null,1);document.body.appendChild(pre);}
 async function login(email,pwd){document.getElementById('au-email').value=email;document.getElementById('au-pwd').value=pwd;await authLogin();await wait(50);}

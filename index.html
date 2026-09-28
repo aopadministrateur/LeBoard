@@ -387,6 +387,9 @@ textarea.chinp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rg
 .mclose{width:32px;height:32px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;color:var(--tx2);border-radius:var(--r);cursor:pointer;}
 .mclose:hover{background:var(--bg4);color:var(--tx);}
 .mclose svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;}
+.dlgtxt{font-size:14px;color:var(--tx2);line-height:1.6;white-space:pre-line;margin:4px 0 16px;}
+.btn.btnr{background:var(--re);color:#fff;border-color:transparent;}
+.btn.btnr:hover{filter:brightness(1.1);}
 .msub{font-size:13px;color:var(--tx2);margin:4px 0 16px;}
 .msec{font-size:12px;font-weight:600;color:var(--tx2);margin:8px 0 12px;}
 .mhd+.msec{margin-top:4px;}
@@ -404,8 +407,8 @@ select.fi{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 /* Champs et encadres en retrait sur le fond de la modale */
 .modal .fi{background-color:var(--bg2);}
 .modal .ldbox,.modal .pavz{background:var(--bg2);border:1px solid var(--b);}
-.modal .btn:not(.btnp):not(.btnd):not(.btn-ico){background:var(--bg4);}
-.modal .btn:not(.btnp):not(.btnd):not(.btn-ico):hover{background:var(--bg5);}
+.modal .btn:not(.btnp):not(.btnd):not(.btn-ico):not(.btnr){background:var(--bg4);}
+.modal .btn:not(.btnp):not(.btnd):not(.btn-ico):not(.btnr):hover{background:var(--bg5);}
 .fhint{font-size:12px;color:var(--tx3);}
 .fhint-up{margin:-8px 0 16px;}
 .fempty{font-size:12px;color:var(--tx3);font-style:italic;margin-bottom:12px;}
@@ -620,6 +623,10 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .fa{margin:auto -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));}
   .fa .btn{flex:1;justify-content:center;}
   .fa .btnd{flex:0 0 auto;}
+  /* Dialogue de confirmation : carte centree, pas plein ecran */
+  #moddlg{align-items:center;padding:16px;}
+  #moddlg .modal{height:auto;max-height:90dvh;border:1px solid var(--b2);border-radius:12px;}
+  #moddlg .fa{margin-bottom:0;padding-bottom:12px;}
   .btn.btn-ico{width:44px;height:44px;}
   .btn.btn-sm{height:44px;}
   .btn.delbtn,.btn.rou-prop,.repbtn,.ldpart .btn,.ldsel{height:36px;}
@@ -1250,6 +1257,16 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
     </div>
     <div id="imp-prev"></div>
     <div class="fa"><button class="btn" onclick="closeM('modimp')">Annuler</button><button class="btn btnp" id="imp-go" onclick="runImport()" disabled>Importer</button></div>
+  </div>
+</div>
+
+<!-- DIALOGUE : confirmation ou saisie (remplace confirm() / prompt() natifs) -->
+<div class="mlov" id="moddlg">
+  <div class="modal msm" role="dialog" aria-modal="true" aria-labelledby="dlg-tit">
+    <div class="mhd"><div class="mtit" id="dlg-tit">Confirmation</div><button class="mclose" type="button" aria-label="Fermer" onclick="dlgFin(false)"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="dlgtxt" id="dlg-txt"></div>
+    <div class="fg" id="dlg-fg" style="display:none;"><input class="fi" type="text" id="dlg-inp" aria-labelledby="dlg-txt" onkeydown="if(event.key==='Enter'){event.preventDefault();dlgFin(true);}"></div>
+    <div class="fa"><button class="btn" type="button" onclick="dlgFin(false)">Annuler</button><button class="btn btnp" type="button" id="dlg-ok" onclick="dlgFin(true)">Confirmer</button></div>
   </div>
 </div>
 
@@ -2244,17 +2261,17 @@ function leadReattrib(l,to,motif){
   if(!to&&l.statut==='Attribué')upd.statut='Nouveau';
   return upd;
 }
-function leadInline(id,field,val,el){
+async function leadInline(id,field,val,el){
   var l=LEADS[id];if(!l)return;
   if(field==='statut'){
     if(val==='Signé'){el.value=l.statut;openLead(id,{statut:'Signé'});return;}
-    if(l.statut==='Signé'&&!confirm('Ce lead ne sera plus compté comme signé dans la rotation. Continuer ?')){el.value=l.statut;return;}
+    if(l.statut==='Signé'&&!(await askConfirm('Ce lead ne sera plus compté comme signé dans la rotation. Continuer ?',{titre:'Retirer la signature',action:'Continuer'}))){el.value=l.statut;return;}
     var u={statut:val};if(l.statut==='Signé')u.dateSignature=null;
     leadPatch(id,u);return;
   }
   if(field==='membre'){
     if(l.membre&&val!==l.membre){
-      var motif=prompt('Réattribuer "'+leadName(l)+'" de '+l.membre+' à '+(val||'personne')+'.\nMotif (facultatif, ex. proximité géographique) :','');
+      var motif=await askPrompt('Réattribuer "'+leadName(l)+'" de '+l.membre+' à '+(val||'personne')+'.\nMotif (facultatif, ex. proximité géographique) :','',{titre:'Réattribuer le lead',action:'Réattribuer'});
       if(motif===null){el.value=l.membre;return;}
       leadPatch(id,leadReattrib(l,val,motif),'Lead réattribué');return;
     }
@@ -2365,19 +2382,19 @@ async function saveLead(){
     d.dateSignature=g('ld-dsig')||isoDay();
   } else {
     d.dateSignature=null;
-    if(old&&old.statut==='Signé'&&!confirm('Ce lead ne sera plus compté comme signé dans la rotation. Continuer ?'))return;
+    if(old&&old.statut==='Signé'&&!(await askConfirm('Ce lead ne sera plus compté comme signé dans la rotation. Continuer ?',{titre:'Retirer la signature',action:'Continuer'})))return;
   }
   if(d.mode==='Groupement'){
     d.participants=leadReadParts();
     var sum=d.participants.reduce(function(a,p){return a+p.prorata;},0);
-    if(d.participants.length&&Math.abs(sum-100)>=0.01&&!confirm('Les proratas totalisent '+(Math.round(sum*100)/100)+' % (et non 100 %). Enregistrer quand même ?'))return;
+    if(d.participants.length&&Math.abs(sum-100)>=0.01&&!(await askConfirm('Les proratas totalisent '+(Math.round(sum*100)/100)+' % (et non 100 %). Enregistrer quand même ?',{titre:'Proratas incomplets',action:'Enregistrer quand même'})))return;
   } else d.participants=null;
   if(d.email){
     var dup=Object.values(LEADS).find(function(x){return x.id!==leadEditId&&x.email&&x.email.toLowerCase()===d.email.toLowerCase();});
-    if(dup&&!confirm('Un lead avec cet email existe déjà ('+dup.id+' : '+leadName(dup)+'). Enregistrer quand même ?'))return;
+    if(dup&&!(await askConfirm('Un lead avec cet email existe déjà ('+dup.id+' : '+leadName(dup)+'). Enregistrer quand même ?',{titre:'Email déjà utilisé',action:'Enregistrer quand même'})))return;
   }
   if(old&&old.membre&&d.membre!==old.membre){
-    var motif=prompt('Réattribuer "'+leadName(old)+'" de '+old.membre+' à '+(d.membre||'personne')+'.\nMotif (facultatif, ex. proximité géographique) :','');
+    var motif=await askPrompt('Réattribuer "'+leadName(old)+'" de '+old.membre+' à '+(d.membre||'personne')+'.\nMotif (facultatif, ex. proximité géographique) :','',{titre:'Réattribuer le lead',action:'Réattribuer'});
     if(motif===null)return;
     d.notes=leadReattrib(Object.assign({},old,{notes:d.notes}),d.membre,motif).notes;
   }
@@ -2403,7 +2420,7 @@ async function saveLead(){
 
 async function delLead(){
   var id=leadEditId,l=LEADS[id];if(!l)return;
-  if(!confirm('Supprimer le lead "'+leadName(l)+'" ('+id+') ? Cette action est irréversible.'))return;
+  if(!(await askConfirm('Supprimer le lead "'+leadName(l)+'" ('+id+') ? Cette action est irréversible.',{titre:'Supprimer le lead',action:'Supprimer',danger:true})))return;
   if(l.chantierId){var c=CH.find(function(x){return x.id===l.chantierId;});if(c&&c.leadId===id){delete c.leadId;sv('lb_ch',CH);fbSet('chantiers',c.id,{leadId:null});}}
   delete LEADS[id];
   leadWrites++;await fbDelete('leads',id);leadWrites--;leadLastWrite=Date.now();
@@ -3078,21 +3095,21 @@ function addMbr(){
   toast(name+' ajouté !');
 }
 
-function rmMoe(key){
+async function rmMoe(key){
   if(!MOE[key])return;
   var name=MOE[key].name;
   var used=CH.find(function(c){return c.chef===name&&(c.statut==='Confirme'||c.statut==='Prevu');});
   if(used){toast('Impossible : '+name+' est utilisé sur "'+used.nom+'"');return;}
-  if(!confirm('Retirer '+name+' ?'))return;
+  if(!(await askConfirm('Retirer '+name+' ?',{titre:'Retirer un maître d\'œuvre',action:'Retirer',danger:true})))return;
   delete MOE[key];
   saveMembersFB();svAll();renderMbr();bldChefSel();
   toast(name+' retiré');
 }
 
-function rmMbr(key){
+async function rmMbr(key){
   if(!MBR[key])return;
   var name=MBR[key].name;
-  if(!confirm('Retirer '+name+' ?'))return;
+  if(!(await askConfirm('Retirer '+name+' ?',{titre:'Retirer un membre',action:'Retirer',danger:true})))return;
   delete MBR[key];
   delete PR[key];
   saveMembersFB();
@@ -3314,16 +3331,39 @@ function handleAv(e){
 }
 function saveProf(){svAll();closeM('modprof');setupUI();toast('Profil sauvegardé');}
 
+// ═══ DIALOGUES ═══
+// Remplacent confirm() et prompt() : meme resultat (true/false, texte/null), mais asynchrone.
+let dlgRes=null,dlgChamp=false;
+function dlgOpen(o){
+  return new Promise(function(res){
+    if(dlgRes)dlgFin(false);   // un dialogue deja ouvert est annule
+    dlgRes=res;dlgChamp=!!o.champ;
+    document.getElementById('dlg-tit').textContent=o.titre;
+    document.getElementById('dlg-txt').textContent=o.texte;
+    const inp=document.getElementById('dlg-inp');document.getElementById('dlg-fg').style.display=o.champ?'':'none';inp.value=o.valeur||'';
+    const ok=document.getElementById('dlg-ok');ok.textContent=o.action;ok.className='btn '+(o.danger?'btnr':'btnp');
+    openM('moddlg');setTimeout(function(){(o.champ?inp:ok).focus();},30);
+  });
+}
+function dlgFin(valider){
+  if(!dlgRes)return;const r=dlgRes;dlgRes=null;const v=document.getElementById('dlg-inp').value;
+  closeM('moddlg');r(dlgChamp?(valider?v:null):!!valider);
+}
+function askConfirm(texte,o){o=o||{};return dlgOpen({titre:o.titre||'Confirmation',texte:texte,action:o.action||'Confirmer',danger:!!o.danger});}
+function askPrompt(texte,valeur,o){o=o||{};return dlgOpen({titre:o.titre||'Précision',texte:texte,action:o.action||'Valider',champ:true,valeur:valeur});}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&dlgRes){e.preventDefault();dlgFin(false);}});
+document.getElementById('moddlg').addEventListener('click',function(e){if(e.target===this)dlgFin(false);});
+
 // ═══ MODAL ═══
 function openM(id){document.getElementById(id).classList.add('open');}
 function closeM(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.mlov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
 // ═══ SYNC ═══
-function delCh(id){
+async function delCh(id){
   var c=CH.find(function(x){return x.id===id;});
   if(!c)return;
-  if(!confirm('Supprimer "'+c.nom+'" ? Cette action est irreversible.'))return;
+  if(!(await askConfirm('Supprimer "'+c.nom+'" ? Cette action est irréversible.',{titre:'Supprimer le chantier',action:'Supprimer',danger:true})))return;
   var idx=CH.findIndex(function(x){return x.id===id;});
   CH.splice(idx,1);
   deleteChantierFB(id);

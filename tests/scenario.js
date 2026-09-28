@@ -1,7 +1,8 @@
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const log=(k,v)=>{window.__OUT=window.__OUT||{};__OUT[k]=v;};
 const txt=id=>document.getElementById(id).innerText.replace(/\s+/g,' ').trim();
-window.confirm=()=>true;window.prompt=()=>'proximite geographique';
+// Dialogues de l'app (askConfirm / askPrompt) acceptes automatiquement
+window.askConfirm=async()=>true;window.askPrompt=async()=>'proximite geographique';
 window.addEventListener('error',e=>{(window.__ERR=window.__ERR||[]).push(e.message);});
 async function importFile(content,name){openImport();leadImpFile({target:{files:[new File([content],name)]}});for(let i=0;i<50&&!(leadImp&&leadImp.plan);i++)await wait(100);return txt('imp-prev');}
 function done(){const pre=document.createElement('pre');pre.id='testout';pre.textContent=JSON.stringify({out:window.__OUT,errors:window.__ERR||[]},null,1);document.body.appendChild(pre);}
