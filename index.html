@@ -15,7 +15,7 @@
 <title>Le Board</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0E0E0F;--bg2:#151517;--bg3:#1B1B1E;--bg4:#222225;--bg5:#2A2A2E;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.11);--b3:rgba(255,255,255,0.18);--tx:#EDEDEF;--tx2:#A0A0A7;--tx3:#7D7D85;--or:#E8722A;--or2:#F0823C;--ord:rgba(232,114,42,0.12);--re:#E5484D;--red:rgba(229,72,77,0.10);--am:#E5A43A;--amd:rgba(229,164,58,0.10);--gr:#4CAF6A;--grd:rgba(76,175,106,0.10);--bl:#5B9BE0;--bld:rgba(91,155,224,0.10);--or-bd:rgba(232,114,42,0.30);--or-bds:rgba(232,114,42,0.40);--re-bd:rgba(229,72,77,0.20);--re-hv:rgba(229,72,77,0.16);--am-bd:rgba(229,164,58,0.30);--am-bds:rgba(229,164,58,0.50);--am-hv:rgba(229,164,58,0.16);--gr-bd:rgba(76,175,106,0.30);--gr-bds:rgba(76,175,106,0.55);--re-row:rgba(229,72,77,0.05);--re-rowh:rgba(229,72,77,0.08);--re-bdg:rgba(229,72,77,0.22);--am-bdg:rgba(229,164,58,0.22);--r:8px;--rl:12px;--rx:12px;color-scheme:dark;}
+:root{--bg:#0E0E0F;--bg2:#151517;--bg3:#1B1B1E;--bg4:#222225;--bg5:#2A2A2E;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.11);--b3:rgba(255,255,255,0.18);--tx:#EDEDEF;--tx2:#A0A0A7;--tx3:#7D7D85;--or:#E8722A;--or2:#F0823C;--ord:rgba(232,114,42,0.12);--re:#E5484D;--red:rgba(229,72,77,0.10);--am:#E5A43A;--amd:rgba(229,164,58,0.10);--gr:#4CAF6A;--grd:rgba(76,175,106,0.10);--bl:#5B9BE0;--bld:rgba(91,155,224,0.10);--or-bd:rgba(232,114,42,0.30);--or-bds:rgba(232,114,42,0.40);--re-bd:rgba(229,72,77,0.20);--re-hv:rgba(229,72,77,0.16);--am-bd:rgba(229,164,58,0.30);--am-bds:rgba(229,164,58,0.50);--gr-bd:rgba(76,175,106,0.30);--gr-bds:rgba(76,175,106,0.55);--re-row:rgba(229,72,77,0.05);--re-rowh:rgba(229,72,77,0.08);--re-bdg:rgba(229,72,77,0.22);--am-bdg:rgba(229,164,58,0.22);--r:8px;--rl:12px;--rx:12px;color-scheme:dark;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;}
 ::-webkit-scrollbar{width:3px;height:3px;}
@@ -180,7 +180,6 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .ttb{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--b);gap:10px;flex-wrap:wrap;}
 .ttit{font-size:13px;font-weight:600;}
 .lgi{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--tx3);}
-.lgd{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
 .twrp{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:750px;}
 th{text-align:left;padding:10px 16px;font-size:12px;font-weight:500;color:var(--tx3);border-bottom:1px solid var(--b);white-space:nowrap;}
@@ -190,8 +189,6 @@ tr:last-child td{border-bottom:none;}
 .trn:hover td{background:var(--bg3);}
 .trc td{background:var(--re-row);}
 .trc:hover td{background:var(--re-rowh);}
-.trw td{background:var(--amd);}
-.trw:hover td{background:var(--am-hv);}
 .tro .badge{background:transparent;border:1px solid var(--b3);color:var(--tx2);}
 .ccell{display:flex;align-items:center;gap:10px;}
 .cbar{display:none;}
@@ -208,9 +205,6 @@ tr[data-kbd]:focus-visible{outline:none;}
 .trt td{opacity:0.55;}
 .cn{font-weight:600;}
 .ca{font-size:11px;color:var(--tx3);margin-top:2px;}
-.cm{font-size:11px;margin-top:3px;font-weight:500;}
-.cmr{color:var(--re);}
-.cma{color:var(--am);}
 /* Badge alerte : conflit (rouge) / indisponibilite (ambre), message complet dans title */
 .cfb{display:inline-flex;align-items:center;gap:5px;width:fit-content;max-width:100%;height:20px;padding:0 7px;margin-top:5px;border-radius:6px;font-size:12px;font-weight:500;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cfr{color:var(--re);background:var(--red);border:1px solid var(--re-bdg);}
@@ -278,9 +272,6 @@ tr[data-kbd]:focus-visible{outline:none;}
 .tcem{font-size:12px;color:var(--tx3);padding:8px 10px;background:var(--bg3);border:1px dashed var(--b2);border-radius:var(--r);}
 
 /* MEMBRES */
-.mblay{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.mbcrd{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);overflow:hidden;}
-.mbhdr{padding:14px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
 .mbit{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--b);transition:background 0.12s;}
 .mbnm{font-size:13px;font-weight:600;margin-bottom:3px;}
 .mbsec{font-size:12px;font-weight:600;color:var(--tx2);padding:18px 4px 8px;}
@@ -333,7 +324,6 @@ tr[data-kbd]:focus-visible{outline:none;}
 .modal{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:0 24px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.3);}
 .modal>*{flex-shrink:0;}
 .modal.msm{max-width:480px;}
-.modal.mlg{max-width:720px;}
 /* En-tete et pied fixes : restent visibles quand le corps defile */
 .mhd{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 -24px 4px;padding:18px 16px 10px 24px;background:var(--bg3);}
 .mtit{font-size:16px;font-weight:600;letter-spacing:-0.01em;}
@@ -343,7 +333,6 @@ tr[data-kbd]:focus-visible{outline:none;}
 .dlgtxt{font-size:14px;color:var(--tx2);line-height:1.6;white-space:pre-line;margin:4px 0 16px;}
 .btn.btnr{background:var(--re);color:#fff;border-color:transparent;}
 .btn.btnr:hover{filter:brightness(1.1);}
-.msub{font-size:13px;color:var(--tx2);margin:4px 0 16px;}
 .msec{font-size:12px;font-weight:600;color:var(--tx2);margin:8px 0 12px;}
 .mhd+.msec{margin-top:4px;}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
@@ -570,7 +559,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .btn,.bpol,.nvok{height:44px;}
   /* Modales en plein ecran, en-tete et pied fixes */
   .mlov{padding:0;align-items:stretch;}
-  .modal,.modal.msm,.modal.mlg{max-width:none;width:100%;height:100dvh;max-height:none;border:0;border-radius:0;box-shadow:none;padding:0 16px;}
+  .modal,.modal.msm{max-width:none;width:100%;height:100dvh;max-height:none;border:0;border-radius:0;box-shadow:none;padding:0 16px;}
   .mhd{margin:0 -16px 4px;padding:calc(8px + env(safe-area-inset-top)) 6px 8px 16px;}
   .mclose{width:44px;height:44px;}
   .fa{margin:auto -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));}
@@ -591,7 +580,6 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   .mbadd .btn{width:100%;justify-content:center;}
   .mbr-grid>.ldcard>.btn{width:100%;justify-content:center;}
   .mblien .frow{flex-direction:column;align-items:stretch;}
-  .mblay{grid-template-columns:1fr;}
   #mccont{grid-template-columns:minmax(0,1fr);}
   .mcnext .ccig{grid-template-columns:repeat(2,minmax(0,1fr));}
   .cccard.mcnext{padding:16px;}
@@ -1215,7 +1203,6 @@ const NVICO={'🔐':'lock','🎯':'target'};
 
 // ═══ CONSTANTS ═══
 console.log('Le Board v3.5 - REST API - loaded at ' + new Date().toISOString());
-const CHEFCOL={'Polydrones':'#E8722A','KGiR':'#E24B4A','Flight Drone Service':'#4A90D9','W-Drones':'#F5C842','Drone Opérations':'#2D9E5F','OrizonDrone':'#8B7FD4'};
 const STATOK=['Confirme','Prevu'];
 // Libelles d'AFFICHAGE des statuts : les valeurs enregistrees et comparees restent Confirme, Prevu, Option, Termine
 const STATLBL={Confirme:'Confirmé',Prevu:'Prévu',Termine:'Terminé'};
@@ -1266,58 +1253,11 @@ const firebaseConfig = {
   messagingSenderId: "876837050695",
   appId: "1:876837050695:web:db90b431f4dff8acc9d462"
 };
-let db = null;
-
-function loadFirebase(){
-  return new Promise(function(resolve, reject){
-    var scripts = [
-      'https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-app-compat.min.js',
-      'https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-firestore-compat.min.js',
-      'https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-messaging-compat.min.js'
-    ];
-    function loadScript(index){
-      if(index >= scripts.length){
-        try{
-          firebase.initializeApp(firebaseConfig);
-          db = firebase.firestore();
-          console.log('Firebase initialized via jsdelivr CDN');
-          resolve();
-        } catch(e){ console.error('Firebase init error:',e); reject(e); }
-        return;
-      }
-      var s = document.createElement('script');
-      s.src = scripts[index];
-      s.onload = function(){ loadScript(index+1); };
-      s.onerror = function(){
-        console.warn('Failed CDN script '+index+', trying next...');
-        // Try gstatic as fallback
-        var fallback = [
-          'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
-          'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js',
-          'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js'
-        ];
-        var sf = document.createElement('script');
-        sf.src = fallback[index];
-        sf.onload = function(){ loadScript(index+1); };
-        sf.onerror = function(){ 
-          if(index < 2){ loadScript(index+1); }
-          else{ reject(new Error('All CDNs failed')); }
-        };
-        document.head.appendChild(sf);
-      };
-      document.head.appendChild(s);
-    }
-    loadScript(0);
-  });
-}
 
 
 // ═══ FIREBASE REST API (no CDN needed) ═══
 const FB_PROJECT = 'leboard-93a96';
 const FB_BASE = 'https://firestore.googleapis.com/v1/projects/'+FB_PROJECT+'/databases/(default)/documents';
-let fbListeners = {};
-
-function fbDoc(path){ return FB_BASE+'/'+path; }
 
 // ═══ AUTH FIREBASE (email + mot de passe, API REST) ═══
 // Le compte identifie la personne aupres de Firestore (regles de securite) ;
@@ -1638,21 +1578,10 @@ async function pollNotifications(){
   } catch(e){ console.error('fbPoll error:', e); }
 }
 
-function loadFirebase(){ return Promise.resolve(); }
 
 
 // ═══ SYNC FIREBASE → LOCAL ═══
 
-function initPush(){}
-function requestPushPermission(){}
-function listenNotifications(){
-  // Notifications handled by fbPoll every 120s
-}
-
-function syncFromFirebase(){
-  console.log('Starting Firebase REST sync...');
-  startFbPolling();
-}
 function stopFbPolling(){
   fbAppOn = false;
   if(fbPollInterval){ clearInterval(fbPollInterval); fbPollInterval = null; }
@@ -1703,9 +1632,6 @@ function isEnConges(nom, debut, fin){
   });
 }
 
-function getSociete(nom){
-  return REF_SOC[nom] || null;
-}
 
 
 // ═══ ROULEMENT AOP ═══
@@ -1887,7 +1813,6 @@ function proposerAOP(nom){
 const LEAD_STATUTS=['Nouveau','Attribué','En cours','Signé','Perdu'];
 const LEAD_VAL={'Petit':1,'Moyen':2,'Gros':3};
 const LEAD_VALCOL={'Petit':'var(--or)','Moyen':'var(--or)','Gros':'var(--or)'};  // couleurs d'affichage des repartitions
-const LEAD_STCOL={'Nouveau':'var(--tx3)','Attribué':'var(--bl)','En cours':'var(--am)','Signé':'var(--gr)','Perdu':'var(--re)'};
 const LEAD_PLAFOND=3;   // ecart de points (>=) au-dessus du plus bas : membre sorti de la suggestion
 const LEAD_SEUIL=30;    // ecart % (max-min)/max au-dela duquel on alerte pour reequilibrage en AG
 const LEAD_POLL=30000;  // relecture Firestore quand la page Leads est ouverte
@@ -2679,7 +2604,6 @@ function launchApp(){
   if(CR==='referent'){showPg('planning',document.getElementById('nvp'));}
   else{showPg('moncal',document.getElementById('mnmc'));}
   startSess();
-  listenNotifications();
   document.getElementById('syntime').textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
 }
 
@@ -2834,8 +2758,6 @@ function renderCal(){
     if(ds && CR==='referent'){
       CONGES.forEach(function(cong){
         if(ds>=cong.debut&&ds<=cong.fin){
-          const m=Object.values(MBR).find(function(mb){return mb.name===cong.nom;});
-          const col=m?m.color:'#555';
           evts+='<div class="calev calind">'+cong.nom+' - Indispo</div>';
         }
       });
@@ -2843,7 +2765,7 @@ function renderCal(){
     if(ds)for(const c of CH){if(ds>=c.debut&&ds<=c.fin){
   const m=MBR[CU];
   if(CR!=='referent'&&m&&c.chef!==m.name&&!c.collabs.includes(m.name)&&c.ctv!==m.name)continue;
-  const col=getColor(c.chef);const evtTxt='white';const evtBorder='';const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' ['+statLbl('Termine')+']':'';const op=isOpt?'0.6':'1';const cfm=(cfs[c.id]||{}).col;evts+=`<div class="calev${isOpt?' opt':isTer?' ter':''}${cfm?' cf':''}" style="--c:${col};" title="${esc(c.nom+lbl+(cfm?' — '+cfm:''))}">${c.nom}${lbl}</div>`;}}
+  const col=getColor(c.chef);const isOpt=c.statut==='Option';const isTer=c.statut==='Termine';const lbl=isOpt?' [Option]':isTer?' ['+statLbl('Termine')+']':'';const cfm=(cfs[c.id]||{}).col;evts+=`<div class="calev${isOpt?' opt':isTer?' ter':''}${cfm?' cf':''}" style="--c:${col};" title="${esc(c.nom+lbl+(cfm?' — '+cfm:''))}">${c.nom}${lbl}</div>`;}}
     return {cls:`calce ${!cell.cur?'om':''} ${isT?'td':''}${i%7>4?' we':''}${evts?'':' sans'}`,j:CAL_JOURS[i%7],d:cell.d,evts:evts,plein:!!evts||isT};
   });
   // Affichage par semaine : en-tete « S38 · 14 – 20 sept. » (mobile), numero dans la case du lundi (ordinateur)
