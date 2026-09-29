@@ -30,6 +30,8 @@ window.fetch=async function(url,opt){
 const repere=()=>__NET.length;
 const compte=(depuis,re)=>__NET.slice(depuis).filter(l=>re.test(l)&&l.indexOf('@u-henri')<0).length;
 const ids=l=>l.map(c=>c.id).sort().join(',');
+// La creation d'un chantier n'attend pas la reponse de la base (comme avant) : on attend qu'elle arrive (8 s max)
+const attendre=async cond=>{for(let t=0;t<8000&&!cond();t+=100)await wait(100);};
 
 async function entrer(){
   await wait(2700);
@@ -153,6 +155,7 @@ async function membres(){
   openModCh();document.getElementById('fnom').value='Chantier test';document.getElementById('fdeb').value='2026-11-20';document.getElementById('ffin').value='2026-11-21';
   bldTypeSel();document.getElementById('ftyp').value='Facade';document.getElementById('fsta').value='Prevu';document.getElementById('fche').value='KGiR';document.getElementById('fctv').value='Florian';
   await saveCh();
+  await attendre(()=>compte(n,/^PATCH chantiers\/.* 200$/)>=2);
   log('4_chantier_sans_membres',{ecritures_membres:compte(n,/^PATCH membres/),ecritures_chantiers:compte(n,/^PATCH chantiers/)});
   log('4_chantier_sans_membres_ok',compte(n,/^PATCH membres/)===0&&compte(n,/^PATCH chantiers\/.* 200$/)===2);
 }
@@ -204,6 +207,7 @@ async function chantiers(){
   bldTypeSel();document.getElementById('ftyp').value='Facade';document.getElementById('fsta').value='Prevu';document.getElementById('fche').value='KGiR';document.getElementById('fctv').value='Florian';
   n=repere();e=ECR.length;TOASTS.length=0;
   await saveCh();
+  await attendre(()=>compte(n,/^PATCH chantiers\//)>=1);
   const nv=CH.find(c=>c.nom==='Chantier cree');b=nv?await lireB('chantiers',nv.id):null;
   log('4_creation',{en_base:!!b,champs_envoyes:ECR.slice(e).map(x=>x.masque.length),condition:ECR.slice(e).map(x=>x.cond.join()),lectures:compte(n,/^GET chantiers\//),toasts:TOASTS.slice()});
   log('4_creation_ok',!!b&&b.nom==='Chantier cree'&&b.ctv==='Florian'&&ECR.slice(e).length===1&&ECR[e].cond.length===0&&ECR[e].masque.length>=15&&compte(n,/^GET chantiers\//)===0&&TOASTS.join()==='Chantier créé !'&&!modale());
