@@ -10,6 +10,16 @@ Points notés pendant la refonte UI v4, volontairement laissés pour après la m
 - **Un document par indispo, avec des droits par personne** : aujourd'hui, toutes les indispos sont dans un seul document (`indispo/data`) que tout membre peut modifier, y compris les indispos des autres. Les écrasements sont déjà évités (écriture conditionnelle), mais les règles Firestore ne peuvent pas limiter chacun à ses propres indispos. À prévoir : schéma `indispo/{id}` avec le membre, règles par personne, reprise des données existantes, lecture limitée aux indispos à venir (quota de lectures).
 - **Types de chantier enregistrés en base** : aujourd'hui, un type ajouté n'est gardé que sur l'appareil qui l'a créé (`localStorage`), les autres ne le voient pas.
 
+## Leads v2
+
+- **Champ « Nature de la demande »** : Demande d'information / Demande de devis / Visite à planifier. Badge dans le tableau et filtre. Ne touche ni aux points ni à la rotation.
+- **Valeur du lead (Petit / Moyen / Gros)** :
+  - **A.** « Non évalué » par défaut ; valeur obligatoire seulement à la signature ;
+  - **B.** valeur calculée automatiquement à partir du montant signé, seuils à voter en AG.
+
+  Recommandation : A tout de suite, B après le vote en AG.
+- **À vérifier avant** : comment la rotation compte aujourd'hui un lead signé « Non évalué ».
+
 ## Décisions : on laisse tel quel
 
 - **Pas de « +N » dans le calendrier** : une case affiche tous ses événements et s'agrandit. Limiter l'affichage demanderait une logique nouvelle.
