@@ -1,14 +1,15 @@
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const log=(k,v)=>{window.__OUT=window.__OUT||{};__OUT[k]=v;};
 const txt=id=>document.getElementById(id).innerText.replace(/\s+/g,' ').trim();
-window.confirm=()=>true;window.prompt=()=>'proximite geographique';
+// Dialogues de l'app (askConfirm / askPrompt) acceptes automatiquement
+window.askConfirm=async()=>true;window.askPrompt=async()=>'proximite geographique';
 window.addEventListener('error',e=>{(window.__ERR=window.__ERR||[]).push(e.message);});
 async function importFile(content,name){openImport();leadImpFile({target:{files:[new File([content],name)]}});for(let i=0;i<50&&!(leadImp&&leadImp.plan);i++)await wait(100);return txt('imp-prev');}
 function done(){const pre=document.createElement('pre');pre.id='testout';pre.textContent=JSON.stringify({out:window.__OUT,errors:window.__ERR||[]},null,1);document.body.appendChild(pre);}
 async function scenario(){
   await wait(2600);
   const mode=location.hash.slice(1);
-  CU='florian';['acc','pol','lref'].forEach(i=>document.getElementById(i).style.display='none');
+  CU='florian';document.getElementById('pol').style.display='none';
   launchApp();showPg('leads',document.getElementById('nvl'));
   await wait(400);
   if(mode==='q429'){
@@ -45,11 +46,11 @@ async function scenario(){
   log('nav_leads',getComputedStyle(document.getElementById('nvl')).display);
   log('topbar',txt('tbact'));
   log('vide',txt('ld-body'));
-  log('preview_seed',await importFile(__SEED,'leads-seed.json'));
+  log('preview_seed',await importFile(__SEED,'leads-fictifs.json'));
   await runImport();await wait(100);
   log('nb_leads',Object.keys(LEADS).length);
-  log('preview_reimport',await importFile(__SEED,'leads-seed.json'));closeM('modimp');
-  // La ligne de fusion reprend l'email du lead L010 lu dans le seed local, en majuscules (aucune donnee reelle ici)
+  log('preview_reimport',await importFile(__SEED,'leads-fictifs.json'));closeM('modimp');
+  // La ligne de fusion reprend l'email du lead fictif L010, en majuscules
   const mailL010=JSON.parse(__SEED).find(x=>x.id==='L010').email.toUpperCase();
   log('preview_csv',await importFile('contact;societe;email;telephone;membre;zone\nNouveau Gars;Acme;nouveau@acme.fr;600000104;Frédéric;\nContact Test;Societe Test;'+mailL010+';;;31 Toulouse\n','sepem.csv'));
   await runImport();await wait(100);

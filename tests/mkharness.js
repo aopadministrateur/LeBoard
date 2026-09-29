@@ -2,8 +2,8 @@
 const fs=require('fs'),path=require('path');
 const [,,repo,out]=process.argv;
 const html=fs.readFileSync(path.join(repo,'index.html'),'utf8');
-const seedPath=path.join(repo,'leads-seed.json');
-if(!fs.existsSync(seedPath)){console.error('leads-seed.json introuvable a la racine du depot (fichier local, jamais versionne).');process.exit(1);}
+// Leads FICTIFS versionnes (tests/fixtures) : aucun test ne lit les vraies donnees de prospects
+const seedPath=path.join(__dirname,'fixtures','leads-fictifs.json');
 const seed=fs.readFileSync(seedPath,'utf8');
 const mock=fs.readFileSync(path.join(__dirname,'mock.js'),'utf8').replace('__SEED_JSON__',JSON.stringify(seed));
 const scen=fs.readFileSync(path.join(__dirname,process.env.SCEN||'scenario.js'),'utf8');
