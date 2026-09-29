@@ -557,6 +557,11 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 
 @media(max-width:768px){
   .btn,.bpol,.nvok{height:44px;}
+  /* Champs en 16px minimum : evite le zoom automatique de Safari iOS a la saisie */
+  input:not([type=checkbox]):not([type=file]),select,textarea,.fi,.ldflt .fi,.ldsel{font-size:16px;}
+  /* Marge en bas du corps des modales egale a la hauteur du pied fixe (12 + 44 + 12 + bordure) */
+  .mlov:not(#moddlg) .modal{scroll-padding-bottom:69px;}
+  .mlov:not(#moddlg) .modal>:has(+.fa){margin-bottom:69px;}
   /* Modales en plein ecran, en-tete et pied fixes */
   .mlov{padding:0;align-items:stretch;}
   .modal,.modal.msm{max-width:none;width:100%;height:100dvh;max-height:none;border:0;border-radius:0;box-shadow:none;padding:0 16px;}
