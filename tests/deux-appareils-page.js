@@ -11,3 +11,5 @@ window.__entrer=async function(email,pwd,pin){
 };
 window.__TOASTS=[];(function(){const t0=window.toast;window.toast=function(m){__TOASTS.push(m);return t0(m);};})();
 window.__ajouterIndispo=async function(d,f){document.getElementById('cong-deb').value=d;document.getElementById('cong-fin').value=f;await addConge();return CONGES.length;};
+window.askConfirm=async()=>true;
+window.__ajouterMembre=async function(nom,role){document.getElementById('newname').value=nom;document.getElementById('newrole').value=role;await addMbr();return Object.keys(MBR).length;};

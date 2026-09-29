@@ -66,6 +66,21 @@ fs.writeFileSync(path.join(OUT,'base.html'),'<!doctype html><meta charset="utf-8
     R.i3_simultanes={base:await baseIndispo(),refus_precondition:await ev(BASE,'__NET.slice('+m+').filter(l=>l.indexOf("PATCH indispo/data ")===0&&l.slice(-4)===" 400").length'),toasts_A:await ev(A,'__TOASTS.slice(-1)'),toasts_B:await ev(B,'__TOASTS.slice(-1)')};
     R.i3_simultanes_ok=R.i3_simultanes.base==='Florian 2026-12-01 | Henri 2026-11-09 | Henri 2026-12-07';
 
+    // ─── Membres ───
+    const baseMembres=async()=>ev(BASE,'Object.keys(JSON.parse(__RAW.membres.data.mbr.stringValue)).filter(k=>/^test|camille/.test(k)).sort().join(",")');
+    m=await repere();
+    await ev(A,"__ajouterMembre('Test A','collaborateur')");
+    await ev(B,"__ajouterMembre('Test B','collaborateur')"); // B ignore l'ajout de A
+    R.m1_deux_ajouts={base:await baseMembres(),lectures_A:await lectures(m,'membres/data','u-flo'),lectures_B:await lectures(m,'membres/data','u-henri')};
+    R.m1_deux_ajouts_ok=R.m1_deux_ajouts.base==='camille,testa,testb'&&R.m1_deux_ajouts.lectures_A===1&&R.m1_deux_ajouts.lectures_B===1;
+    await ev(A,"rmMbr('camille')"); // A ignore l'ajout de B
+    R.m2_retrait_perime={base:await baseMembres()};
+    R.m2_retrait_perime_ok=R.m2_retrait_perime.base==='testa,testb';
+    m=await repere();
+    await Promise.all([ev(A,"__ajouterMembre('Test C','collaborateur')"),ev(B,"__ajouterMembre('Test D','collaborateur')")]);
+    R.m3_simultanes={base:await baseMembres(),refus_precondition:await ev(BASE,'__NET.slice('+m+').filter(l=>l.indexOf("PATCH membres/data ")===0&&l.slice(-4)===" 400").length'),toasts_A:await ev(A,'__TOASTS.slice(-1)'),toasts_B:await ev(B,'__TOASTS.slice(-1)')};
+    R.m3_simultanes_ok=R.m3_simultanes.base==='testa,testb,testc,testd';
+
     R.erreurs_console_A=await ev(A,'(window.__ERR||[]).length');R.erreurs_console_B=await ev(B,'(window.__ERR||[]).length');
   }catch(e){R.exception=e.stack;ok=false;}
   for(const k in R)if(/_ok$/.test(k)&&R[k]!==true)ok=false;

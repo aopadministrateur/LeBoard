@@ -1220,13 +1220,16 @@ function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
 let selMoeColor='#E8722A';
 function selMoeCol(c,el){selMoeColor=c;document.querySelectorAll('#moe-colpick .csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}
-function saveMoe(){
+async function saveMoe(){
   const nom=document.getElementById('moe-name').value.trim();
   if(!nom){toast('Entrez un nom de société');return;}
   const key=nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
   if(MOE[key]){toast('Cette société existe déjà');return;}
-  MOE[key]={name:nom,color:selMoeColor};
-  svAll();bldChefSel();
+  var existe=false,color=selMoeColor;
+  const ok=await majMembres(function(mbr,moe){if(moe[key]){existe=true;return false;}moe[key]={name:nom,color:color};});
+  if(existe){bldChefSel();toast('Cette société existe déjà');return;}
+  if(!ok)return;
+  bldChefSel();
   closeM('modmoe');
   document.getElementById('fche').value=nom;
   toast(nom+' ajouté !');
@@ -1563,7 +1566,7 @@ async function fbPoll(){
     const mbrDocs = await fbGet('membres', true);
     if(!mbrDocs){ fbSyncState(false); return; }
     const mbrDoc = mbrDocs.find(function(d){return d.id==='data';});
-    if(mbrDoc){
+    if(mbrDoc && fbFrais('membres', t0)){
       if(mbrDoc.mbr){try{MBR=JSON.parse(mbrDoc.mbr);}catch(e){}}
       if(mbrDoc.moe){try{MOE=Object.assign({},MOE_DEFAULT,JSON.parse(mbrDoc.moe));}catch(e){}}
       // Don't rebuild selects if modal is open (would reset user selections)
@@ -1641,8 +1644,33 @@ function deleteChantierFB(id){
   fbDelete('chantiers', id);
 }
 
-function saveMembersFB(){
-  fbSet('membres', 'data', {mbr:JSON.stringify(MBR), moe:JSON.stringify(MOE)});
+function appliquerMembres(doc){
+  if(!doc)return;
+  if(doc.mbr){try{MBR=JSON.parse(doc.mbr);}catch(e){}}
+  if(doc.moe){try{MOE=Object.assign({},MOE_DEFAULT,JSON.parse(doc.moe));}catch(e){}}
+  svAll();
+}
+function rafraichirMembres(){
+  renderMbr();
+  // Formulaire chantier ouvert : on ne reconstruit pas ses listes (perdrait la saisie)
+  if(!document.getElementById('modch').classList.contains('open')){bldChefSel();bldCChks();}
+}
+// Membres et maitres d'oeuvre : une seule modification appliquee a la version en base, jamais les listes locales
+// entieres. modif(mbr, moe) modifie les listes lues en base ; false pour renoncer. Echec : message, copie realignee.
+async function majMembres(modif){
+  const r = await fbMaj('membres', 'data', function(doc){
+    // Document absent : on part de la copie locale, comme avant
+    const mbr = JSON.parse(doc && doc.mbr ? doc.mbr : JSON.stringify(MBR));
+    const moe = Object.assign({}, MOE_DEFAULT, JSON.parse(doc && doc.moe ? doc.moe : JSON.stringify(MOE)));
+    if(modif(mbr, moe) === false) return null;
+    return {mbr:JSON.stringify(mbr), moe:JSON.stringify(moe)};
+  });
+  if(r.ok){ appliquerMembres(r.doc); return true; }
+  if(r.abandon){ appliquerMembres(r.doc); rafraichirMembres(); return false; }
+  try{ const b = await fbLire('membres', 'data'); appliquerMembres(b.doc); }catch(e){}
+  rafraichirMembres();
+  toast('Échec : modification non enregistrée. Réessayez.');
+  return false;
 }
 
 function sendPushNotif(title, body, targetRole){
@@ -2938,7 +2966,7 @@ function renderMbr(){
 }
 
 
-function addMbr(){
+async function addMbr(){
   var name=document.getElementById('newname').value.trim();
   var role=document.getElementById('newrole').value;
   if(!name){toast('Entrez un nom');return;}
@@ -2946,14 +2974,19 @@ function addMbr(){
   var key=name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
   if(role==='maitreoeuvre'){
     if(MOE[key]){toast('Ce maître d\'œuvre existe déjà');return;}
-    MOE[key]={name:name,color:selColor};
   } else {
     if(MBR[key]){toast('Ce membre existe déjà');return;}
-    MBR[key]={name:name,color:selColor,role:role};
   }
+  var existe=false,color=selColor;
+  const ok=await majMembres(function(mbr,moe){
+    if(role==='maitreoeuvre'){if(moe[key]){existe=true;return false;}moe[key]={name:name,color:color};}
+    else{if(mbr[key]){existe=true;return false;}mbr[key]={name:name,color:color,role:role};}
+  });
+  if(existe){toast(role==='maitreoeuvre'?'Ce maître d\'œuvre existe déjà':'Ce membre existe déjà');return;}
+  if(!ok)return;
   document.getElementById('newname').value='';
   document.getElementById('newrole').value='';
-  saveMembersFB();svAll();renderMbr();
+  renderMbr();
   // Rebuild selects so new member appears immediately
   bldChefSel();bldCChks();
   toast(name+' ajouté !');
@@ -2965,8 +2998,8 @@ async function rmMoe(key){
   var used=CH.find(function(c){return c.chef===name&&(c.statut==='Confirme'||c.statut==='Prevu');});
   if(used){toast('Impossible : '+name+' est utilisé sur "'+used.nom+'"');return;}
   if(!(await askConfirm('Retirer '+name+' ?',{titre:'Retirer un maître d\'œuvre',action:'Retirer',danger:true})))return;
-  delete MOE[key];
-  saveMembersFB();svAll();renderMbr();bldChefSel();
+  if(!(await majMembres(function(mbr,moe){delete moe[key];})))return;
+  renderMbr();bldChefSel();
   toast(name+' retiré');
 }
 
@@ -2974,9 +3007,8 @@ async function rmMbr(key){
   if(!MBR[key])return;
   var name=MBR[key].name;
   if(!(await askConfirm('Retirer '+name+' ?',{titre:'Retirer un membre',action:'Retirer',danger:true})))return;
-  delete MBR[key];
+  if(!(await majMembres(function(mbr){delete mbr[key];})))return;
   delete PR[key];
-  saveMembersFB();
   svAll();
   renderMbr();
   bldChefSel();
@@ -3103,7 +3135,6 @@ function saveCh(){
     var last=CH[CH.length-1];if(last)saveChantierFB(last);
     if(last&&pendingLeadLink)leadChantierCreated(last.id);
   }
-  saveMembersFB();
   svAll();closeM('modch');editId=null;renderAll();
 }
 
