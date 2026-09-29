@@ -7,10 +7,21 @@ if(MODE==='a_reload'){localStorage.setItem('lb_auth',JSON.stringify({uid:'u-flo'
 if(MODE==='a_revoked'){localStorage.setItem('lb_auth',JSON.stringify({uid:'u-flo',refresh:'rt-REVOQUE',membre:'florian',role:'referent'}));localStorage.setItem('lb_pins',JSON.stringify({florian:'1234'}));}
 window.__STRICT=MODE.indexOf('strict')>=0||MODE==='a_reads'||MODE==='a_reload'||MODE==='a_revoked';
 window.__SEED=__SEED_JSON__;
+// Deux appareils simules (tests/deux-appareils.js) : cette page n'a pas de base a elle ; ses appels Firebase
+// sont transmis par le pilote de test a une page « base » unique, partagee par les deux appareils.
+if(MODE.indexOf('relais')>=0){
+  const _fr=window.fetch,ATT={};let nr=0;
+  window.__relaisRep=(id,st,txt)=>{const r=ATT[id];delete ATT[id];if(r)r(new Response(txt,{status:st,headers:{'Content-Type':'application/json'}}));};
+  window.fetch=function(url,opt){
+    url=String(url);if(!/googleapis\.com/.test(url))return _fr.apply(this,arguments);opt=opt||{};
+    return new Promise(res=>{const id=++nr;ATT[id]=res;window.__relais(JSON.stringify({id:id,url:url,opt:{method:opt.method,headers:opt.headers,body:opt.body}}));});
+  };
+  return;
+}
 const enc=v=>Array.isArray(v)?{arrayValue:{values:v.map(i=>({stringValue:String(i)}))}}:typeof v==='boolean'?{booleanValue:v}:typeof v==='number'?{integerValue:String(v)}:{stringValue:String(v)};
 const init={
   chantiers:{c1:{id:'c1',nom:'Chantier Safran',client:'SAFRAN',adresse:'Blagnac',type:'Facade',statut:'Prevu',chef:'Drone Opérations',ctv:'Yoan',collabs:['Tony'],debut:'2026-10-05',fin:'2026-10-06',materiel:'',notes:'',origineAOP:true,decompte:true}},
-  acces:{'u-flo':{membre:'florian',role:'referent'},'u-tony':{membre:'tony',role:'collaborateur'}}
+  acces:{'u-flo':{membre:'florian',role:'referent'},'u-tony':{membre:'tony',role:'collaborateur'},'u-henri':{membre:'henri',role:'referent'}}
 };
 if(MODE==='a_reads'){for(let i=2;i<=40;i++)init.chantiers['c'+i]={id:'c'+i,nom:'Chantier '+i,client:'C'+i,adresse:'',type:'Facade',statut:'Prevu',chef:'KGiR',ctv:'Henri',collabs:[],debut:'2026-11-0'+(i%9+1),fin:'2026-11-0'+(i%9+1),materiel:'',notes:''};
   init.profiles={};['florian','henri','franck','yoan','frederic','thomas','tony','camille','sebastien','alexandre'].forEach(k=>init.profiles[k]={avatar:'data:x',user:k});
@@ -19,7 +30,12 @@ if(MODE==='a_reads'){for(let i=2;i<=40;i++)init.chantiers['c'+i]={id:'c'+i,nom:'
   init.indispo={data:{list:'[]'}};}
 const RAW={};for(const c in init){RAW[c]={};for(const id in init[c])RAW[c][id]=Object.fromEntries(Object.entries(init[c][id]).map(([k,v])=>[k,enc(v)]));}
 window.__RAW=RAW;window.__NET=[];window.__READS=0;window.__REFRESH=0;
-const ACCOUNTS={'florian@test.fr':{pwd:'pw-flo',uid:'u-flo'},'tony@test.fr':{pwd:'pw-tony',uid:'u-tony'},'intrus@test.fr':{pwd:'pw-x',uid:'u-x'}};
+// Date de derniere modification de chaque document (updateTime, precision microseconde comme Firestore)
+const UT={};let dernierUT=0;window.__UT=UT;
+const horo=()=>{let t=Date.now()*1000;if(t<=dernierUT)t=dernierUT+1;dernierUT=t;return new Date(Math.floor(t/1000)).toISOString().replace('Z',String(t%1000).padStart(3,'0')+'Z');};
+const utDe=(col,id)=>RAW[col]&&RAW[col][id]?(UT[col+'/'+id]=UT[col+'/'+id]||horo()):null;
+const docJ=(col,k)=>({name:'projects/x/databases/(default)/documents/'+col+'/'+k,fields:RAW[col][k],updateTime:utDe(col,k)});
+const ACCOUNTS={'florian@test.fr':{pwd:'pw-flo',uid:'u-flo'},'tony@test.fr':{pwd:'pw-tony',uid:'u-tony'},'henri@test.fr':{pwd:'pw-henri',uid:'u-henri'},'intrus@test.fr':{pwd:'pw-x',uid:'u-x'}};
 const TOK={};let n=0;window.__TOK=TOK;
 const newTok=uid=>{const t='tok-'+uid+'-'+(++n);TOK[t]={uid:uid,exp:Date.now()+3600e3};return t;};
 const J=(st,body)=>new Response(JSON.stringify(body||{}),{status:st,headers:{'Content-Type':'application/json'}});
@@ -63,7 +79,7 @@ window.fetch=async function(url,opt){
     if(window.__STRICT&&!allowed(uid,col,null,'read')){__NET.push('QUERY '+col+' 403');return J(403,{});}
     const docs=Object.keys(RAW[col]||{}).filter(k=>{const f=(RAW[col][k][ff.field.fieldPath]||{}).stringValue;return f!==undefined&&f>=ff.value.stringValue;});
     __READS+=Math.max(1,docs.length)+(window.__STRICT?1:0);__NET.push('QUERY '+col+' '+docs.length+' docs');
-    return J(200,docs.length?docs.map(k=>({document:{name:'x/'+col+'/'+k,fields:RAW[col][k]}})):[{readTime:'now'}]);
+    return J(200,docs.length?docs.map(k=>({document:docJ(col,k)})):[{readTime:'now'}]);
   }
   const parts=decodeURIComponent(u.pathname).split('/documents/')[1].split('/');const col=parts[0],id=parts[1];
   RAW[col]=RAW[col]||{};
@@ -74,19 +90,24 @@ window.fetch=async function(url,opt){
   const uid=tk?TOK[tk].uid:null;
   const op=m==='GET'?'read':m==='POST'?'create':(m==='PATCH'&&!RAW[col][id])?'create':m==='DELETE'?'delete':'update';
   if(window.__STRICT&&!allowed(uid,col,id,op)){log(403);return J(403,{error:{status:'PERMISSION_DENIED'}});}
+  // Preconditions d'ecriture, comme Firestore REST : currentDocument.exists et currentDocument.updateTime
+  const pExiste=m==='GET'?null:u.searchParams.get('currentDocument.exists'),pUT=m==='GET'?null:u.searchParams.get('currentDocument.updateTime');
+  if(pExiste==='false'&&RAW[col][id]){log(409);return J(409,{error:{code:409,status:'ALREADY_EXISTS',message:'Document already exists'}});}
+  if((pExiste==='true'||pUT)&&!RAW[col][id]){log(404);return J(404,{error:{code:404,status:'NOT_FOUND',message:'No document to update'}});}
+  if(pUT&&pUT!==utDe(col,id)){log(400);return J(400,{error:{code:400,status:'FAILED_PRECONDITION',message:'the stored version ('+utDe(col,id)+') does not match the required base version ('+pUT+')'}});}
   log(200);
   if(m==='GET'){__READS+=(id?1:Math.max(1,Object.keys(RAW[col]).length))+(window.__STRICT?1:0);}
-  if(m==='GET'&&!id)return J(200,{documents:Object.keys(RAW[col]).map(k=>({name:'projects/x/databases/(default)/documents/'+col+'/'+k,fields:RAW[col][k]}))});
-  if(m==='GET'){return RAW[col][id]?J(200,{name:col+'/'+id,fields:RAW[col][id]}):J(404,{error:{status:'NOT_FOUND'}});}
-  if(m==='DELETE'){delete RAW[col][id];return J(200);}
-  if(m==='POST'){RAW[col]['n'+Date.now()+Math.random()]=JSON.parse(opt.body).fields;return J(200);}
+  if(m==='GET'&&!id)return J(200,{documents:Object.keys(RAW[col]).map(k=>docJ(col,k))});
+  if(m==='GET'){return RAW[col][id]?J(200,docJ(col,id)):J(404,{error:{code:404,status:'NOT_FOUND'}});}
+  if(m==='DELETE'){delete RAW[col][id];delete UT[col+'/'+id];return J(200);}
+  if(m==='POST'){const k='n'+Date.now()+Math.random();RAW[col][k]=JSON.parse(opt.body).fields;UT[col+'/'+k]=horo();return J(200,docJ(col,k));}
   if(m==='PATCH'){
     const f=JSON.parse(opt.body).fields||{};
-    if(u.searchParams.get('currentDocument.exists')==='false'&&RAW[col][id])return J(409,{error:'exists'});
     const mask=u.searchParams.getAll('updateMask.fieldPaths');
     if(mask.length){const d=RAW[col][id]||{};mask.forEach(k=>{if(k in f)d[k]=f[k];else delete d[k];});RAW[col][id]=d;}
     else RAW[col][id]=f;
-    return J(200);
+    UT[col+'/'+id]=horo();
+    return J(200,docJ(col,id));
   }
   return J(400);
 };

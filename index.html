@@ -1410,6 +1410,48 @@ async function fbCreate(collection, id, obj){
   } catch(e){ console.error('fbCreate error:',e); return false; }
 }
 
+// Lecture d'un document avec sa date de derniere modification (updateTime) ; doc=null s'il n'existe pas
+async function fbLire(collection, id){
+  const r = await fbFetch(FB_BASE+'/'+collection+'/'+id);
+  if(r.status === 404) return {doc:null, ut:null};
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const d = await r.json();
+  return {doc:fbParseDoc(d.fields||{}), ut:d.updateTime||null};
+}
+
+// Ecriture conditionnelle : relit le document (1 lecture), applique la modification demandee a la version
+// en base, puis n'ecrit que si personne n'a ecrit entre-temps (precondition updateTime) ; sinon nouvel essai.
+// modif(doc) renvoie les champs a ecrire, ou null pour renoncer. Resultat : {ok, doc} ou {ok:false, abandon, doc}.
+const fbEcr = {};
+async function fbMaj(collection, id, modif){
+  const e = fbEcr[collection] = fbEcr[collection] || {n:0, t:0};
+  e.n++;
+  try{
+    for(let essai=1; essai<=3; essai++){
+      if(essai > 1) await new Promise(function(r){ setTimeout(r, 150*essai); });
+      let lu;
+      try{ lu = await fbLire(collection, id); } catch(err){ console.error('fbMaj lecture:',err); continue; }
+      const champs = modif(lu.doc);
+      if(!champs) return {ok:false, abandon:true, doc:lu.doc};
+      const cond = lu.ut ? 'currentDocument.updateTime='+encodeURIComponent(lu.ut) : 'currentDocument.exists=false';
+      let w;
+      try{
+        w = await fbFetch(FB_BASE+'/'+collection+'/'+id+'?'+cond+'&updateMask.fieldPaths='+Object.keys(champs).join('&updateMask.fieldPaths='), {
+          method:'PATCH', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({fields:fbEncodeDoc(champs)})
+        });
+      } catch(err){ console.error('fbMaj ecriture:',err); continue; }
+      if(w.ok) return {ok:true, doc:Object.assign({}, lu.doc||{}, champs)};
+      if(w.status === 401 || w.status === 403) break; // droits refuses : inutile de reessayer
+      // 400 FAILED_PRECONDITION, 404, 409 : ecriture concurrente entre la lecture et l'ecriture -> on recommence
+    }
+    return {ok:false};
+  } catch(err){ console.error('fbMaj error:',err); return {ok:false}; } // donnee en base illisible : on n'ecrit rien
+  finally{ e.n--; e.t = Date.now(); }
+}
+// Une relecture periodique commencee a t0 ne doit pas remplacer une ecriture locale plus recente
+function fbFrais(collection, t0){ const e = fbEcr[collection]; return !e || (!e.n && e.t < t0); }
+
 async function fbDelete(collection, id){
   try{
     const r = await fbFetch(FB_BASE+'/'+collection+'/'+id, {method:'DELETE'});
@@ -1483,6 +1525,7 @@ async function fbPoll(){
   // App en arriere-plan : aucune lecture (economise le quota Firestore)
   if(document.hidden) return;
   fbLastPoll = Date.now();
+  const t0 = fbLastPoll;
   try{
     // En cas d'erreur (quota 429, reseau, droits) fbGet strict renvoie null :
     // on arrete ce cycle et on GARDE les donnees actuelles au lieu de les vider.
@@ -1490,7 +1533,7 @@ async function fbPoll(){
     const congesDocs = await fbGet('indispo', true);
     if(!congesDocs){ fbSyncState(false); return; }
     const congesDoc = congesDocs.find(function(d){return d.id==='data';});
-    if(congesDoc && congesDoc.list){
+    if(congesDoc && congesDoc.list && fbFrais('indispo', t0)){
       try{CONGES=JSON.parse(congesDoc.list);localStorage.setItem('lb_indispo',JSON.stringify(CONGES));}catch(e){}
     }
 
@@ -1619,9 +1662,21 @@ const REF_SOC = {
 };
 
 let CONGES = JSON.parse(localStorage.getItem('lb_indispo') || '[]');
-function saveConges(){
-  localStorage.setItem('lb_indispo', JSON.stringify(CONGES));
-  fbSet('indispo','data',{list:JSON.stringify(CONGES)});
+function appliquerConges(list){
+  try{ CONGES = JSON.parse(list||'[]'); localStorage.setItem('lb_indispo', JSON.stringify(CONGES)); }catch(e){}
+  renderCongesProf();
+}
+// Une seule modification (ajout ou suppression) appliquee a la liste en base, jamais la copie locale entiere.
+// Echec apres 3 essais : message, copie locale realignee sur la base, aucun faux succes.
+async function majConges(modif){
+  const r = await fbMaj('indispo', 'data', function(doc){
+    const list = doc ? JSON.parse(doc.list||'[]') : CONGES.slice(); // document absent : on part de la copie locale, comme avant
+    return {list:JSON.stringify(modif(list))};
+  });
+  if(r.ok){ appliquerConges(r.doc.list); return true; }
+  try{ const b = await fbLire('indispo', 'data'); if(b.doc) appliquerConges(b.doc.list); }catch(e){}
+  toast('Échec : indisponibilité non enregistrée. Réessayez.');
+  return false;
 }
 
 function isEnConges(nom, debut, fin){
@@ -3066,24 +3121,22 @@ function renderCongesProf(){
   }).join('');
 }
 
-function addConge(){
+async function addConge(){
   const deb=document.getElementById('cong-deb').value;
   const fin=document.getElementById('cong-fin').value;
   const m=MBR[CU];if(!m)return;
   if(!deb||!fin){toast('Entrez les dates');return;}
   if(deb>fin){toast('La date de fin doit être après le début');return;}
-  const id=Date.now();
-  CONGES.push({id:id,nom:m.name,debut:deb,fin:fin});
-  saveConges();
+  const c={id:Date.now(),nom:m.name,debut:deb,fin:fin};
+  if(!(await majConges(function(l){l.push(c);return l;})))return;
   document.getElementById('cong-deb').value='';
   document.getElementById('cong-fin').value='';
-  renderCongesProf();
   toast('Indisponibilité ajoutée !');
 }
 
-function delConge(id){
-  CONGES=CONGES.filter(function(c){return c.id!==id;});
-  saveConges();renderCongesProf();toast('Indisponibilité supprimée');
+async function delConge(id){
+  if(!(await majConges(function(l){return l.filter(function(c){return c.id!==id;});})))return;
+  toast('Indisponibilité supprimée');
 }
 
 function openProf(){

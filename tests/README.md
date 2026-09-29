@@ -27,6 +27,13 @@ Prérequis : Node et Chrome. Les tests n'utilisent que des données fictives : l
     BUDGET=30000 SCEN=auth-scenario.js sh tests/run.sh a_reads    # lectures facturables par cycle
     BUDGET=30000 SCEN=modch-scenario.js sh tests/run.sh m_reset  # creation de chantier apres une edition : champs vides
     BUDGET=40000 SCEN=dates-scenario.js sh tests/run.sh d_dates   # fin avant debut refusee, fin = debut acceptee
+    BUDGET=60000 SCEN=ecritures-scenario.js sh tests/run.sh e_indispo_strict   # indispos : copie perimee, ecriture concurrente, echec apres 3 essais
+
+## Deux appareils sur la même base fictive
+
+    node tests/deux-appareils.js
+
+Deux pages Chrome isolées (stockage local séparé, comme deux téléphones : Florian et Henri) dont les appels Firebase sont relayés vers une page « base » unique qui porte `mock.js` en règles strictes. Chaque appareil garde sa copie sans relecture périodique ; on vérifie qu'aucune écriture de l'un n'efface celle de l'autre, y compris quand elles sont simultanées. Sort en erreur (code 1) si un seul point n'est pas vert.
 
 Ajouter une taille (ex. `1440,1500`) après le mode produit une capture d'écran dans `tests/.out/` au lieu du résultat. Si « PAS DE RESULTAT » s'affiche, augmenter `BUDGET`.
 
