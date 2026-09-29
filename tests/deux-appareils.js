@@ -81,7 +81,21 @@ fs.writeFileSync(path.join(OUT,'base.html'),'<!doctype html><meta charset="utf-8
     R.m3_simultanes={base:await baseMembres(),refus_precondition:await ev(BASE,'__NET.slice('+m+').filter(l=>l.indexOf("PATCH membres/data ")===0&&l.slice(-4)===" 400").length'),toasts_A:await ev(A,'__TOASTS.slice(-1)'),toasts_B:await ev(B,'__TOASTS.slice(-1)')};
     R.m3_simultanes_ok=R.m3_simultanes.base==='testa,testb,testc,testd';
 
+    // ─── Chantiers ───
+    const baseC1=async()=>ev(BASE,'(()=>{const d=__RAW.chantiers.c1;const v=k=>d[k]?d[k].stringValue:"";return {statut:v("statut"),notes:v("notes"),client:v("client"),materiel:v("materiel")};})()');
+    m=await repere();
+    await ev(A,"editCh('c1')");await ev(B,"editCh('c1')"); // les deux ouvrent le meme chantier
+    await ev(A,"document.getElementById('fnot').value='Notes de Florian';saveCh()");
+    await ev(B,"document.getElementById('fsta').value='Confirme';saveCh()"); // le formulaire de B a les anciennes notes
+    R.c1_deux_modifs={base:await baseC1(),lectures_A:await lectures(m,'chantiers/c1','u-flo'),lectures_B:await lectures(m,'chantiers/c1','u-henri')};
+    R.c1_deux_modifs_ok=R.c1_deux_modifs.base.notes==='Notes de Florian'&&R.c1_deux_modifs.base.statut==='Confirme'&&R.c1_deux_modifs.lectures_A===1&&R.c1_deux_modifs.lectures_B===1;
+    await ev(A,"editCh('c1')");await ev(B,"editCh('c1')");
+    await Promise.all([ev(A,"document.getElementById('fcli').value='CLIENT A';saveCh()"),ev(B,"document.getElementById('fmat').value='Nacelle B';saveCh()")]);
+    R.c2_simultanes={base:await baseC1(),refus_precondition:await ev(BASE,'__NET.slice('+m+').filter(l=>l.indexOf("PATCH chantiers/c1 ")===0&&l.slice(-4)===" 400").length'),ecritures_membres:await ev(BASE,'__NET.slice('+m+').filter(l=>l.indexOf("PATCH membres")===0).length')};
+    R.c2_simultanes_ok=R.c2_simultanes.base.client==='CLIENT A'&&R.c2_simultanes.base.materiel==='Nacelle B'&&R.c2_simultanes.base.notes==='Notes de Florian'&&R.c2_simultanes.base.statut==='Confirme'&&R.c2_simultanes.ecritures_membres===0;
+
     R.erreurs_console_A=await ev(A,'(window.__ERR||[]).length');R.erreurs_console_B=await ev(B,'(window.__ERR||[]).length');
+    R.console_ok=R.erreurs_console_A===0&&R.erreurs_console_B===0;
   }catch(e){R.exception=e.stack;ok=false;}
   for(const k in R)if(/_ok$/.test(k)&&R[k]!==true)ok=false;
   console.log(JSON.stringify(R,null,1));console.log(ok?'DEUX APPAREILS : OK':'DEUX APPAREILS : ECHEC');

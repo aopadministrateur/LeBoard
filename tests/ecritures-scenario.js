@@ -16,8 +16,9 @@ async function ecrireB(col,id,champs){const r=await fetch0(FB_BASE+'/'+col+'/'+i
 async function supprimerB(col,id){const r=await fetch0(FB_BASE+'/'+col+'/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+tokB}});return r.ok;}
 
 // Interception des ecritures de l'app : avant chacune des n prochaines, B ecrit (concurrence) ou le reseau tombe
-let piege=null;
+let piege=null;const ECR=[]; // ecritures de l'app : document, champs envoyes (updateMask), preconditions
 window.fetch=async function(url,opt){
+  if(opt&&opt.method==='PATCH'){const u=new URL(String(url));ECR.push({doc:decodeURIComponent(u.pathname).split('/documents/')[1],masque:u.searchParams.getAll('updateMask.fieldPaths'),cond:[...u.searchParams.keys()].filter(k=>k.indexOf('currentDocument')===0)});}
   if(piege&&piege.n>0&&opt&&opt.method==='PATCH'&&String(url).indexOf('/'+piege.cible+'?')>=0){
     piege.n--;
     if(piege.type==='reseau')throw new TypeError('Failed to fetch');
@@ -156,8 +157,67 @@ async function membres(){
   log('4_chantier_sans_membres_ok',compte(n,/^PATCH membres/)===0&&compte(n,/^PATCH chantiers\/.* 200$/)===2);
 }
 
+// ─── Chantiers (un document par chantier) ───
+async function chantiers(){
+  const modale=()=>document.getElementById('modch').classList.contains('open');
+  const local=()=>CH.find(c=>c.id==='c1')||null;
+  const pareil=(b,l)=>!!b&&!!l&&['statut','notes','materiel','client'].every(k=>(b[k]||'')===(l[k]||''));
+  // 1. Copie perimee : B confirme le chantier pendant que l'app modifie les notes
+  editCh('c1');
+  await ecrireB('chantiers','c1',{statut:'Confirme'});
+  document.getElementById('fnot').value='Notes de Florian';
+  let n=repere(),e=ECR.length;TOASTS.length=0;
+  await saveCh();
+  let b=await lireB('chantiers','c1');
+  log('1_modif',{statut:b.statut,notes:b.notes,champs_envoyes:ECR.slice(e).map(x=>x.masque.join('+')),condition:ECR.slice(e).map(x=>x.cond.join()),lectures:compte(n,/^GET chantiers\/c1 /),toasts:TOASTS.slice(),modale_fermee:!modale()});
+  log('1_modif_ok',b.statut==='Confirme'&&b.notes==='Notes de Florian'&&ECR.slice(e).length===1&&ECR[e].masque.join()==='notes'&&ECR[e].cond.join()==='currentDocument.updateTime'&&compte(n,/^GET chantiers\/c1 /)===1&&pareil(b,local())&&TOASTS.join()==='Chantier mis à jour'&&!modale());
+  // 1b. Enregistrer sans rien changer : aucune lecture, aucune ecriture
+  editCh('c1');n=repere();e=ECR.length;TOASTS.length=0;
+  await saveCh();
+  log('1_sans_changement',{lectures:compte(n,/^GET chantiers\/c1 /),ecritures:ECR.length-e,toasts:TOASTS.slice()});
+  log('1_sans_changement_ok',compte(n,/^GET chantiers\/c1 /)===0&&ECR.length===e&&TOASTS.join()==='Chantier mis à jour'&&!modale());
+  // 2. B ecrit entre la lecture et l'ecriture de l'app : nouvel essai, rien de perdu
+  editCh('c1');document.getElementById('fcli').value='CLIENT MODIFIE';
+  piege={cible:'chantiers/c1',n:1,avant:()=>ecrireB('chantiers','c1',{materiel:'Nacelle'})};
+  n=repere();e=ECR.length;TOASTS.length=0;
+  await saveCh();
+  b=await lireB('chantiers','c1');
+  log('2_concurrence',{client:b.client,materiel:b.materiel,lectures:compte(n,/^GET chantiers\/c1 /),refus:compte(n,/^PATCH chantiers\/c1 .*400$/),toasts:TOASTS.slice()});
+  log('2_concurrence_ok',b.client==='CLIENT MODIFIE'&&b.materiel==='Nacelle'&&compte(n,/^GET chantiers\/c1 /)===2&&compte(n,/^PATCH chantiers\/c1 .*400$/)===1&&pareil(b,local())&&TOASTS.join()==='Chantier mis à jour'&&!modale());
+  // 3a. Concurrence a chaque essai : echec, message, copie realignee, formulaire ouvert avec la saisie
+  editCh('c1');document.getElementById('fnot').value='Notes perdues ?';
+  let k=0;piege={cible:'chantiers/c1',n:3,avant:()=>ecrireB('chantiers','c1',{materiel:'Materiel B'+(k++)})};
+  n=repere();TOASTS.length=0;
+  await saveCh();
+  b=await lireB('chantiers','c1');
+  log('3_echec_concurrence',{notes:b.notes,materiel:b.materiel,materiel_local:local().materiel,refus:compte(n,/^PATCH chantiers\/c1 .*400$/),toasts:TOASTS.slice(),modale_ouverte:modale(),saisie:document.getElementById('fnot').value});
+  log('3_echec_concurrence_ok',b.notes==='Notes de Florian'&&b.materiel==='Materiel B2'&&pareil(b,local())&&compte(n,/^PATCH chantiers\/c1 .*400$/)===3&&TOASTS.length===1&&/^Échec/.test(TOASTS[0])&&modale()&&document.getElementById('fnot').value==='Notes perdues ?');
+  // 3b. Reseau coupe : echec, rien ne change
+  piege={cible:'chantiers/c1',n:3,type:'reseau'};TOASTS.length=0;
+  await saveCh();
+  b=await lireB('chantiers','c1');
+  log('3_echec_reseau',{notes:b.notes,toasts:TOASTS.slice(),modale_ouverte:modale()});
+  log('3_echec_reseau_ok',b.notes==='Notes de Florian'&&pareil(b,local())&&TOASTS.length===1&&/^Échec/.test(TOASTS[0])&&modale());
+  piege=null;closeM('modch');
+  // 4. Creation : exactement comme avant (une ecriture du chantier complet, sans lecture ni precondition)
+  openModCh();document.getElementById('fnom').value='Chantier cree';document.getElementById('fdeb').value='2026-11-20';document.getElementById('ffin').value='2026-11-21';
+  bldTypeSel();document.getElementById('ftyp').value='Facade';document.getElementById('fsta').value='Prevu';document.getElementById('fche').value='KGiR';document.getElementById('fctv').value='Florian';
+  n=repere();e=ECR.length;TOASTS.length=0;
+  await saveCh();
+  const nv=CH.find(c=>c.nom==='Chantier cree');b=nv?await lireB('chantiers',nv.id):null;
+  log('4_creation',{en_base:!!b,champs_envoyes:ECR.slice(e).map(x=>x.masque.length),condition:ECR.slice(e).map(x=>x.cond.join()),lectures:compte(n,/^GET chantiers\//),toasts:TOASTS.slice()});
+  log('4_creation_ok',!!b&&b.nom==='Chantier cree'&&b.ctv==='Florian'&&ECR.slice(e).length===1&&ECR[e].cond.length===0&&ECR[e].masque.length>=15&&compte(n,/^GET chantiers\//)===0&&TOASTS.join()==='Chantier créé !'&&!modale());
+  // 5. Chantier supprime par B pendant la modification : pas de recreation
+  editCh('c1');await supprimerB('chantiers','c1');document.getElementById('fnot').value='Trop tard';
+  TOASTS.length=0;
+  await saveCh();
+  log('5_supprime',{en_base:!!(await lireB('chantiers','c1')),en_local:!!local(),toasts:TOASTS.slice(),modale_fermee:!modale()});
+  log('5_supprime_ok',!(await lireB('chantiers','c1'))&&!local()&&TOASTS.join()==='Ce chantier a été supprimé entre-temps'&&!modale());
+}
+
 async function scenario(){
   await entrer();
+  if(MODE_E.indexOf('e_chantiers')===0)await chantiers();
   if(MODE_E.indexOf('e_indispo')===0)await indispo();
   if(MODE_E.indexOf('e_membres')===0)await membres();
   done();
