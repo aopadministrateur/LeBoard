@@ -1635,9 +1635,15 @@ function stopFbPolling(){
 }
 
 // ═══ SAVE TO FIREBASE ═══
-function saveChantierFB(c){
-  if(!c||!c.id){return;}
-  fbSet('chantiers', c.id, c);
+// Creation d'un chantier : meme ecriture qu'avant (chantier complet), confirmee par la base (3 essais).
+// Echec : message ; rien n'est ajoute a la liste locale.
+async function creerChantier(c){
+  for(let essai=1; essai<=3; essai++){
+    if(essai > 1) await new Promise(function(r){ setTimeout(r, 150*essai); });
+    if(await fbSet('chantiers', c.id, c)) return true;
+  }
+  toast('Échec : chantier non créé. Réessayez.');
+  return false;
 }
 
 // Chantier tel qu'il etait a l'ouverture du formulaire : sert a n'envoyer que les champs reellement modifies
@@ -3123,7 +3129,12 @@ function editCh(id){
   document.getElementById('fnom').value=c.nom;document.getElementById('fcli').value=c.client;document.getElementById('fadr').value=c.adresse;document.getElementById('ftyp').value=c.type;document.getElementById('fsta').value=c.statut;document.getElementById('fche').value=c.chef;document.getElementById('fctv').value=c.ctv||'';document.getElementById('fdeb').value=c.debut;document.getElementById('ffin').value=c.fin;document.getElementById('fmat').value=c.materiel;document.getElementById('fnot').value=c.notes;var aopCb2=document.getElementById('faop');if(aopCb2){aopCb2.checked=c.origineAOP||false;document.getElementById('fcanaop').style.display=c.origineAOP?'block':'none';document.getElementById('fcanaop').value=c.canalAOP||'';}
   setSelCollabs(c.collabs);bldTypeSel();document.getElementById('ftyp').value=c.type||'';document.getElementById('fche').value=c.chef||'';document.getElementById('fctv').value=c.ctv||'';openM('modch');
 }
+let chEnvoi=false;
 async function saveCh(){
+  if(chEnvoi)return;chEnvoi=true;
+  try{await saveChEnvoi();}finally{chEnvoi=false;}
+}
+async function saveChEnvoi(){
   const nom=document.getElementById('fnom').value.trim();const debut=document.getElementById('fdeb').value;const fin=document.getElementById('ffin').value;
   if(!nom||!debut||!fin){toast('Nom, début et fin sont obligatoires');return;}
   if(fin<debut){toast('La date de fin doit être après le début');return;}
@@ -3154,14 +3165,13 @@ async function saveCh(){
     if(Object.keys(champs).length&&!(await majChantier(editId,champs)))return;
     toast('Chantier mis à jour');
   }
-  else{const newC={id:'c'+Date.now(),...data};if(pendingLeadLink)newC.leadId=pendingLeadLink;CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);
+  else{const newC={id:'c'+Date.now(),...data};if(pendingLeadLink)newC.leadId=pendingLeadLink;
+      if(!(await creerChantier(newC)))return;
+      CH.push(newC);const chef=MBR[CU]?MBR[CU].name:'Quelqu\'un';var nmsg='Nouveau chantier par '+chef+' : '+nom+' du '+fd(debut)+' au '+fd(fin);
       addN(nmsg);
       // Only send push to referents
-      sendPushNotif('Nouveau chantier',nmsg,'referent');toast('Chantier créé !');}
-  if(!editId){
-    var last=CH[CH.length-1];if(last)saveChantierFB(last);
-    if(last&&pendingLeadLink)leadChantierCreated(last.id);
-  }
+      sendPushNotif('Nouveau chantier',nmsg,'referent');toast('Chantier créé !');
+      if(pendingLeadLink)leadChantierCreated(newC.id);}
   svAll();closeM('modch');editId=null;renderAll();
 }
 

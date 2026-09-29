@@ -13,13 +13,14 @@ const fetch0=window.fetch;let tokB=null;
 async function entrerB(){const r=await fetch0('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=x',{method:'POST',body:JSON.stringify({email:'henri@test.fr',password:'pw-henri'})});tokB=(await r.json()).idToken;}
 async function lireB(col,id){const r=await fetch0(FB_BASE+'/'+col+'/'+id,{headers:{Authorization:'Bearer '+tokB}});return r.ok?fbParseDoc((await r.json()).fields||{}):null;}
 async function ecrireB(col,id,champs){const r=await fetch0(FB_BASE+'/'+col+'/'+id+'?updateMask.fieldPaths='+Object.keys(champs).join('&updateMask.fieldPaths='),{method:'PATCH',headers:{Authorization:'Bearer '+tokB},body:JSON.stringify({fields:fbEncodeDoc(champs)})});return r.ok;}
+async function listeB(col){const r=await fetch0(FB_BASE+'/'+col+'?pageSize=300',{headers:{Authorization:'Bearer '+tokB}});const d=await r.json();return (d.documents||[]).map(x=>fbParseDoc(x.fields||{}));}
 async function supprimerB(col,id){const r=await fetch0(FB_BASE+'/'+col+'/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+tokB}});return r.ok;}
 
 // Interception des ecritures de l'app : avant chacune des n prochaines, B ecrit (concurrence) ou le reseau tombe
 let piege=null;const ECR=[]; // ecritures de l'app : document, champs envoyes (updateMask), preconditions
 window.fetch=async function(url,opt){
   if(opt&&opt.method==='PATCH'){const u=new URL(String(url));ECR.push({doc:decodeURIComponent(u.pathname).split('/documents/')[1],masque:u.searchParams.getAll('updateMask.fieldPaths'),cond:[...u.searchParams.keys()].filter(k=>k.indexOf('currentDocument')===0)});}
-  if(piege&&piege.n>0&&opt&&opt.method==='PATCH'&&String(url).indexOf('/'+piege.cible+'?')>=0){
+  if(piege&&piege.n>0&&opt&&opt.method==='PATCH'&&(piege.re?piege.re.test(String(url)):String(url).indexOf('/'+piege.cible+'?')>=0)){
     piege.n--;
     if(piege.type==='reseau')throw new TypeError('Failed to fetch');
     await piege.avant();
@@ -211,6 +212,21 @@ async function chantiers(){
   const nv=CH.find(c=>c.nom==='Chantier cree');b=nv?await lireB('chantiers',nv.id):null;
   log('4_creation',{en_base:!!b,champs_envoyes:ECR.slice(e).map(x=>x.masque.length),condition:ECR.slice(e).map(x=>x.cond.join()),lectures:compte(n,/^GET chantiers\//),toasts:TOASTS.slice()});
   log('4_creation_ok',!!b&&b.nom==='Chantier cree'&&b.ctv==='Florian'&&ECR.slice(e).length===1&&ECR[e].cond.length===0&&ECR[e].masque.length>=15&&compte(n,/^GET chantiers\//)===0&&TOASTS.join()==='Chantier créé !'&&!modale());
+  // 4b. Creation, reseau coupe a chaque essai : message, formulaire ouvert avec la saisie, rien d'ajoute nulle part
+  openModCh();document.getElementById('fnom').value='Chantier echec';document.getElementById('fdeb').value='2026-11-23';document.getElementById('ffin').value='2026-11-24';
+  bldTypeSel();document.getElementById('ftyp').value='Facade';document.getElementById('fsta').value='Prevu';document.getElementById('fche').value='KGiR';document.getElementById('fctv').value='Florian';
+  piege={re:/\/chantiers\/c\d+\?/,n:3,type:'reseau'};const nbCH=CH.length,nbN=notifs.length;TOASTS.length=0;e=ECR.length;
+  await saveCh();
+  const enBase=(await listeB('chantiers')).filter(c=>c.nom==='Chantier echec').length;
+  log('4b_creation_echec',{essais:ECR.length-e,toasts:TOASTS.slice(),modale_ouverte:modale(),saisie:document.getElementById('fnom').value,ajout_local:CH.length-nbCH,notification:notifs.length-nbN,en_base:enBase});
+  log('4b_creation_echec_ok',ECR.length-e===3&&TOASTS.length===1&&TOASTS[0]==='Échec : chantier non créé. Réessayez.'&&modale()&&document.getElementById('fnom').value==='Chantier echec'&&CH.length===nbCH&&notifs.length===nbN&&enBase===0);
+  piege=null;
+  // 4c. Double appui sur Enregistrer pendant l'attente de la base : un seul chantier
+  document.getElementById('fnom').value='Chantier double';e=ECR.length;TOASTS.length=0;
+  await Promise.all([saveCh(),saveCh()]);
+  const nbDouble=(await listeB('chantiers')).filter(c=>c.nom==='Chantier double').length;
+  log('4c_double_appui',{en_base:nbDouble,en_local:CH.filter(c=>c.nom==='Chantier double').length,ecritures:ECR.length-e,toasts:TOASTS.slice()});
+  log('4c_double_appui_ok',nbDouble===1&&CH.filter(c=>c.nom==='Chantier double').length===1&&ECR.length-e===1&&TOASTS.join()==='Chantier créé !'&&!modale());
   // 5. Chantier supprime par B pendant la modification : pas de recreation
   editCh('c1');await supprimerB('chantiers','c1');document.getElementById('fnot').value='Trop tard';
   TOASTS.length=0;
