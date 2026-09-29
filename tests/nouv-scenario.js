@@ -25,14 +25,14 @@ async function scenario(){
   retAcc();await wait(100);await pin('1234');await wait(800);
   log('4_autre_appareil_deja_vu',vis('nouv'));
   // Changement de version
-  NOUVEAUTES.version=2;
+  NOUVEAUTES.version++;
   retAcc();await wait(100);await pin('1234');await wait(800);
-  log('5_version_2',vis('nouv'));
+  log('5_version_suivante',vis('nouv'));
   nouvClose();await wait(200);log('5_firestore_florian',vu('florian'));
   retAcc();await wait(100);await pin('1234');await wait(800);
-  log('5_version_2_reouverture',vis('nouv'));
+  log('5_version_suivante_reouverture',vis('nouv'));
   // Verrouillage pendant l'affichage : masque, pas marque vu
-  NOUVEAUTES.version=3;retAcc();await wait(100);await pin('1234');await wait(800);
+  NOUVEAUTES.version++;retAcc();await wait(100);await pin('1234');await wait(800);
   retAcc();await wait(100);log('6_verrou_pendant_ecran',{ecran:vis('nouv'),firestore_florian:vu('florian')});
   // Autre membre (collaborateur)
   authSwitch();await wait(50);await login('tony@test.fr','pw-tony');await pin('5678');await pin('5678');await wait(800);

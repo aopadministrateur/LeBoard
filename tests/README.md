@@ -27,6 +27,7 @@ Prérequis : Node et Chrome. Les tests n'utilisent que des données fictives : l
     BUDGET=30000 SCEN=auth-scenario.js sh tests/run.sh a_reads    # lectures facturables par cycle
     BUDGET=30000 SCEN=modch-scenario.js sh tests/run.sh m_reset  # creation de chantier apres une edition : champs vides
     BUDGET=40000 SCEN=dates-scenario.js sh tests/run.sh d_dates   # fin avant debut refusee, fin = debut acceptee
+    BUDGET=60000 SCEN=nouv-scenario.js sh tests/run.sh n_strict                  # écran des nouveautés : une fois par version et par membre, tous appareils
     BUDGET=60000 SCEN=ecritures-scenario.js sh tests/run.sh e_indispo_strict   # indispos : copie perimee, ecriture concurrente, echec apres 3 essais
     BUDGET=90000 SCEN=ecritures-scenario.js sh tests/run.sh e_membres_strict   # membres et maitres d'oeuvre : memes cas + chantier sans ecriture des membres
     BUDGET=90000 SCEN=ecritures-scenario.js sh tests/run.sh e_chantiers_strict # chantiers : seuls les champs modifies, memes cas, creation confirmee par la base (echec reseau, double appui), chantier supprime entre-temps

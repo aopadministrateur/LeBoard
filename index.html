@@ -59,12 +59,14 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;b
 .nvti{font-size:20px;font-weight:600;letter-spacing:-0.02em;line-height:1.3;}
 .nvin{font-size:13px;color:var(--tx2);margin-top:8px;}
 .nvsc{overflow-y:auto;padding:14px 26px 4px;display:flex;flex-direction:column;gap:10px;}
-.nvbl{display:flex;gap:14px;padding:14px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
+.nvbl{display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);}
 .nvic{width:38px;height:38px;border-radius:10px;background:var(--ord);display:flex;align-items:center;justify-content:center;font-size:19px;color:var(--or);flex-shrink:0;}
 .nvbt{font-size:14px;font-weight:600;margin-bottom:4px;}
 .nvbx{font-size:13px;color:var(--tx2);line-height:1.6;}
 .nvft{padding:16px 26px 24px;display:flex;flex-direction:column;gap:14px;}
 .nvfn{font-size:13px;color:var(--tx2);}
+.nvbx:first-child{color:var(--tx);}
+.nvin:empty,.nvfn:empty{display:none;}
 .nvok{width:100%;height:32px;padding:0 13px;border-radius:var(--r);border:none;background:#EDEDEF;color:#141416;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;}
 .nvok:hover{background:#FFFFFF;}
 
@@ -546,7 +548,8 @@ th.ldsrt:hover{color:var(--tx);}
 .ico-alert{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");}
 .ico-camera{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E");}
 .ico-lock{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");}
-.ico-target{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E");}
+.ico-phone{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='2' width='14' height='20' rx='2.5'/%3E%3Cpath d='M11 18h2'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='2' width='14' height='20' rx='2.5'/%3E%3Cpath d='M11 18h2'/%3E%3C/svg%3E");}
+.ico-users{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");}
 
 /* FOCUS CLAVIER */
 button:focus-visible,a:focus-visible,[onclick]:focus-visible,[tabindex]:focus-visible,summary:focus-visible,input[type=checkbox]:focus-visible,input[type=file]:focus-visible{outline:2px solid var(--or);outline-offset:2px;}
@@ -1191,20 +1194,19 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 // ═══ ECRAN DES NOUVEAUTES ═══
 // Pour annoncer de nouvelles nouveautes : augmenter "version" (2, 3...) et remplacer le texte.
 // L'ecran reapparait alors une fois pour chaque membre (version vue enregistree dans profiles/{membre}.nouveautesVues).
+// Chaque bloc : ico (nom d'une icone au trait .ico-*), titre facultatif, texte.
 const NOUVEAUTES = {
-  version: 1,
-  titre: 'Bienvenue sur la nouvelle version du Board',
-  intro: 'Deux nouveautés :',
+  version: 2,
+  titre: 'Bienvenue dans la V4 du Board',
+  intro: '',
   blocs: [
-    {icone:'🔐', titre:'Connexion sécurisée',
-     texte:'Vous vous connectez maintenant avec votre email et votre mot de passe, puis un code PIN sur votre appareil. Vos données sont protégées.'},
-    {icone:'🎯', titre:'Module Leads',
-     texte:"Un nouvel onglet pour suivre et répartir les prospects de l'alliance. Chaque lead est attribué selon la rotation par points, et les compteurs se calculent tout seuls. Réservé aux référents."}
+    {ico:'phone', texte:'Une interface repensée, plus claire, et enfin pensée pour le téléphone.'},
+    {ico:'alert', texte:'Les conflits sont détectés même sur une seule journée, et visibles dans le calendrier.'},
+    {ico:'lock',  texte:"Vos modifications ne peuvent plus être écrasées par celles d'un autre membre."},
+    {ico:'users', texte:'Équipe et Mon planning affichent enfin tous vos chantiers, y compris comme chargé de travaux.'}
   ],
-  fin: 'Bon boulot à tous.'
+  fin: ''
 };
-// Icones SVG affichees a la place des emojis connus (les autres emojis restent affiches tels quels)
-const NVICO={'🔐':'lock','🎯':'target'};
 
 // ═══ CONSTANTS ═══
 const STATOK=['Confirme','Prevu'];
@@ -2578,7 +2580,7 @@ function nouvCheck(){
   document.getElementById('nouv-titre').textContent=NOUVEAUTES.titre;
   document.getElementById('nouv-intro').textContent=NOUVEAUTES.intro||'';
   document.getElementById('nouv-fin').textContent=NOUVEAUTES.fin||'';
-  document.getElementById('nouv-blocs').innerHTML=NOUVEAUTES.blocs.map(b=>'<div class="nvbl"><div class="nvic">'+(NVICO[b.icone]?'<span class="ico ico-'+NVICO[b.icone]+'" aria-hidden="true"></span>':esc(b.icone))+'</div><div><div class="nvbt">'+esc(b.titre)+'</div><div class="nvbx">'+esc(b.texte)+'</div></div></div>').join('');
+  document.getElementById('nouv-blocs').innerHTML=NOUVEAUTES.blocs.map(b=>'<div class="nvbl"><div class="nvic">'+(b.ico?'<span class="ico ico-'+esc(b.ico)+'" aria-hidden="true"></span>':'')+'</div><div>'+(b.titre?'<div class="nvbt">'+esc(b.titre)+'</div>':'')+'<div class="nvbx">'+esc(b.texte)+'</div></div></div>').join('');
   document.getElementById('nouv').classList.add('open');
 }
 function nouvHide(){document.getElementById('nouv').classList.remove('open');}
