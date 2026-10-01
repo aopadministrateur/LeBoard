@@ -56,9 +56,15 @@ service cloud.firestore {
       allow write: if isMember() && acces().membre == key;
     }
 
-    // Notifications internes
+    // Notifications internes : lecture par les membres ; creation par les referents uniquement,
+    // en leur propre nom (from = cle du membre), avec les seuls champs de l'app et un texte court
     match /notifications/{id} {
-      allow read, create: if isMember();
+      allow read: if isMember();
+      allow create: if isRef()
+        && request.resource.data.keys().hasOnly(['title', 'body', 'from', 'targetRole', 'read', 'ts'])
+        && request.resource.data.from == acces().membre
+        && request.resource.data.body is string
+        && request.resource.data.body.size() < 500;
       allow update, delete: if isRef();
     }
 

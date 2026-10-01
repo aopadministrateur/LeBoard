@@ -40,7 +40,8 @@ const TOK={};let n=0;window.__TOK=TOK;
 const newTok=uid=>{const t='tok-'+uid+'-'+(++n);TOK[t]={uid:uid,exp:Date.now()+3600e3};return t;};
 const J=(st,body)=>new Response(JSON.stringify(body||{}),{status:st,headers:{'Content-Type':'application/json'}});
 const S=(f)=>f&&f.stringValue;
-function allowed(uid,col,id,op){ // miroir de firestore.rules
+const CHAMPS_NOTIF=['title','body','from','targetRole','read','ts'];
+function allowed(uid,col,id,op,data){ // miroir de firestore.rules ; data : champs ecrits (creation)
   const a=uid&&RAW.acces&&RAW.acces[uid];const member=!!a;const ref=member&&S(a.role)==='referent';
   switch(col){
     case 'acces':return op==='read'&&uid===id;
@@ -48,7 +49,11 @@ function allowed(uid,col,id,op){ // miroir de firestore.rules
     case 'chantiers':case 'membres':return op==='read'?member:ref;
     case 'indispo':return member;
     case 'profiles':return op==='read'?member:(member&&S(a.membre)===id);
-    case 'notifications':return (op==='read'||op==='create')?member:ref;
+    case 'notifications':
+      if(op==='read')return member;
+      if(op==='create')return ref&&!!data&&Object.keys(data).every(k=>CHAMPS_NOTIF.includes(k))&&S(data.from)===S(a.membre)
+        &&typeof S(data.body)==='string'&&S(data.body).length<500;
+      return ref;
   }
   return false;
 }
@@ -89,7 +94,8 @@ window.fetch=async function(url,opt){
   if(tk&&(!TOK[tk]||TOK[tk].exp<Date.now()||TOK[tk].revoked)){log(401);return J(401,{error:{status:'UNAUTHENTICATED'}});}
   const uid=tk?TOK[tk].uid:null;
   const op=m==='GET'?'read':m==='POST'?'create':(m==='PATCH'&&!RAW[col][id])?'create':m==='DELETE'?'delete':'update';
-  if(window.__STRICT&&!allowed(uid,col,id,op)){log(403);return J(403,{error:{status:'PERMISSION_DENIED'}});}
+  const ecrits=(m==='POST'||m==='PATCH')&&opt.body?(JSON.parse(opt.body).fields||{}):null;
+  if(window.__STRICT&&!allowed(uid,col,id,op,ecrits)){log(403);return J(403,{error:{status:'PERMISSION_DENIED'}});}
   // Preconditions d'ecriture, comme Firestore REST : currentDocument.exists et currentDocument.updateTime
   const pExiste=m==='GET'?null:u.searchParams.get('currentDocument.exists'),pUT=m==='GET'?null:u.searchParams.get('currentDocument.updateTime');
   if(pExiste==='false'&&RAW[col][id]){log(409);return J(409,{error:{code:409,status:'ALREADY_EXISTS',message:'Document already exists'}});}
