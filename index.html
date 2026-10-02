@@ -730,10 +730,14 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
   <div class="polbox">
     <div class="poltit">Politique de confidentialité</div>
     <div class="polscr">
-      <h4>1. Données collectées</h4><p>Le Board collecte uniquement les données nécessaires : noms des membres, affectations aux chantiers et photo de profil (facultative). Aucune donnée sensible n'est collectée.</p>
-      <h4>2. Utilisation</h4><p>Ces données sont utilisées exclusivement pour l'organisation interne. Elles ne sont jamais transmises à des tiers ni utilisées à des fins commerciales.</p>
-      <h4>3. Sécurité</h4><p>Accès protégé par un code PIN personnel choisi à la première connexion. Toute session inactive depuis plus d'1 heure est automatiquement fermée.</p>
-      <h4>4. Vos droits (RGPD)</h4><p>Droit d'accès, de rectification et de suppression de vos données. Contactez un référent pour exercer ces droits.</p>
+      <h4>1. Responsable du traitement</h4><p>AOP – Alliance des Opérateurs Professionnels. Contact : <a class="lnk" href="mailto:contact@aop-drones.fr">contact@aop-drones.fr</a>.</p>
+      <h4>2. Données collectées</h4><p><strong>Membres</strong> : nom, rôle, couleur, adresse e-mail du compte, photo de profil (facultative), indisponibilités et affectations aux chantiers.<br><strong>Chantiers</strong> : nom, client, adresse, dates, intervenants, matériel et notes.<br><strong>Prospects</strong> (module Leads) : nom du contact, société, téléphone, e-mail, besoin, zone, notes, statut, membre attribué, valeur, source et date de la demande.</p>
+      <h4>3. Utilisation</h4><p>Organisation interne des chantiers de l'alliance, et suivi des demandes de prospects reçues par l'alliance (formulaire, salons, numéro commun) ainsi que leur répartition entre les membres. Ces données ne sont ni vendues, ni transmises à des tiers, ni utilisées à d'autres fins.</p>
+      <h4>4. Qui y accède</h4><p>Les membres connectés voient le planning, le calendrier, l'équipe, les indisponibilités et les photos. Les données des prospects ne sont accessibles qu'aux référents. Ces accès sont contrôlés par le serveur.</p>
+      <h4>5. Hébergement</h4><p>Les données sont hébergées par Google Firebase, région europe-west9 (Paris, France). Une copie du planning, des membres, des indisponibilités et des photos est gardée sur votre appareil pour l'affichage ; les données des prospects n'y sont jamais enregistrées.</p>
+      <h4>6. Durée de conservation</h4><p>Données des membres : tant que la personne est membre, puis suppression à sa demande ou à son départ. Données des prospects : 3 ans à compter du dernier contact.</p>
+      <h4>7. Sécurité</h4><p>Chacun se connecte avec son propre compte (e-mail et mot de passe), et la connexion reste enregistrée sur l'appareil. Le code PIN à 4 chiffres verrouille l'app sur cet appareil : elle se verrouille après 1 heure d'inactivité ou avec le bouton « Verrouiller », et redemande alors le PIN. Pour retirer complètement votre compte d'un appareil (appareil partagé ou perdu), utilisez « Changer de compte » sur l'écran du code PIN.</p>
+      <h4>8. Vos droits (RGPD)</h4><p>Droits d'accès, de rectification, d'effacement et d'opposition : écrivez à <a class="lnk" href="mailto:contact@aop-drones.fr">contact@aop-drones.fr</a> ou adressez-vous à un référent. Les prospects peuvent exercer les mêmes droits auprès de l'alliance.</p>
     </div>
     <label class="polchk"><input type="checkbox" id="chkpol" onchange="document.getElementById('btnpol').disabled=!this.checked;document.getElementById('btnpol').style.opacity=this.checked?'1':'0.35';"><span>J'ai lu et j'accepte la politique de confidentialité.</span></label>
     <div class="polact">
@@ -784,9 +788,9 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
 <div id="sexp" style="display:none;align-items:center;justify-content:center;">
   <div class="sxbox">
     <div class="sxic"><span class="ico ico-lock" aria-hidden="true"></span></div>
-    <div class="sxti">Session expirée</div>
-    <div class="sxtx">Votre session a expiré après 1 h d'inactivité.</div>
-    <button class="btn btnp btn-block" onclick="retAcc()">Se reconnecter</button>
+    <div class="sxti">App verrouillée</div>
+    <div class="sxtx">L'app s'est verrouillée après 1 h d'inactivité.</div>
+    <button class="btn btnp btn-block" onclick="retAcc()">Déverrouiller</button>
   </div>
 </div>
 
@@ -815,7 +819,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
         </div>
       </nav>
       <div class="synbar"><div class="syndot" id="syndot"></div><span class="syntx" id="syntxt">Connecté</span><span class="syntm" id="syntime"></span></div>
-      <div class="sbbot"><div class="sbusr" tabindex="0" role="button" aria-label="Mon profil" onclick="openProf()"><div class="av" id="sbav" style="width:32px;height:32px;font-size:12px;"></div><div class="sbunm" id="sbnm"></div><button class="lgbtn" onclick="event.stopPropagation();retAcc()" title="Déconnexion"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button></div></div>
+      <div class="sbbot"><div class="sbusr" tabindex="0" role="button" aria-label="Mon profil" onclick="openProf()"><div class="av" id="sbav" style="width:32px;height:32px;font-size:12px;"></div><div class="sbunm" id="sbnm"></div><button class="lgbtn" onclick="event.stopPropagation();retAcc()" title="Verrouiller" aria-label="Verrouiller"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button></div></div>
     </aside>
     <div class="main">
       <div class="topbar"><div class="tprow"><div><div class="pgtit" id="pgtit">Planning</div><div class="pgsub" id="pgsub">Vue globale</div></div><div style="display:flex;gap:8px;flex-shrink:0;" id="tbact"></div></div></div>
@@ -1047,7 +1051,7 @@ table,.scvl,.scsu,.ldpts,.ldrow .v,.caldt,.calml,.tct,.cciv,.pgsub,#syntime,#rou
       <div class="fhint">Cliquer pour changer la photo</div>
       <input type="file" id="avinp" accept="image/*" class="dn" onchange="handleAv(event)">
     </div>
-    <div class="ldbox">Session active. Déconnexion automatique après <strong>1 heure</strong> d'inactivité.</div>
+    <div class="ldbox">Connexion conservée sur cet appareil. Verrouillage automatique après <strong>1 heure</strong> d'inactivité.</div>
     <div class="msec">Mes indisponibilités</div>
     <div id="mes-conges" class="conglist"></div>
     <div class="fr">
