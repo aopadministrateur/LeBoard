@@ -29,6 +29,8 @@ Prérequis : Node et Chrome. Les tests n'utilisent que des données fictives : l
     BUDGET=40000 SCEN=dates-scenario.js sh tests/run.sh d_dates   # fin avant debut refusee, fin = debut acceptee
     BUDGET=60000 SCEN=affichage-scenario.js sh tests/run.sh x_strict             # textes avec < > & " ' affichés tels quels, photos et couleurs invalides rejetées
     BUDGET=60000 SCEN=notif-regles-scenario.js sh tests/run.sh r_strict         # notifications : création réservée aux référents, en leur nom, champs autorisés, texte < 500
+    BUDGET=30000 SCEN=politique-scenario.js sh tests/run.sh p_ancienne          # politique modifiée : réacceptée une fois sur un appareil qui avait accepté l'ancienne
+    BUDGET=30000 SCEN=politique-scenario.js sh tests/run.sh p_nouvelle          # politique déjà acceptée : rien ne s'affiche
     BUDGET=60000 SCEN=nouv-scenario.js sh tests/run.sh n_strict                  # écran des nouveautés : une fois par version et par membre, tous appareils
     BUDGET=60000 SCEN=ecritures-scenario.js sh tests/run.sh e_indispo_strict   # indispos : copie perimee, ecriture concurrente, echec apres 3 essais
     BUDGET=90000 SCEN=ecritures-scenario.js sh tests/run.sh e_membres_strict   # membres et maitres d'oeuvre : memes cas + chantier sans ecriture des membres

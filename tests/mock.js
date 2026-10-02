@@ -2,9 +2,10 @@
 // window.__STRICT=true applique les memes regles que firestore.rules.
 (function(){
 const MODE=location.hash.slice(1);
-localStorage.clear();localStorage.setItem('lb_pol','1');localStorage.setItem('lb_pins_reset','1');
+localStorage.clear();localStorage.setItem('lb_pol','2');localStorage.setItem('lb_pins_reset','1');
 if(MODE==='a_reload'){localStorage.setItem('lb_auth',JSON.stringify({uid:'u-flo',refresh:'rt-u-flo',membre:'florian',role:'referent'}));localStorage.setItem('lb_pins',JSON.stringify({florian:'1234'}));}
 if(MODE==='a_revoked'){localStorage.setItem('lb_auth',JSON.stringify({uid:'u-flo',refresh:'rt-REVOQUE',membre:'florian',role:'referent'}));localStorage.setItem('lb_pins',JSON.stringify({florian:'1234'}));}
+if(MODE==='p_ancienne')localStorage.setItem('lb_pol','1'); // appareil ayant accepte l'ancienne politique
 window.__STRICT=MODE.indexOf('strict')>=0||MODE==='a_reads'||MODE==='a_reload'||MODE==='a_revoked';
 window.__SEED=__SEED_JSON__;
 // Deux appareils simules (tests/deux-appareils.js) : cette page n'a pas de base a elle ; ses appels Firebase
